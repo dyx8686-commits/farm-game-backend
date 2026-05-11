@@ -4,6 +4,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version>
+    </parent>
+
     <groupId>com.game</groupId>
     <artifactId>farm-game</artifactId>
     <version>1.0</version>
@@ -13,11 +19,12 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.2.0</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -25,7 +32,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.0</version>
             </plugin>
         </plugins>
     </build>
