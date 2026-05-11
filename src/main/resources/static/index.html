@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Game</title>
+
+    <style>
+
+        body {
+            background: #87CEEB;
+            font-family: Arial;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .panel {
+            background: white;
+            width: 300px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>🌴 Farm Game</h1>
+
+    <div class="panel">
+
+        <h2>Игрок</h2>
+
+        <p id="playerName">Имя: нет</p>
+        <p id="playerType">Класс: нет</p>
+
+        <h3>Ресурсы</h3>
+
+        <p id="food">FOOD: 0</p>
+        <p id="wood">WOOD: 0</p>
+        <p id="ore">ORE: 0</p>
+
+        <button onclick="createPlayer()">
+            Создать игрока
+        </button>
+
+    </div>
+<script>
+
+    let currentPlayer = null;
+
+    async function createPlayer() {
+
+        const response = await fetch(
+            "https://farm-game-backend-eo4y.onrender.com/game/player?name=Alex&type=FARMER"
+        );
+
+        const player = await response.json();
+
+        currentPlayer = player;
+
+        document.getElementById("playerName").innerText =
+            "Имя: " + player.name;
+
+        document.getElementById("playerType").innerText =
+            "Класс: " + player.type;
+
+        document.getElementById("food").innerText =
+            "FOOD: " + player.resources.FOOD;
+
+        document.getElementById("wood").innerText =
+            "WOOD: " + player.resources.WOOD;
+
+        document.getElementById("ore").innerText =
+            "ORE: " + player.resources.ORE;
+    }
+
+</script>
+</body>
+</html>
