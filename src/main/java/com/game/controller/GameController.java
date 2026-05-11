@@ -16,7 +16,7 @@ public class GameController {
         this.service = service;
     }
 
-    @PostMapping("/player")
+    @GetMapping("/player")
     public Player create(@RequestParam String name,
                          @RequestParam String type) {
         return service.createPlayer(name, type);
