@@ -21,14 +21,33 @@ public class GameService {
         return players;
     }
 
-    public void tick() {
-        for (Player p : players) {
+    
+public void tick() {
 
-            switch (p.type) {
-                case "FARMER" -> p.resources.put("FOOD", p.resources.get("FOOD") + 10);
-                case "WOODCUTTER" -> p.resources.put("WOOD", p.resources.get("WOOD") + 8);
-                case "MINER" -> p.resources.put("ORE", p.resources.get("ORE") + 6);
-            }
+    for (Player player : players) {
+
+        switch (player.getType()) {
+
+            case "FARMER":
+                player.getResources().put(
+                        "FOOD",
+                        player.getResources().get("FOOD") + 10
+                );
+                break;
+
+            case "WOODCUTTER":
+                player.getResources().put(
+                        "WOOD",
+                        player.getResources().get("WOOD") + 8
+                );
+                break;
+
+            case "MINER":
+                player.getResources().put(
+                        "ORE",
+                        player.getResources().get("ORE") + 5
+                );
+                break;
         }
     }
 }
