@@ -22,10 +22,10 @@ public class GameController {
         return service.createPlayer(name, type);
     }
 
-    @GetMapping("/game/player")
-public Player createPlayer(@RequestParam String name, @RequestParam String type) {
-    return gameService.createPlayer(name, type);
-}
+    @GetMapping("/players")
+    public List<Player> all() {
+        return service.getPlayers();
+    }
 
     @PostMapping("/tick")
     public String tick() {
