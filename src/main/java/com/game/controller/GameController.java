@@ -27,7 +27,7 @@ public class GameController {
         return service.getPlayers();
     }
 
-    @PostMapping("/tick")
+    @GetMapping("/tick")
     public String tick() {
         service.tick();
         return "ok";
