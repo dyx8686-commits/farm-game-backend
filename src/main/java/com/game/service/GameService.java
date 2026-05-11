@@ -12,42 +12,46 @@ public class GameService {
     private final List<Player> players = new ArrayList<>();
 
     public Player createPlayer(String name, String type) {
-        Player p = new Player(name, type);
-        players.add(p);
-        return p;
+
+        Player player = new Player(name, type);
+
+        players.add(player);
+
+        return player;
     }
 
     public List<Player> getPlayers() {
+
         return players;
     }
 
-    
-public void tick() {
+    public void tick() {
 
-    for (Player player : players) {
+        for (Player player : players) {
 
-        switch (player.getType()) {
+            switch (player.getType()) {
 
-            case "FARMER":
-                player.getResources().put(
-                        "FOOD",
-                        player.getResources().get("FOOD") + 10
-                );
-                break;
+                case "FARMER":
+                    player.getResources().put(
+                            "FOOD",
+                            player.getResources().get("FOOD") + 10
+                    );
+                    break;
 
-            case "WOODCUTTER":
-                player.getResources().put(
-                        "WOOD",
-                        player.getResources().get("WOOD") + 8
-                );
-                break;
+                case "WOODCUTTER":
+                    player.getResources().put(
+                            "WOOD",
+                            player.getResources().get("WOOD") + 8
+                    );
+                    break;
 
-            case "MINER":
-                player.getResources().put(
-                        "ORE",
-                        player.getResources().get("ORE") + 5
-                );
-                break;
+                case "MINER":
+                    player.getResources().put(
+                            "ORE",
+                            player.getResources().get("ORE") + 5
+                    );
+                    break;
+            }
         }
     }
 }
