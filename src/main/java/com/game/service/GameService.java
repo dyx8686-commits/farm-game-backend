@@ -117,6 +117,11 @@ public class GameService {
         }
 
         return player;
+        @PostMapping("/shop/seeds")
+public Player buySeeds(@RequestParam String name,
+                       @RequestParam int amount) {
+    return service.buySeeds(name, amount);
+}
     }
 
     // 🔍 найти игрока
