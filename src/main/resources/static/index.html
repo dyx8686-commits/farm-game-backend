@@ -130,32 +130,49 @@
 
     <div class="island">
 
-        <div class="panel">
+    <div class="panel">
 
-            <h2>Игрок</h2>
+        <h2>Игрок</h2>
 
-            <p id="playerName">Имя: нет</p>
-            <p id="playerType">Класс: нет</p>
+        <p id="playerName">Имя: нет</p>
+        <p id="playerType">Класс: нет</p>
 
-            <h3>Ресурсы</h3>
+        <h3>Ресурсы</h3>
 
-            <p id="food">FOOD: 0</p>
-            <p id="wood">WOOD: 0</p>
-            <p id="ore">ORE: 0</p>
+        <p id="food">FOOD: 0</p>
+        <p id="wood">WOOD: 0</p>
+        <p id="ore">ORE: 0</p>
 
-            <button onclick="createPlayer()">
-                Создать игрока
-            </button>
+        <button onclick="createFarmer()">
+            FARMER
+        </button>
 
-            <button onclick="nextTick()">
-                Следующий тик
-            </button>
+        <button onclick="createWoodcutter()">
+            WOODCUTTER
+        </button>
 
-        </div>
+        <button onclick="createMiner()">
+            MINER
+        </button>
+
+    </div>
+
+    <!-- FARMER ISLAND -->
+    <div id="farmerIsland">
 
         <div class="farm" onclick="farmClick()"></div>
 
+    </div>
+
+    <!-- WOODCUTTER ISLAND -->
+    <div id="woodIsland" style="display:none;">
+
         <div class="tree"></div>
+
+    </div>
+
+    <!-- MINER ISLAND -->
+    <div id="minerIsland" style="display:none;">
 
         <div class="mine"></div>
 
@@ -189,8 +206,71 @@
 
     let currentPlayer = null;
 
-    async function createPlayer() {
+     async function createFarmer() {
 
+    await createPlayerByType("FARMER");
+
+    showFarmerIsland();
+}
+
+async function createWoodcutter() {
+
+    await createPlayerByType("WOODCUTTER");
+
+    showWoodIsland();
+}
+
+async function createMiner() {
+
+    await createPlayerByType("MINER");
+
+    showMinerIsland();
+}
+async function createPlayerByType(type) {
+
+    const response = await fetch(
+        "https://farm-game-backend-eo4y.onrender.com/game/player?name=Alex&type=" + type
+    );
+
+    const player = await response.json();
+
+    currentPlayer = player;
+
+    document.getElementById("playerName").innerText =
+        "Имя: " + player.name;
+
+    document.getElementById("playerType").innerText =
+        "Класс: " + player.type;
+
+    document.getElementById("food").innerText =
+        "FOOD: " + player.resources.FOOD;
+
+    document.getElementById("wood").innerText =
+        "WOOD: " + player.resources.WOOD;
+
+    document.getElementById("ore").innerText =
+        "ORE: " + player.resources.ORE;
+}
+    function showFarmerIsland() {
+
+    document.getElementById("farmerIsland").style.display = "block";
+    document.getElementById("woodIsland").style.display = "none";
+    document.getElementById("minerIsland").style.display = "none";
+}
+
+function showWoodIsland() {
+
+    document.getElementById("farmerIsland").style.display = "none";
+    document.getElementById("woodIsland").style.display = "block";
+    document.getElementById("minerIsland").style.display = "none";
+}
+
+function showMinerIsland() {
+
+    document.getElementById("farmerIsland").style.display = "none";
+    document.getElementById("woodIsland").style.display = "none";
+    document.getElementById("minerIsland").style.display = "block";
+}
         const response = await fetch(
             "https://farm-game-backend-eo4y.onrender.com/game/player?name=Alex&type=FARMER"
         );
