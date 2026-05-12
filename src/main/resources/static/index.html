@@ -7,119 +7,120 @@
 
     <style>
 
-    body {
-        margin: 0;
-        font-family: Arial;
-        background: linear-gradient(#87CEEB, #4CAF50);
-        overflow-x: hidden;
-    }
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(#87CEEB, #4CAF50);
+            overflow-x: hidden;
+        }
 
-    h1 {
-        text-align: center;
-        color: white;
-        padding-top: 20px;
-    }
+        h1 {
+            text-align: center;
+            color: white;
+            padding-top: 20px;
+        }
 
-    .game {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 30px;
-    }
+        .game {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
 
-    .island {
-        width: 900px;
-        height: 500px;
-        background: #6dbf4b;
-        border-radius: 40px;
-        position: relative;
-        border: 8px solid #4e8f35;
-        box-shadow: 0 0 30px rgba(0,0,0,0.3);
-    }
+        .island {
+            width: 900px;
+            height: 500px;
+            background: #6dbf4b;
+            border-radius: 40px;
+            position: relative;
+            border: 8px solid #4e8f35;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        }
 
-    .panel {
-        position: absolute;
-        top: 20px;
-        left: 20px;
+        .panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
 
-        background: white;
-        width: 220px;
-        padding: 20px;
-        border-radius: 15px;
-    }
+            background: white;
+            width: 220px;
+            padding: 20px;
+            border-radius: 15px;
+        }
 
-    .farm {
-        position: absolute;
-        bottom: 80px;
-        left: 120px;
+        .farm {
+            position: absolute;
+            bottom: 80px;
+            left: 120px;
 
-        width: 140px;
-        height: 140px;
+            width: 140px;
+            height: 140px;
 
-        background: #c58b45;
-        border: 5px solid #8b5a2b;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
+            background: #c58b45;
+            border: 5px solid #8b5a2b;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
         .farm:hover {
-    transform: scale(1.05);
-}
+            transform: scale(1.05);
+        }
 
-    .tree {
-        position: absolute;
-        top: 140px;
-        right: 180px;
+        .tree {
+            position: absolute;
+            top: 140px;
+            right: 180px;
 
-        width: 100px;
-        height: 100px;
+            width: 100px;
+            height: 100px;
 
-        background: #2e8b57;
-        border-radius: 50%;
-    }
+            background: #2e8b57;
+            border-radius: 50%;
+        }
 
-    .tree::after {
-        content: '';
-        position: absolute;
+        .tree::after {
+            content: '';
+            position: absolute;
 
-        width: 20px;
-        height: 60px;
+            width: 20px;
+            height: 60px;
 
-        background: #6b3e26;
+            background: #6b3e26;
 
-        left: 40px;
-        top: 80px;
-    }
+            left: 40px;
+            top: 80px;
+        }
 
-    .mine {
-        position: absolute;
-        bottom: 60px;
-        right: 120px;
+        .mine {
+            position: absolute;
+            bottom: 60px;
+            right: 120px;
 
-        width: 140px;
-        height: 100px;
+            width: 140px;
+            height: 100px;
 
-        background: gray;
-        border-radius: 20px;
-    }
+            background: gray;
+            border-radius: 20px;
+        }
 
-    button {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        cursor: pointer;
-        border: none;
-        border-radius: 10px;
-        background: #4CAF50;
-        color: white;
-        font-size: 16px;
-    }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+        }
 
-    button:hover {
-        background: #45a049;
-    }
+        button:hover {
+            background: #45a049;
+        }
 
-</style>
+    </style>
 </head>
 
 <body>
@@ -130,154 +131,110 @@
 
     <div class="island">
 
-    <div class="panel">
+        <div class="panel">
 
-        <h2>Игрок</h2>
+            <h2>Игрок</h2>
 
-        <p id="playerName">Имя: нет</p>
-        <p id="playerType">Класс: нет</p>
+            <p id="playerName">Имя: нет</p>
+            <p id="playerType">Класс: нет</p>
 
-        <h3>Ресурсы</h3>
+            <h3>Ресурсы</h3>
 
-        <p id="food">FOOD: 0</p>
-        <p id="wood">WOOD: 0</p>
-        <p id="ore">ORE: 0</p>
+            <p id="food">FOOD: 0</p>
+            <p id="wood">WOOD: 0</p>
+            <p id="ore">ORE: 0</p>
 
-        <button onclick="createFarmer()">
-            FARMER
-        </button>
+            <button onclick="createFarmer()">FARMER</button>
+            <button onclick="createWoodcutter()">WOODCUTTER</button>
+            <button onclick="createMiner()">MINER</button>
 
-        <button onclick="createWoodcutter()">
-            WOODCUTTER
-        </button>
+        </div>
 
-        <button onclick="createMiner()">
-            MINER
-        </button>
+        <!-- FARMER ISLAND -->
+        <div id="farmerIsland">
+            <div class="farm" onclick="farmClick()"></div>
+        </div>
 
-    </div>
+        <!-- WOODCUTTER ISLAND -->
+        <div id="woodIsland" style="display:none;">
+            <div class="tree"></div>
+        </div>
 
-    <!-- FARMER ISLAND -->
-    <div id="farmerIsland">
-
-        <div class="farm" onclick="farmClick()"></div>
-
-    </div>
-
-    <!-- WOODCUTTER ISLAND -->
-    <div id="woodIsland" style="display:none;">
-
-        <div class="tree"></div>
-
-    </div>
-
-    <!-- MINER ISLAND -->
-    <div id="minerIsland" style="display:none;">
-
-        <div class="mine"></div>
+        <!-- MINER ISLAND -->
+        <div id="minerIsland" style="display:none;">
+            <div class="mine"></div>
+        </div>
 
     </div>
 
 </div>
+
 <script>
-    async function farmClick() {
-
-    await fetch(
-        "https://farm-game-backend-eo4y.onrender.com/game/tick"
-    );
-
-    const response = await fetch(
-        "https://farm-game-backend-eo4y.onrender.com/game/players"
-    );
-
-    const players = await response.json();
-
-    const player = players[0];
-
-    document.getElementById("food").innerText =
-        "FOOD: " + player.resources.FOOD;
-
-    document.getElementById("wood").innerText =
-        "WOOD: " + player.resources.WOOD;
-
-    document.getElementById("ore").innerText =
-        "ORE: " + player.resources.ORE;
-}
 
     let currentPlayer = null;
 
-     async function createFarmer() {
+    const BASE_URL = "https://farm-game-backend-eo4y.onrender.com";
 
-    await createPlayerByType("FARMER");
+    // ---------------- CLICK FARM ----------------
 
-    showFarmerIsland();
-}
+    async function farmClick() {
 
-async function createWoodcutter() {
+        await fetch(BASE_URL + "/game/tick");
 
-    await createPlayerByType("WOODCUTTER");
+        updatePlayer();
+    }
 
-    showWoodIsland();
-}
+    async function nextTick() {
 
-async function createMiner() {
+        await fetch(BASE_URL + "/game/tick");
 
-    await createPlayerByType("MINER");
+        updatePlayer();
+    }
 
-    showMinerIsland();
-}
-async function createPlayerByType(type) {
+    // ---------------- CREATE PLAYER ----------------
 
-    const response = await fetch(
-        "https://farm-game-backend-eo4y.onrender.com/game/player?name=Alex&type=" + type
-    );
+    async function createFarmer() {
+        await createPlayerByType("FARMER");
+        showFarmerIsland();
+    }
 
-    const player = await response.json();
+    async function createWoodcutter() {
+        await createPlayerByType("WOODCUTTER");
+        showWoodIsland();
+    }
 
-    currentPlayer = player;
+    async function createMiner() {
+        await createPlayerByType("MINER");
+        showMinerIsland();
+    }
 
-    document.getElementById("playerName").innerText =
-        "Имя: " + player.name;
+    async function createPlayerByType(type) {
 
-    document.getElementById("playerType").innerText =
-        "Класс: " + player.type;
-
-    document.getElementById("food").innerText =
-        "FOOD: " + player.resources.FOOD;
-
-    document.getElementById("wood").innerText =
-        "WOOD: " + player.resources.WOOD;
-
-    document.getElementById("ore").innerText =
-        "ORE: " + player.resources.ORE;
-}
-    function showFarmerIsland() {
-
-    document.getElementById("farmerIsland").style.display = "block";
-    document.getElementById("woodIsland").style.display = "none";
-    document.getElementById("minerIsland").style.display = "none";
-}
-
-function showWoodIsland() {
-
-    document.getElementById("farmerIsland").style.display = "none";
-    document.getElementById("woodIsland").style.display = "block";
-    document.getElementById("minerIsland").style.display = "none";
-}
-
-function showMinerIsland() {
-
-    document.getElementById("farmerIsland").style.display = "none";
-    document.getElementById("woodIsland").style.display = "none";
-    document.getElementById("minerIsland").style.display = "block";
-}
         const response = await fetch(
-            "https://farm-game-backend-eo4y.onrender.com/game/player?name=Alex&type=FARMER"
+            BASE_URL + "/game/player?name=Alex&type=" + type
         );
 
         const player = await response.json();
 
         currentPlayer = player;
+
+        updateUI(player);
+    }
+
+    // ---------------- UPDATE UI ----------------
+
+    async function updatePlayer() {
+
+        const response = await fetch(BASE_URL + "/game/players");
+
+        const players = await response.json();
+
+        const player = players[0];
+
+        updateUI(player);
+    }
+
+    function updateUI(player) {
 
         document.getElementById("playerName").innerText =
             "Имя: " + player.name;
@@ -295,30 +252,27 @@ function showMinerIsland() {
             "ORE: " + player.resources.ORE;
     }
 
-    async function nextTick() {
+    // ---------------- ISLAND SWITCH ----------------
 
-        await fetch(
-            "https://farm-game-backend-eo4y.onrender.com/game/tick"
-        );
+    function showFarmerIsland() {
+        document.getElementById("farmerIsland").style.display = "block";
+        document.getElementById("woodIsland").style.display = "none";
+        document.getElementById("minerIsland").style.display = "none";
+    }
 
-        const response = await fetch(
-            "https://farm-game-backend-eo4y.onrender.com/game/players"
-        );
+    function showWoodIsland() {
+        document.getElementById("farmerIsland").style.display = "none";
+        document.getElementById("woodIsland").style.display = "block";
+        document.getElementById("minerIsland").style.display = "none";
+    }
 
-        const players = await response.json();
-
-        const player = players[0];
-
-        document.getElementById("food").innerText =
-            "FOOD: " + player.resources.FOOD;
-
-        document.getElementById("wood").innerText =
-            "WOOD: " + player.resources.WOOD;
-
-        document.getElementById("ore").innerText =
-            "ORE: " + player.resources.ORE;
+    function showMinerIsland() {
+        document.getElementById("farmerIsland").style.display = "none";
+        document.getElementById("woodIsland").style.display = "none";
+        document.getElementById("minerIsland").style.display = "block";
     }
 
 </script>
+
 </body>
 </html>
