@@ -32,4 +32,17 @@ public class GameController {
         service.tick();
         return "ok";
     }
+    @RestController
+@RequestMapping("/game")
+public class GameController {
+
+    @GetMapping("/players")
+    public List<Player> getPlayers() {
+        return gameService.getPlayers();
+    }
+@PostMapping("/plant")
+public Player plant(@RequestParam String name) {
+    return gameService.plant(name);
+}
+
 }
