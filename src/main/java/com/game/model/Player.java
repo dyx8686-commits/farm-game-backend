@@ -2,6 +2,8 @@ package com.game.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
 
@@ -9,6 +11,9 @@ public class Player {
     private String type;
 
     private Map<String, Integer> resources = new HashMap<>();
+
+    private int seeds = 5;
+    private List<Field> fields = new ArrayList<>();
 
     public Player(String name, String type) {
 
@@ -20,6 +25,8 @@ public class Player {
         resources.put("ORE", 0);
     }
 
+    // ===== BASIC INFO =====
+
     public String getName() {
         return name;
     }
@@ -28,7 +35,27 @@ public class Player {
         return type;
     }
 
+    // ===== RESOURCES =====
+
     public Map<String, Integer> getResources() {
         return resources;
+    }
+
+    // ===== FARM SYSTEM =====
+
+    public int getSeeds() {
+        return seeds;
+    }
+
+    public void setSeeds(int seeds) {
+        this.seeds = seeds;
+    }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
     }
 }
