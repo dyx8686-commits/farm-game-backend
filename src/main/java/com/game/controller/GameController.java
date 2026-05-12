@@ -50,4 +50,16 @@ public Player wood(@RequestParam String name) {
 public Player mine(@RequestParam String name) {
     return service.mineOre(name);
 }
+    @PostMapping("/sell/wood")
+public Player sellWood(@RequestParam String name,
+                       @RequestParam int amount) {
+    return service.sellWood(name, amount);
 }
+
+@PostMapping("/sell/ore")
+public Player sellOre(@RequestParam String name,
+                      @RequestParam int amount) {
+    return service.sellOre(name, amount);
+}
+}
+
