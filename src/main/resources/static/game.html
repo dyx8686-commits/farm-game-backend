@@ -364,11 +364,7 @@ function renderInventory(r) {
 
 // ================= ACTIONS =================
 
-async function plant() {
-    if (selectedItem !== "SEEDS") return alert("Select SEEDS first");
-    await fetch(BASE + "/game/plant?name=" + playerName);
-    load();
-}
+
 
 async function harvest() {
     await fetch(BASE + "/game/harvest?name=" + playerName);
