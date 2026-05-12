@@ -26,6 +26,7 @@ public class Player {
         resources.put("FOOD", 0);
         resources.put("WOOD", 0);
         resources.put("ORE", 0);
+        resources.put("GOLD", 0);
     }
 
     // ===== BASIC INFO =====
