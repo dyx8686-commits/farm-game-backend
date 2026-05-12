@@ -31,23 +31,16 @@ h1 {
     border-radius: 40px;
     position: relative;
     border: 8px solid #4e8f35;
-    transition: 0.3s;
 }
 
 /* 🌴 FARMER */
-.farmerIsland {
-    background: #6dbf4b;
-}
+.farmerIsland { background: #6dbf4b; }
 
 /* 🌲 WOODCUTTER */
-.woodIsland {
-    background: #2f6b2f;
-}
+.woodIsland { background: #2f6b2f; }
 
 /* ⛏ MINER */
-.minerIsland {
-    background: #777;
-}
+.minerIsland { background: #777; }
 
 .panel {
     position: absolute;
@@ -56,7 +49,7 @@ h1 {
     background: white;
     padding: 15px;
     border-radius: 10px;
-    width: 220px;
+    width: 240px;
 }
 
 button {
@@ -74,51 +67,38 @@ button:hover {
     background: #45a049;
 }
 
-/* 🌾 FARM */
-.farm {
+/* объекты */
+.farm, .tree, .mine {
     position: absolute;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.farm {
     bottom: 80px;
     left: 120px;
     width: 120px;
     height: 120px;
     background: #c58b45;
-    border-radius: 10px;
-    cursor: pointer;
 }
 
-/* 🌲 TREE */
 .tree {
-    position: absolute;
     top: 150px;
     right: 180px;
     width: 100px;
     height: 100px;
     background: #2e8b57;
-    border-radius: 50%;
 }
 
-.tree::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 60px;
-    background: #6b3e26;
-    left: 40px;
-    top: 80px;
-}
-
-/* ⛏ MINE */
 .mine {
-    position: absolute;
     bottom: 80px;
     right: 120px;
     width: 140px;
     height: 100px;
     background: #555;
-    border-radius: 20px;
 }
 
-/* 🌱 ПОЛЯ */
+/* поля */
 .field {
     width: 40px;
     height: 40px;
@@ -138,43 +118,36 @@ button:hover {
 
 <div id="island" class="island">
 
-    <!-- ПАНЕЛЬ -->
+    <!-- PANEL -->
     <div class="panel">
 
         <div id="info">Loading...</div>
 
-        <button onclick="plant()">🌱 Plant seed</button>
-
+        <button onclick="plant()">🌱 Plant</button>
         <button onclick="harvest()">🌾 Harvest</button>
+        <button onclick="buySeeds()">🛒 Buy seeds</button>
 
-        <button onclick="buySeeds()">🛒 Buy seeds (5 FOOD)</button>
-        <button onclick="goNpcIsland()">
-    🏪 NPC Island
-</button>
+        <button onclick="sellWood()">💰 Sell wood</button>
+        <button onclick="sellOre()">💰 Sell ore</button>
+
+        <button onclick="goNpcIsland()">🏪 NPC Island</button>
 
     </div>
 
-    <!-- 🌴 FARMER -->
+    <!-- FARMER -->
     <div id="farmerObjects">
-
         <div class="farm" onclick="tick()"></div>
-
         <div id="fields"></div>
-
     </div>
 
-    <!-- 🌲 WOODCUTTER -->
+    <!-- WOOD -->
     <div id="woodObjects" style="display:none;">
-
         <div class="tree" onclick="chopWood()"></div>
-
     </div>
 
-    <!-- ⛏ MINER -->
+    <!-- MINE -->
     <div id="minerObjects" style="display:none;">
-
         <div class="mine" onclick="mineOre()"></div>
-
     </div>
 
 </div>
@@ -184,15 +157,13 @@ button:hover {
 <script>
 
 const BASE = "https://farm-game-backend-eo4y.onrender.com";
-
 let playerName = new URLSearchParams(window.location.search).get("name");
 
-// ---------------- ЗАГРУЗКА ----------------
+// ================= LOAD =================
 
 async function load() {
 
     const res = await fetch(BASE + "/game/players");
-
     const players = await res.json();
 
     const player = players.find(p => p.name === playerName);
@@ -201,104 +172,105 @@ async function load() {
 
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
-        Class: ${player.type}<br>
+        Class: ${player.type}<br><br>
+
         FOOD: ${player.resources.FOOD}<br>
         WOOD: ${player.resources.WOOD}<br>
-        ORE: ${player.resources.ORE}<br>
-        Seeds: ${player.seeds}
+        ORE: ${player.resources.ORE}<br><br>
+
+        SEEDS: ${player.seeds}<br>
+        GOLD: ${player.gold ?? 0}<br>
     `;
 
     renderFields(player);
-
     changeIsland(player.type);
 }
 
-// ---------------- ОСТРОВА ----------------
+// ================= ISLAND =================
 
 function changeIsland(type) {
 
     const island = document.getElementById("island");
 
-    island.classList.remove(
-        "farmerIsland",
-        "woodIsland",
-        "minerIsland"
-    );
+    island.classList.remove("farmerIsland","woodIsland","minerIsland");
 
-    // скрываем все
     document.getElementById("farmerObjects").style.display = "none";
     document.getElementById("woodObjects").style.display = "none";
     document.getElementById("minerObjects").style.display = "none";
 
-    // FARMER
     if (type === "FARMER") {
-
         island.classList.add("farmerIsland");
-
         document.getElementById("farmerObjects").style.display = "block";
     }
 
-    // WOODCUTTER
     if (type === "WOODCUTTER") {
-
         island.classList.add("woodIsland");
-
         document.getElementById("woodObjects").style.display = "block";
     }
 
-    // MINER
     if (type === "MINER") {
-
         island.classList.add("minerIsland");
-
         document.getElementById("minerObjects").style.display = "block";
     }
 }
 
-// ---------------- TICK ----------------
+// ================= ACTIONS =================
 
 async function tick() {
-
     await fetch(BASE + "/game/tick");
-
     load();
 }
-
-// ---------------- PLANT ----------------
 
 async function plant() {
-
     await fetch(BASE + "/game/plant?name=" + playerName);
-
     load();
 }
-
-// ---------------- HARVEST ----------------
 
 async function harvest() {
-
     await fetch(BASE + "/game/harvest?name=" + playerName);
-
     load();
 }
-
-// ---------------- SHOP ----------------
 
 async function buySeeds() {
-
-    await fetch(
-        BASE + "/game/shop/seeds?name=" + playerName + "&amount=1"
-    );
-
+    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1");
     load();
 }
 
-// ---------------- ПОЛЯ ----------------
+// ================= SELL =================
+
+async function sellWood() {
+    await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", { method: "POST" });
+    load();
+}
+
+async function sellOre() {
+    await fetch(BASE + "/game/sell/ore?name=" + playerName + "&amount=5", { method: "POST" });
+    load();
+}
+
+// ================= RESOURCES =================
+
+async function chopWood() {
+    await fetch(BASE + "/game/wood?name=" + playerName, { method: "POST" });
+    load();
+}
+
+async function mineOre() {
+    await fetch(BASE + "/game/mine?name=" + playerName, { method: "POST" });
+    load();
+}
+
+// ================= NPC =================
+
+function goNpcIsland() {
+    window.location.href = "npc.html?name=" + playerName;
+}
+
+// ================= FIELDS =================
 
 function renderFields(player) {
 
     const container = document.getElementById("fields");
-
     container.innerHTML = "";
 
     if (!player.fields) return;
@@ -308,59 +280,20 @@ function renderFields(player) {
         const div = document.createElement("div");
 
         div.className = "field";
-
         div.style.left = (300 + i * 50) + "px";
-
         div.style.bottom = "120px";
 
-        if (f.planted) {
-            div.style.background = "#8B5A2B";
-        }
-        else if (f.ready) {
-            div.style.background = "#FFD700";
-        }
-        else {
-            div.style.background = "#3CB371";
-        }
+        if (f.planted) div.style.background = "#8B5A2B";
+        else if (f.ready) div.style.background = "#FFD700";
+        else div.style.background = "#3CB371";
 
         container.appendChild(div);
     });
 }
-    // 🌲 рубка дерева
-async function chopWood() {
 
-    await fetch(
-        BASE + "/game/wood?name=" + playerName,
-        {
-            method: "POST"
-        }
-    );
-
-    load();
-}
-
-// ⛏ добыча руды
-async function mineOre() {
-
-    await fetch(
-        BASE + "/game/mine?name=" + playerName,
-        {
-            method: "POST"
-        }
-    );
-
-    load();
-}
-    function goNpcIsland() {
-
-    window.location.href =
-        "npc.html?name=" + playerName;
-}
-
-// ---------------- АВТО ОБНОВЛЕНИЕ ----------------
+// ================= START =================
 
 setInterval(load, 3000);
-
 load();
 
 </script>
