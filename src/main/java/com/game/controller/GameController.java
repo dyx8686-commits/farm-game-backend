@@ -16,33 +16,29 @@ public class GameController {
         this.service = service;
     }
 
+    // 🧑 создать игрока
     @GetMapping("/player")
     public Player create(@RequestParam String name,
                          @RequestParam String type) {
         return service.createPlayer(name, type);
     }
 
+    // 📋 все игроки
     @GetMapping("/players")
     public List<Player> all() {
         return service.getPlayers();
     }
 
+    // ⏱ ручной tick (пока оставляем)
     @GetMapping("/tick")
     public String tick() {
         service.tick();
         return "ok";
     }
-    @RestController
-@RequestMapping("/game")
-public class GameController {
 
-    @GetMapping("/players")
-    public List<Player> getPlayers() {
-        return gameService.getPlayers();
+    // 🌱 посадка
+    @PostMapping("/plant")
+    public Player plant(@RequestParam String name) {
+        return service.plant(name);
     }
-@PostMapping("/plant")
-public Player plant(@RequestParam String name) {
-    return gameService.plant(name);
-}
-
 }
