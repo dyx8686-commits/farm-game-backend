@@ -30,40 +30,12 @@ h1 {
     border-radius: 40px;
     position: relative;
     border: 8px solid #4e8f35;
-}
-
-.farmerIsland { background: #6dbf4b; }
-.woodIsland { background: #2f6b2f; }
-.minerIsland { background: #777; }
-
-.panel {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    width: 240px;
-}
-
-button {
-    width: 100%;
-    margin-top: 5px;
-    padding: 8px;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background: #4CAF50;
-    color: white;
-}
-
-button:hover {
-    background: #45a049;
+    background: #6dbf4b;
 }
 
 /* ===== OBJECTS ===== */
 
-.farm, .treeObj, .stoneObj, .shop {
+.farm, .shop {
     position: absolute;
     border-radius: 10px;
     cursor: pointer;
@@ -130,24 +102,30 @@ button:hover {
     background: #c8f7c5 !important;
 }
 
-/* ===== GENERATED OBJECTS ===== */
+/* ===== WORLD OBJECTS ===== */
+
+.plantObj {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: #3CB371;
+    border-radius: 6px;
+}
 
 .treeObj {
-    width: 40px;
-    height: 40px;
+    position: absolute;
+    width: 35px;
+    height: 35px;
     background: #2e8b57;
+    border-radius: 6px;
 }
 
 .stoneObj {
-    width: 40px;
-    height: 40px;
+    position: absolute;
+    width: 35px;
+    height: 35px;
     background: #666;
-}
-
-.plantObj {
-    width: 40px;
-    height: 40px;
-    background: #3CB371;
+    border-radius: 6px;
 }
 
 </style>
@@ -167,22 +145,26 @@ button:hover {
 
         <button onclick="plant()">🌱 Plant</button>
         <button onclick="harvest()">🌾 Harvest</button>
-        <button onclick="openShop()">🏪 Shop</button>
 
     </div>
 
     <div class="inventory" id="inventory"></div>
 
     <div id="farmerObjects">
+
         <div class="farm"></div>
-        <div class="shop" onclick="openShop()"></div>
+        <div class="shop"></div>
 
         <div id="fields"></div>
+
+        <!-- PLAYER -->
         <div id="player"></div>
 
+        <!-- WORLD -->
         <div id="farmerPlants"></div>
         <div id="woodTrees"></div>
         <div id="minerStones"></div>
+
     </div>
 
 </div>
@@ -210,7 +192,7 @@ async function load() {
 
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
-        Class: ${player.type}<br><br>
+        CLASS: FARMER<br><br>
 
         FOOD: ${r.FOOD ?? 0}<br>
         WOOD: ${r.WOOD ?? 0}<br>
@@ -222,76 +204,60 @@ async function load() {
     renderInventory(r);
     renderFields(player);
     renderWorld();
-    updatePlayerPosition();
+    updatePlayer();
 }
 
-// ================= WORLD =================
+// ================= WORLD (6 объектов на остров) =================
 
 function renderWorld() {
-
     renderPlants();
     renderTrees();
     renderStones();
 }
 
-// 🌱 FARMER (6 грядок)
-
+// 🌱 грядки (6)
 function renderPlants() {
-
     const c = document.getElementById("farmerPlants");
-    if (!c) return;
-
     c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
-
         const d = document.createElement("div");
         d.className = "plantObj";
 
-        d.style.left = (200 + (i % 3) * 60) + "px";
-        d.style.top = (220 + Math.floor(i / 3) * 60) + "px";
+        d.style.left = (250 + (i % 3) * 60) + "px";
+        d.style.top = (200 + Math.floor(i / 3) * 60) + "px";
 
         c.appendChild(d);
     }
 }
 
-// 🌲 WOODCUTTER (6 деревьев)
-
+// 🌲 деревья (6)
 function renderTrees() {
-
     const c = document.getElementById("woodTrees");
-    if (!c) return;
-
     c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
-
         const d = document.createElement("div");
         d.className = "treeObj";
 
-        d.style.left = (140 + (i % 3) * 80) + "px";
-        d.style.top = (120 + Math.floor(i / 3) * 90) + "px";
+        d.style.left = (120 + (i % 3) * 80) + "px";
+        d.style.top = (120 + Math.floor(i / 3) * 80) + "px";
 
         c.appendChild(d);
     }
 }
 
-// ⛏ MINER (6 камней)
-
+// ⛏ камни (6)
 function renderStones() {
-
     const c = document.getElementById("minerStones");
-    if (!c) return;
-
     c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
-
         const d = document.createElement("div");
         d.className = "stoneObj";
 
-        d.style.left = (140 + (i % 3) * 80) + "px";
-        d.style.top = (200 + Math.floor(i / 3) * 80) + "px";
+        d.style.left = (120 + (i % 3) * 80) + "px";
+        d.style.top = (250 + Math.floor(i / 3) * 70) + "px";
 
         c.appendChild(d);
     }
@@ -299,10 +265,10 @@ function renderStones() {
 
 // ================= PLAYER =================
 
-function updatePlayerPosition() {
+function updatePlayer() {
     const p = document.getElementById("player");
-    if (!p) return;
 
+    // пока статично
     p.style.left = "420px";
     p.style.top = "260px";
 }
