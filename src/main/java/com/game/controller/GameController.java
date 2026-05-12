@@ -29,7 +29,7 @@ public class GameController {
         return service.getPlayers();
     }
 
-    // ⏱ ручной tick (пока оставляем)
+    // ⏱ tick
     @GetMapping("/tick")
     public String tick() {
         service.tick();
@@ -41,25 +41,37 @@ public class GameController {
     public Player plant(@RequestParam String name) {
         return service.plant(name);
     }
+
+    // 🌲 рубка дерева
     @PostMapping("/wood")
-public Player wood(@RequestParam String name) {
-    return service.chopWood(name);
-}
+    public Player wood(@RequestParam String name) {
+        return service.chopWood(name);
+    }
 
-@PostMapping("/mine")
-public Player mine(@RequestParam String name) {
-    return service.mineOre(name);
-}
+    // ⛏ добыча
+    @PostMapping("/mine")
+    public Player mine(@RequestParam String name) {
+        return service.mineOre(name);
+    }
+
+    // 💰 продажа дерева
     @PostMapping("/sell/wood")
-public Player sellWood(@RequestParam String name,
-                       @RequestParam int amount) {
-    return service.sellWood(name, amount);
-}
+    public Player sellWood(@RequestParam String name,
+                           @RequestParam int amount) {
+        return service.sellWood(name, amount);
+    }
 
-@PostMapping("/sell/ore")
-public Player sellOre(@RequestParam String name,
-                      @RequestParam int amount) {
-    return service.sellOre(name, amount);
-}
-}
+    // 💰 продажа руды
+    @PostMapping("/sell/ore")
+    public Player sellOre(@RequestParam String name,
+                          @RequestParam int amount) {
+        return service.sellOre(name, amount);
+    }
 
+    // 💰 продажа еды
+    @PostMapping("/sell/food")
+    public Player sellFood(@RequestParam String name,
+                           @RequestParam int amount) {
+        return service.sellFood(name, amount);
+    }
+}
