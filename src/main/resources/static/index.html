@@ -110,6 +110,12 @@
             <p id="food">FOOD: 0</p>
             <p id="wood">WOOD: 0</p>
             <p id="ore">ORE: 0</p>
+            <h3>🛒 Магазин семян</h3>
+
+<button onclick="buySeeds(1)">Купить 1 seed (5 FOOD)</button>
+<button onclick="buySeeds(5)">Купить 5 seeds</button>
+
+<p id="seeds">SEEDS: 0</p>
 
             <button onclick="createFarmer()">FARMER</button>
             <button onclick="createWoodcutter()">WOODCUTTER</button>
@@ -215,6 +221,9 @@ function updateUI(player) {
         "ORE: " + player.resources.ORE;
 
     renderFields(player);
+    
+    document.getElementById("seeds").innerText =
+    "SEEDS: " + player.seeds;
 }
 
 // ---------------- FIELDS ----------------
@@ -283,7 +292,17 @@ function showMinerIsland() {
     document.getElementById("woodIsland").style.display = "none";
     document.getElementById("minerIsland").style.display = "block";
 }
+async function buySeeds(amount) {
 
+    await fetch(
+        BASE_URL + "/game/shop/seeds?name=Alex&amount=" + amount,
+        {
+            method: "POST"
+        }
+    );
+
+    updatePlayer();
+}
 </script>
 
 </body>
