@@ -32,7 +32,6 @@ public class GameService {
 
         for (Player player : players) {
 
-            // 🌱 рост растений
             if (player.getFields() != null) {
 
                 for (Field field : player.getFields()) {
@@ -49,30 +48,23 @@ public class GameService {
                 }
             }
 
-            // 💰 пассивный доход
-            switch (player.getType()) {
+            player.getResources().put(
+                    "FOOD",
+                    player.getResources().getOrDefault("FOOD", 0)
+                            + (player.getType().equals("FARMER") ? 10 : 0)
+            );
 
-                case "FARMER":
-                    player.getResources().put(
-                            "FOOD",
-                            player.getResources().get("FOOD") + 10
-                    );
-                    break;
+            player.getResources().put(
+                    "WOOD",
+                    player.getResources().getOrDefault("WOOD", 0)
+                            + (player.getType().equals("WOODCUTTER") ? 8 : 0)
+            );
 
-                case "WOODCUTTER":
-                    player.getResources().put(
-                            "WOOD",
-                            player.getResources().get("WOOD") + 8
-                    );
-                    break;
-
-                case "MINER":
-                    player.getResources().put(
-                            "ORE",
-                            player.getResources().get("ORE") + 5
-                    );
-                    break;
-            }
+            player.getResources().put(
+                    "ORE",
+                    player.getResources().getOrDefault("ORE", 0)
+                            + (player.getType().equals("MINER") ? 5 : 0)
+            );
         }
     }
 
@@ -96,7 +88,7 @@ public class GameService {
         return player;
     }
 
-    // 🌾 сбор урожая
+    // 🌾 сбор
     public Player harvest(String name) {
 
         Player player = getPlayer(name);
@@ -110,7 +102,7 @@ public class GameService {
 
                 player.getResources().put(
                         "FOOD",
-                        player.getResources().get("FOOD") + 5
+                        player.getResources().getOrDefault("FOOD", 0) + 5
                 );
 
                 field.setReady(false);
@@ -120,7 +112,7 @@ public class GameService {
         return player;
     }
 
-    // 🔍 найти игрока
+    // 🔍 игрок
     public Player getPlayer(String name) {
 
         for (Player player : players) {
@@ -132,14 +124,14 @@ public class GameService {
         return null;
     }
 
-    // 🛒 купить семена
+    // 🛒 семена
     public Player buySeeds(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
         int cost = amount * 5;
-        int food = player.getResources().get("FOOD");
+        int food = player.getResources().getOrDefault("FOOD", 0);
 
         if (food < cost) return player;
 
@@ -149,13 +141,41 @@ public class GameService {
         return player;
     }
 
-    // 🌲 дерево → GOLD
+    // 🌲 рубка дерева
+    public Player chopWood(String name) {
+
+        Player player = getPlayer(name);
+        if (player == null) return null;
+
+        player.getResources().put(
+                "WOOD",
+                player.getResources().getOrDefault("WOOD", 0) + 5
+        );
+
+        return player;
+    }
+
+    // ⛏ добыча руды
+    public Player mineOre(String name) {
+
+        Player player = getPlayer(name);
+        if (player == null) return null;
+
+        player.getResources().put(
+                "ORE",
+                player.getResources().getOrDefault("ORE", 0) + 3
+        );
+
+        return player;
+    }
+
+    // 💰 дерево → GOLD
     public Player sellWood(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        int wood = player.getResources().get("WOOD");
+        int wood = player.getResources().getOrDefault("WOOD", 0);
         if (wood < amount) return player;
 
         player.getResources().put("WOOD", wood - amount);
@@ -168,13 +188,13 @@ public class GameService {
         return player;
     }
 
-    // ⛏ руда → GOLD
+    // 💰 руда → GOLD
     public Player sellOre(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        int ore = player.getResources().get("ORE");
+        int ore = player.getResources().getOrDefault("ORE", 0);
         if (ore < amount) return player;
 
         player.getResources().put("ORE", ore - amount);
@@ -187,13 +207,13 @@ public class GameService {
         return player;
     }
 
-    // 🍞 еда → GOLD
+    // 💰 еда → GOLD
     public Player sellFood(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        int food = player.getResources().get("FOOD");
+        int food = player.getResources().getOrDefault("FOOD", 0);
         if (food < amount) return player;
 
         player.getResources().put("FOOD", food - amount);
