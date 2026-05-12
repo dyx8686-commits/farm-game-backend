@@ -12,6 +12,8 @@ public class Player {
 
     private Map<String, Integer> resources = new HashMap<>();
 
+    private int gold = 0;
+
     private int seeds = 5;
     private List<Field> fields = new ArrayList<>();
 
@@ -19,6 +21,7 @@ public class Player {
 
         this.name = name;
         this.type = type;
+        this.gold = 0;
 
         resources.put("FOOD", 0);
         resources.put("WOOD", 0);
@@ -58,4 +61,11 @@ public class Player {
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
+    public int getGold() {
+    return gold;
+}
+
+public void setGold(int gold) {
+    this.gold = gold;
+}
 }
