@@ -128,7 +128,7 @@ h1 {
         
         <div class="shop"></div>
 
-        <div id="fields"></div>
+        
         <div id="player"></div>
 
         <div id="farmerPlants"></div>
@@ -172,7 +172,6 @@ async function load() {
     `;
 
     renderInventory(r);
-    renderFields(player);
     renderWorld(player);
     updatePlayer();
 }
@@ -219,17 +218,22 @@ function renderPlants() {
         d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
 
         d.style.background = "#8B5A2B";
+        d.style.border = "2px solid #5c3b15";
 
-        d.onclick = () => {
+        d.onclick = async () => {
 
-            if (selectedItem !== "SEEDS") return;
+            if (selectedItem !== "SEEDS") {
+                alert("Select SEEDS in inventory");
+                return;
+            }
 
-            plant();
+            await fetch(BASE + "/game/plant?name=" + playerName);
+
+            load();
         };
 
         c.appendChild(d);
     }
-
 }
 
 // 🌲 WOODCUTTER
