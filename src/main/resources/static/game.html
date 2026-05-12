@@ -117,8 +117,7 @@ h1 {
     <div class="panel">
         <div id="info">Loading...</div>
 
-        <button onclick="plant()">🌱 Plant</button>
-        <button onclick="harvest()">🌾 Harvest</button>
+       
     </div>
 
     <div class="inventory" id="inventory"></div>
@@ -185,15 +184,15 @@ function renderWorld(player) {
     document.getElementById("minerStones").innerHTML = "";
 
     if (player.type === "FARMER") {
-        renderPlants();
+        renderPlants(player);
     }
 
     if (player.type === "WOODCUTTER") {
-        renderTrees();
+        renderTrees((player);
     }
 
     if (player.type === "MINER") {
-        renderStones();
+        renderStones((player);
     }
 }
 function clearWorld() {
@@ -203,12 +202,14 @@ function clearWorld() {
 }
 
 // 🌱 FARMER
-function renderPlants() {
+function renderPlants(player) {
 
     const c = document.getElementById("farmerPlants");
     c.innerHTML = "";
 
-    for (let i = 0; i < 6; i++) {
+    if (!player.fields) return;
+
+    player.fields.forEach((f, i) => {
 
         const d = document.createElement("div");
 
@@ -217,23 +218,49 @@ function renderPlants() {
         d.style.left = (240 + (i % 3) * 70) + "px";
         d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
 
-        d.style.background = "#8B5A2B";
+        // СОСТОЯНИЕ ГРЯДКИ
+
+        if (f.ready) {
+            d.style.background = "#FFD700";
+        }
+        else if (f.planted) {
+            d.style.background = "#8B5A2B";
+        }
+        else {
+            d.style.background = "#3CB371";
+        }
+
         d.style.border = "2px solid #5c3b15";
+
+        // КЛИК ПО ГРЯДКЕ
 
         d.onclick = async () => {
 
-            if (selectedItem !== "SEEDS") {
-                alert("Select SEEDS in inventory");
+            // СОБРАТЬ
+            if (f.ready) {
+
+                await fetch(BASE + "/game/harvest?name=" + playerName);
+
+                load();
                 return;
             }
 
-            await fetch(BASE + "/game/plant?name=" + playerName);
+            // ПОСАДИТЬ
+            if (!f.planted) {
 
-            load();
+                if (selectedItem !== "SEEDS") {
+                    alert("Select SEEDS in inventory");
+                    return;
+                }
+
+                await fetch(BASE + "/game/plant?name=" + playerName);
+
+                load();
+            }
         };
 
         c.appendChild(d);
-    }
+    });
 }
 
 // 🌲 WOODCUTTER
