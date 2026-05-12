@@ -180,5 +180,39 @@ public Player mineOre(String name) {
 
         return player;
     }
-    
+    // 💰 продажа дерева
+public Player sellWood(String name, int amount) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    int wood = player.getResources().get("WOOD");
+
+    if (wood < amount) return player;
+
+    player.getResources().put("WOOD", wood - amount);
+
+    player.setGold(player.getGold() + amount * 2);
+
+    return player;
+}
+
+// 💰 продажа руды
+public Player sellOre(String name, int amount) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    int ore = player.getResources().get("ORE");
+
+    if (ore < amount) return player;
+
+    player.getResources().put("ORE", ore - amount);
+
+    player.setGold(player.getGold() + amount * 5);
+
+    return player;
+}
 }
