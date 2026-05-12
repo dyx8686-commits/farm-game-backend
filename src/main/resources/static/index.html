@@ -1,147 +1,61 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farm Game</title>
+<meta charset="UTF-8">
+<title>Farm Game - Login</title>
 
-    <style>
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background: linear-gradient(#87CEEB, #4CAF50);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: linear-gradient(#87CEEB, #4CAF50);
-            overflow-x: hidden;
-        }
+.box {
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    width:300px;
+    text-align:center;
+}
 
-        h1 {
-            text-align: center;
-            color: white;
-            padding-top: 20px;
-        }
+input, select {
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+}
 
-        .game {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
-        }
+button {
+    width:100%;
+    padding:10px;
+    background:#4CAF50;
+    border:none;
+    color:white;
+    cursor:pointer;
+}
+</style>
 
-        .island {
-            width: 900px;
-            height: 500px;
-            background: #6dbf4b;
-            border-radius: 40px;
-            position: relative;
-            border: 8px solid #4e8f35;
-            box-shadow: 0 0 30px rgba(0,0,0,0.3);
-        }
-
-        .panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-
-            background: white;
-            width: 220px;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .farm {
-            position: absolute;
-            bottom: 80px;
-            left: 120px;
-
-            width: 140px;
-            height: 140px;
-
-            background: #c58b45;
-            border: 5px solid #8b5a2b;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .farm:hover {
-            transform: scale(1.05);
-        }
-
-        #farmerIsland {
-            position: relative;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 10px;
-            background: #4CAF50;
-            color: white;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-    </style>
 </head>
 
 <body>
 
-<h1>🌴 Farm Game</h1>
+<div class="box">
 
-<div class="game">
+<h2>🌴 Farm Game</h2>
 
-    <div class="island">
+<input id="name" placeholder="Введите имя">
 
-        <div class="panel">
+<select id="type">
+    <option value="FARMER">FARMER</option>
+    <option value="WOODCUTTER">WOODCUTTER</option>
+    <option value="MINER">MINER</option>
+</select>
 
-            <h2>Игрок</h2>
-
-            <p id="playerName">Имя: нет</p>
-            <p id="playerType">Класс: нет</p>
-
-            <h3>Ресурсы</h3>
-
-            <p id="food">FOOD: 0</p>
-            <p id="wood">WOOD: 0</p>
-            <p id="ore">ORE: 0</p>
-            <h3>🛒 Магазин семян</h3>
-
-<button onclick="buySeeds(1)">Купить 1 seed (5 FOOD)</button>
-<button onclick="buySeeds(5)">Купить 5 seeds</button>
-
-<p id="seeds">SEEDS: 0</p>
-
-            <button onclick="createFarmer()">FARMER</button>
-            <button onclick="createWoodcutter()">WOODCUTTER</button>
-            <button onclick="createMiner()">MINER</button>
-
-            <button onclick="harvest()">🌾 HARVEST</button>
-
-        </div>
-
-        <!-- FARMER ISLAND -->
-        <div id="farmerIsland">
-
-            <div class="farm" onclick="farmClick()"></div>
-
-            <!-- 🌱 ПОЛЯ -->
-            <div id="fieldsContainer"></div>
-
-        </div>
-
-        <!-- WOODCUTTER ISLAND -->
-        <div id="woodIsland" style="display:none;"></div>
-
-        <!-- MINER ISLAND -->
-        <div id="minerIsland" style="display:none;"></div>
-
-    </div>
+<button onclick="register()">Играть</button>
 
 </div>
 
@@ -149,160 +63,21 @@
 
 const BASE_URL = "https://farm-game-backend-eo4y.onrender.com";
 
-let currentPlayer = null;
+async function register() {
 
-// ---------------- CLICK ----------------
-
-async function farmClick() {
-    await fetch(BASE_URL + "/game/tick");
-    updatePlayer();
-}
-
-// ---------------- CREATE ----------------
-
-async function createFarmer() {
-    await createPlayerByType("FARMER");
-    showFarmerIsland();
-}
-
-async function createWoodcutter() {
-    await createPlayerByType("WOODCUTTER");
-    showWoodIsland();
-}
-
-async function createMiner() {
-    await createPlayerByType("MINER");
-    showMinerIsland();
-}
-
-async function createPlayerByType(type) {
+    const name = document.getElementById("name").value;
+    const type = document.getElementById("type").value;
 
     const response = await fetch(
-        BASE_URL + "/game/player?name=Alex&type=" + type
+        BASE_URL + "/game/player?name=" + name + "&type=" + type
     );
 
     const player = await response.json();
 
-    currentPlayer = player;
-
-    updateUI(player);
-
-    updatePlayer();
+    // 👉 ПЕРЕХОД НА ОСТРОВ
+    window.location.href = "game.html?name=" + player.name;
 }
 
-// ---------------- UPDATE ----------------
-
-async function updatePlayer() {
-
-    const response = await fetch(BASE_URL + "/game/players");
-
-    const players = await response.json();
-
-    const player = players[0];
-
-    updateUI(player);
-}
-
-function updateUI(player) {
-
-    document.getElementById("playerName").innerText =
-        "Имя: " + player.name;
-
-    document.getElementById("playerType").innerText =
-        "Класс: " + player.type;
-
-    document.getElementById("food").innerText =
-        "FOOD: " + player.resources.FOOD;
-
-    document.getElementById("wood").innerText =
-        "WOOD: " + player.resources.WOOD;
-
-    document.getElementById("ore").innerText =
-        "ORE: " + player.resources.ORE;
-
-    renderFields(player);
-    
-    document.getElementById("seeds").innerText =
-    "SEEDS: " + player.seeds;
-}
-
-// ---------------- FIELDS ----------------
-
-function renderFields(player) {
-
-    const container = document.getElementById("fieldsContainer");
-
-    container.innerHTML = "";
-
-    if (!player.fields || player.fields.length === 0) return;
-
-    player.fields.forEach((field, index) => {
-
-        const div = document.createElement("div");
-
-        div.style.width = "40px";
-        div.style.height = "40px";
-        div.style.position = "absolute";
-        div.style.bottom = "20px";
-        div.style.left = (200 + index * 50) + "px";
-        div.style.borderRadius = "8px";
-
-        // 🌾 логика состояния
-        if (field.ready) {
-            div.style.background = "#FFD700"; // готово
-        }
-        else if (field.planted) {
-            div.style.background = "#8B5A2B"; // растёт
-        }
-        else {
-            div.style.background = "#3CB371"; // пусто
-        }
-
-        container.appendChild(div);
-    });
-}
-
-// ---------------- HARVEST ----------------
-
-async function harvest() {
-
-    await fetch(BASE_URL + "/game/harvest?name=Alex", {
-        method: "POST"
-    });
-
-    updatePlayer();
-}
-
-// ---------------- ISLANDS ----------------
-
-function showFarmerIsland() {
-    document.getElementById("farmerIsland").style.display = "block";
-    document.getElementById("woodIsland").style.display = "none";
-    document.getElementById("minerIsland").style.display = "none";
-}
-
-function showWoodIsland() {
-    document.getElementById("farmerIsland").style.display = "none";
-    document.getElementById("woodIsland").style.display = "block";
-    document.getElementById("minerIsland").style.display = "none";
-}
-
-function showMinerIsland() {
-    document.getElementById("farmerIsland").style.display = "none";
-    document.getElementById("woodIsland").style.display = "none";
-    document.getElementById("minerIsland").style.display = "block";
-}
-async function buySeeds(amount) {
-
-    await fetch(
-        BASE_URL + "/game/shop/seeds?name=Alex&amount=" + amount,
-        {
-            method: "POST"
-        }
-    );
-
-    updatePlayer();
-}
 </script>
 
 </body>
