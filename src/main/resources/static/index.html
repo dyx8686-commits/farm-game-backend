@@ -68,14 +68,26 @@ async function register() {
     const name = document.getElementById("name").value;
     const type = document.getElementById("type").value;
 
-    const response = await fetch(
-        BASE_URL + "/game/player?name=" + name + "&type=" + type
-    );
+    // 🧪 ДИАГНОСТИКА (ОЧЕНЬ ВАЖНО)
+    console.log("SELECTED TYPE =", type);
+
+    if (!name) {
+        alert("Введите имя!");
+        return;
+    }
+
+    const url = `${BASE_URL}/game/player?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`;
+
+    console.log("REQUEST URL =", url);
+
+    const response = await fetch(url);
 
     const player = await response.json();
 
-    // 👉 ПЕРЕХОД НА ОСТРОВ
-    window.location.href = "game.html?name=" + player.name;
+    console.log("SERVER RESPONSE =", player);
+
+    // 👉 ПЕРЕХОД НА ИГРУ
+    window.location.href = "game.html?name=" + encodeURIComponent(player.name);
 }
 
 </script>
