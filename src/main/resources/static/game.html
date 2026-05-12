@@ -33,8 +33,7 @@ h1 {
     background: #6dbf4b;
 }
 
-/* ===== OBJECTS ===== */
-
+/* OBJECTS */
 .farm, .shop {
     position: absolute;
     border-radius: 10px;
@@ -58,8 +57,7 @@ h1 {
     border-radius: 12px;
 }
 
-/* ===== PLAYER ===== */
-
+/* PLAYER */
 #player {
     position: absolute;
     width: 30px;
@@ -71,8 +69,7 @@ h1 {
     box-shadow: 0 0 10px rgba(255,0,0,0.6);
 }
 
-/* ===== FIELD ===== */
-
+/* FIELD */
 .field {
     width: 40px;
     height: 40px;
@@ -80,8 +77,7 @@ h1 {
     border-radius: 6px;
 }
 
-/* ===== INVENTORY ===== */
-
+/* INVENTORY */
 .inventory {
     position: absolute;
     right: 20px;
@@ -102,31 +98,17 @@ h1 {
     background: #c8f7c5 !important;
 }
 
-/* ===== WORLD OBJECTS ===== */
-
-.plantObj {
+/* WORLD */
+.plantObj, .treeObj, .stoneObj {
     position: absolute;
     width: 35px;
     height: 35px;
-    background: #3CB371;
     border-radius: 6px;
 }
 
-.treeObj {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background: #2e8b57;
-    border-radius: 6px;
-}
-
-.stoneObj {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background: #666;
-    border-radius: 6px;
-}
+.plantObj { background: #3CB371; }
+.treeObj { background: #2e8b57; }
+.stoneObj { background: #666; }
 
 </style>
 </head>
@@ -140,12 +122,10 @@ h1 {
 <div id="island" class="island">
 
     <div class="panel">
-
         <div id="info">Loading...</div>
 
         <button onclick="plant()">🌱 Plant</button>
         <button onclick="harvest()">🌾 Harvest</button>
-
     </div>
 
     <div class="inventory" id="inventory"></div>
@@ -157,10 +137,8 @@ h1 {
 
         <div id="fields"></div>
 
-        <!-- PLAYER -->
         <div id="player"></div>
 
-        <!-- WORLD -->
         <div id="farmerPlants"></div>
         <div id="woodTrees"></div>
         <div id="minerStones"></div>
@@ -192,7 +170,7 @@ async function load() {
 
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
-        CLASS: FARMER<br><br>
+        CLASS: ${player.type}<br><br>
 
         FOOD: ${r.FOOD ?? 0}<br>
         WOOD: ${r.WOOD ?? 0}<br>
@@ -203,22 +181,30 @@ async function load() {
 
     renderInventory(r);
     renderFields(player);
-    renderWorld();
+    renderWorld(player);
     updatePlayer();
 }
 
-// ================= WORLD (6 объектов на остров) =================
+// ================= WORLD CONTROL =================
 
-function renderWorld() {
-    renderPlants();
-    renderTrees();
-    renderStones();
+function renderWorld(player) {
+
+    const plants = document.getElementById("farmerPlants");
+    const trees = document.getElementById("woodTrees");
+    const stones = document.getElementById("minerStones");
+
+    plants.innerHTML = "";
+    trees.innerHTML = "";
+    stones.innerHTML = "";
+
+    if (player.type === "FARMER") renderPlants();
+    if (player.type === "WOODCUTTER") renderTrees();
+    if (player.type === "MINER") renderStones();
 }
 
-// 🌱 грядки (6)
+// 🌱 FARMER
 function renderPlants() {
     const c = document.getElementById("farmerPlants");
-    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
         const d = document.createElement("div");
@@ -231,10 +217,9 @@ function renderPlants() {
     }
 }
 
-// 🌲 деревья (6)
+// 🌲 WOODCUTTER
 function renderTrees() {
     const c = document.getElementById("woodTrees");
-    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
         const d = document.createElement("div");
@@ -247,10 +232,9 @@ function renderTrees() {
     }
 }
 
-// ⛏ камни (6)
+// ⛏ MINER
 function renderStones() {
     const c = document.getElementById("minerStones");
-    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
         const d = document.createElement("div");
@@ -267,8 +251,6 @@ function renderStones() {
 
 function updatePlayer() {
     const p = document.getElementById("player");
-
-    // пока статично
     p.style.left = "420px";
     p.style.top = "260px";
 }
