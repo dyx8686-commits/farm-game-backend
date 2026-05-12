@@ -147,4 +147,75 @@ public class GameService {
 
         return player;
     }
+    // 🌲 рубка дерева
+public Player chopWood(String name) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    player.getResources().put(
+            "WOOD",
+            player.getResources().get("WOOD") + 5
+    );
+
+    return player;
+}
+
+// ⛏ добыча руды
+public Player mineOre(String name) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    player.getResources().put(
+            "ORE",
+            player.getResources().get("ORE") + 3
+    );
+
+    return player;
+}
+
+// 💰 продажа дерева
+public Player sellWood(String name, int amount) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    int wood = player.getResources().get("WOOD");
+
+    if (wood < amount) return player;
+
+    player.getResources().put("WOOD", wood - amount);
+
+    player.getResources().put(
+            "FOOD",
+            player.getResources().get("FOOD") + amount * 2
+    );
+
+    return player;
+}
+
+// 💰 продажа руды
+public Player sellOre(String name, int amount) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    int ore = player.getResources().get("ORE");
+
+    if (ore < amount) return player;
+
+    player.getResources().put("ORE", ore - amount);
+
+    player.getResources().put(
+            "FOOD",
+            player.getResources().get("FOOD") + amount * 3
+    );
+
+    return player;
+}
 }
