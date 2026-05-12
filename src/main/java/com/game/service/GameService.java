@@ -16,7 +16,6 @@ public class GameService {
     public Player createPlayer(String name, String type) {
 
         Player player = new Player(name, type);
-
         players.add(player);
 
         return player;
@@ -24,15 +23,32 @@ public class GameService {
 
     // 📋 получить всех игроков
     public List<Player> getPlayers() {
-
         return players;
     }
 
-    // ⏱ старый tick (оставляем как есть)
+    // ⏱ tick (ресурсы + рост растений)
     public void tick() {
 
         for (Player player : players) {
 
+            // 🌱 рост растений
+            if (player.getFields() != null) {
+
+                for (Field field : player.getFields()) {
+
+                    if (field.isPlanted()) {
+
+                        long now = System.currentTimeMillis();
+
+                        if (now - field.getPlantTime() >= field.getGrowTime()) {
+                            field.setPlanted(false);
+                            field.setReady(true);
+                        }
+                    }
+                }
+            }
+
+            // 💰 ресурсы
             switch (player.getType()) {
 
                 case "FARMER":
@@ -59,33 +75,51 @@ public class GameService {
         }
     }
 
-    // 🌱 НОВАЯ МЕХАНИКА: ПОСАДКА
+    // 🌱 посадка
     public Player plant(String name) {
 
         Player player = getPlayer(name);
 
-        // ❌ нет семян
-        if (player.getSeeds() <= 0) {
+        if (player == null || player.getSeeds() <= 0) {
             return player;
         }
 
-        // 🌱 создаём поле
         Field field = new Field();
         field.setPlanted(true);
         field.setReady(false);
         field.setPlantTime(System.currentTimeMillis());
-        field.setGrowTime(10000); // 10 сек рост
+        field.setGrowTime(10000);
 
-        // ➕ добавляем поле
         player.getFields().add(field);
-
-        // ❌ тратим семя
         player.setSeeds(player.getSeeds() - 1);
 
         return player;
     }
 
-    // 🔍 найти игрока по имени
+    // 🌾 сбор урожая
+    public Player harvest(String name) {
+
+        Player player = getPlayer(name);
+
+        if (player == null || player.getFields() == null) return player;
+
+        for (Field field : player.getFields()) {
+
+            if (field.isReady()) {
+
+                player.getResources().put(
+                        "FOOD",
+                        player.getResources().get("FOOD") + 5
+                );
+
+                field.setReady(false);
+            }
+        }
+
+        return player;
+    }
+
+    // 🔍 найти игрока
     public Player getPlayer(String name) {
 
         for (Player player : players) {
