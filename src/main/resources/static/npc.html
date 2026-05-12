@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>NPC Island</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(#87CEEB, #d9c28f);
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    padding-top: 10px;
+}
+
+.island {
+    width: 1000px;
+    height: 600px;
+    background: #d9c28f;
+    margin: 20px auto;
+    border-radius: 40px;
+    position: relative;
+    border: 8px solid #9e8757;
+}
+
+/* NPC */
+.npc {
+    position: absolute;
+    width: 90px;
+    height: 130px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.npc:hover {
+    transform: scale(1.05);
+}
+
+/* 🛒 Trader */
+.trader {
+    left: 250px;
+    top: 220px;
+    background: #8B4513;
+}
+
+/* 📜 Quest */
+.quest {
+    right: 250px;
+    top: 220px;
+    background: #483D8B;
+}
+
+.panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 240px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🏪 NPC Island</h1>
+
+<div class="island">
+
+    <!-- ПАНЕЛЬ -->
+    <div class="panel">
+
+        <div id="playerInfo">
+            Loading...
+        </div>
+
+        <button onclick="backToIsland()">
+            ⬅ Back to island
+        </button>
+
+    </div>
+
+    <!-- 🛒 TRADER -->
+    <div class="npc trader"
+         onclick="openTrader()">
+    </div>
+
+    <!-- 📜 QUEST NPC -->
+    <div class="npc quest"
+         onclick="openQuestNpc()">
+    </div>
+
+</div>
+
+<script>
+
+const BASE =
+    "https://farm-game-backend-eo4y.onrender.com";
+
+const playerName =
+    new URLSearchParams(window.location.search)
+        .get("name");
+
+// ---------------- LOAD PLAYER ----------------
+
+async function loadPlayer() {
+
+    const res =
+        await fetch(BASE + "/game/players");
+
+    const players = await res.json();
+
+    const player =
+        players.find(p => p.name === playerName);
+
+    if (!player) return;
+
+    document.getElementById("playerInfo").innerHTML = `
+        <b>${player.name}</b><br><br>
+
+        Class: ${player.type}<br>
+
+        FOOD: ${player.resources.FOOD}<br>
+        WOOD: ${player.resources.WOOD}<br>
+        ORE: ${player.resources.ORE}<br>
+    `;
+}
+
+// ---------------- BACK ----------------
+
+function backToIsland() {
+
+    window.location.href =
+        "game.html?name=" + playerName;
+}
+
+// ---------------- TRADER ----------------
+
+function openTrader() {
+
+    alert("🛒 Market coming soon");
+}
+
+// ---------------- QUEST NPC ----------------
+
+function openQuestNpc() {
+
+    alert("📜 Quest system coming soon");
+}
+
+loadPlayer();
+
+</script>
+
+</body>
+</html>
