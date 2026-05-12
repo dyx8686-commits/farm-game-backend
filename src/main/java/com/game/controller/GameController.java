@@ -29,46 +29,47 @@ public class GameController {
         return service.getPlayers();
     }
 
-    // ⏱ tick
+    // ⏱ тик игры
     @GetMapping("/tick")
     public String tick() {
         service.tick();
         return "ok";
     }
 
-    // 🌱 посадка
+    // 🌱 посадка семян
     @PostMapping("/plant")
     public Player plant(@RequestParam String name) {
         return service.plant(name);
     }
 
-    // 🌲 рубка дерева
-    @PostMapping("/wood")
-    public Player wood(@RequestParam String name) {
-        return service.chopWood(name);
+    // 🌾 сбор урожая
+    @PostMapping("/harvest")
+    public Player harvest(@RequestParam String name) {
+        return service.harvest(name);
     }
 
-    // ⛏ добыча
-    @PostMapping("/mine")
-    public Player mine(@RequestParam String name) {
-        return service.mineOre(name);
+    // 🛒 купить семена
+    @PostMapping("/shop/seeds")
+    public Player buySeeds(@RequestParam String name,
+                           @RequestParam int amount) {
+        return service.buySeeds(name, amount);
     }
 
-    // 💰 продажа дерева
+    // 💰 продать дерево → GOLD
     @PostMapping("/sell/wood")
     public Player sellWood(@RequestParam String name,
                            @RequestParam int amount) {
         return service.sellWood(name, amount);
     }
 
-    // 💰 продажа руды
+    // 💰 продать руду → GOLD
     @PostMapping("/sell/ore")
     public Player sellOre(@RequestParam String name,
                           @RequestParam int amount) {
         return service.sellOre(name, amount);
     }
 
-    // 💰 продажа еды
+    // 💰 продать еду → GOLD
     @PostMapping("/sell/food")
     public Player sellFood(@RequestParam String name,
                            @RequestParam int amount) {
