@@ -101,6 +101,11 @@ button:hover {
     cursor: pointer;
 }
 
+.inventoryBtn {
+    margin-top: 5px;
+    background: #2196F3;
+}
+
 .field {
     width: 40px;
     height: 40px;
@@ -130,9 +135,8 @@ button:hover {
 
 .shop-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
-    margin-top: 10px;
 }
 
 .item {
@@ -147,9 +151,31 @@ button:hover {
     height: 60px;
 }
 
-.item button {
-    margin-top: 5px;
-    font-size: 12px;
+/* ===== INVENTORY ===== */
+
+#invModal {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+}
+
+.inv-box {
+    width: 350px;
+    margin: 100px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.inv-item {
+    display:flex;
+    justify-content: space-between;
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
 }
 
 </style>
@@ -171,7 +197,8 @@ button:hover {
         <button onclick="plant()">🌱 Plant</button>
         <button onclick="harvest()">🌾 Harvest</button>
 
-        <button onclick="openShop()">🏪 Open Shop</button>
+        <button onclick="openShop()">🏪 Shop</button>
+        <button onclick="openInventory()" class="inventoryBtn">🎒 Inventory</button>
 
     </div>
 
@@ -197,7 +224,7 @@ button:hover {
             <div class="item">
                 <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png">
                 <div>Seeds</div>
-                <button onclick="buySeeds()">Buy (5 FOOD)</button>
+                <button onclick="buySeeds()">Buy</button>
             </div>
 
             <div class="item">
@@ -222,6 +249,21 @@ button:hover {
 
         <br>
         <button onclick="closeShop()">❌ Close</button>
+
+    </div>
+</div>
+
+<!-- ================= INVENTORY ================= -->
+
+<div id="invModal">
+    <div class="inv-box">
+
+        <h2>🎒 Inventory</h2>
+
+        <div id="invContent"></div>
+
+        <br>
+        <button onclick="closeInventory()">❌ Close</button>
 
     </div>
 </div>
@@ -256,6 +298,7 @@ async function load() {
     `;
 
     renderFields(player);
+    renderInventory(player);
 }
 
 // ===== SHOP =====
@@ -266,6 +309,28 @@ function openShop() {
 
 function closeShop() {
     document.getElementById("shopModal").style.display = "none";
+}
+
+// ===== INVENTORY =====
+
+function openInventory() {
+    document.getElementById("invModal").style.display = "block";
+}
+
+function closeInventory() {
+    document.getElementById("invModal").style.display = "none";
+}
+
+function renderInventory(player) {
+
+    const r = player.resources || {};
+
+    document.getElementById("invContent").innerHTML = `
+        <div class="inv-item"><span>🌾 FOOD</span><span>${r.FOOD ?? 0}</span></div>
+        <div class="inv-item"><span>🪵 WOOD</span><span>${r.WOOD ?? 0}</span></div>
+        <div class="inv-item"><span>⛏ ORE</span><span>${r.ORE ?? 0}</span></div>
+        <div class="inv-item"><span>💰 GOLD</span><span>${r.GOLD ?? 0}</span></div>
+    `;
 }
 
 // ===== ACTIONS =====
