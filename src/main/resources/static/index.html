@@ -67,41 +67,8 @@
             transform: scale(1.05);
         }
 
-        .tree {
-            position: absolute;
-            top: 140px;
-            right: 180px;
-
-            width: 100px;
-            height: 100px;
-
-            background: #2e8b57;
-            border-radius: 50%;
-        }
-
-        .tree::after {
-            content: '';
-            position: absolute;
-
-            width: 20px;
-            height: 60px;
-
-            background: #6b3e26;
-
-            left: 40px;
-            top: 80px;
-        }
-
-        .mine {
-            position: absolute;
-            bottom: 60px;
-            right: 120px;
-
-            width: 140px;
-            height: 100px;
-
-            background: gray;
-            border-radius: 20px;
+        #farmerIsland {
+            position: relative;
         }
 
         button {
@@ -148,27 +115,25 @@
             <button onclick="createWoodcutter()">WOODCUTTER</button>
             <button onclick="createMiner()">MINER</button>
 
+            <button onclick="harvest()">🌾 HARVEST</button>
+
         </div>
 
         <!-- FARMER ISLAND -->
         <div id="farmerIsland">
 
-    <div class="farm" onclick="farmClick()"></div>
+            <div class="farm" onclick="farmClick()"></div>
 
-    <!-- 🌱 ПОЛЯ -->
-    <div id="fieldsContainer"></div>
+            <!-- 🌱 ПОЛЯ -->
+            <div id="fieldsContainer"></div>
 
-</div>
+        </div>
 
         <!-- WOODCUTTER ISLAND -->
-        <div id="woodIsland" style="display:none;">
-            <div class="tree"></div>
-        </div>
+        <div id="woodIsland" style="display:none;"></div>
 
         <!-- MINER ISLAND -->
-        <div id="minerIsland" style="display:none;">
-            <div class="mine"></div>
-        </div>
+        <div id="minerIsland" style="display:none;"></div>
 
     </div>
 
@@ -176,115 +141,91 @@
 
 <script>
 
-    let currentPlayer = null;
+const BASE_URL = "https://farm-game-backend-eo4y.onrender.com";
 
-    const BASE_URL = "https://farm-game-backend-eo4y.onrender.com";
+let currentPlayer = null;
 
-    // ---------------- CLICK FARM ----------------
+// ---------------- CLICK ----------------
 
-    async function farmClick() {
+async function farmClick() {
+    await fetch(BASE_URL + "/game/tick");
+    updatePlayer();
+}
 
-        await fetch(BASE_URL + "/game/tick");
+// ---------------- CREATE ----------------
 
-        updatePlayer();
-    }
+async function createFarmer() {
+    await createPlayerByType("FARMER");
+    showFarmerIsland();
+}
 
-    async function nextTick() {
+async function createWoodcutter() {
+    await createPlayerByType("WOODCUTTER");
+    showWoodIsland();
+}
 
-        await fetch(BASE_URL + "/game/tick");
+async function createMiner() {
+    await createPlayerByType("MINER");
+    showMinerIsland();
+}
 
-        updatePlayer();
-    }
+async function createPlayerByType(type) {
 
-    // ---------------- CREATE PLAYER ----------------
+    const response = await fetch(
+        BASE_URL + "/game/player?name=Alex&type=" + type
+    );
 
-    async function createFarmer() {
-        await createPlayerByType("FARMER");
-        showFarmerIsland();
-    }
+    const player = await response.json();
 
-    async function createWoodcutter() {
-        await createPlayerByType("WOODCUTTER");
-        showWoodIsland();
-    }
+    currentPlayer = player;
 
-    async function createMiner() {
-        await createPlayerByType("MINER");
-        showMinerIsland();
-    }
+    updateUI(player);
 
-    async function createPlayerByType(type) {
+    updatePlayer();
+}
 
-        const response = await fetch(
-            BASE_URL + "/game/player?name=Alex&type=" + type
-        );
+// ---------------- UPDATE ----------------
 
-        const player = await response.json();
+async function updatePlayer() {
 
-        currentPlayer = player;
+    const response = await fetch(BASE_URL + "/game/players");
 
-        updateUI(player);
-    }
+    const players = await response.json();
 
-    // ---------------- UPDATE UI ----------------
+    const player = players[0];
 
-    async function updatePlayer() {
+    updateUI(player);
+}
 
-        const response = await fetch(BASE_URL + "/game/players");
+function updateUI(player) {
 
-        const players = await response.json();
+    document.getElementById("playerName").innerText =
+        "Имя: " + player.name;
 
-        const player = players[0];
+    document.getElementById("playerType").innerText =
+        "Класс: " + player.type;
 
-        updateUI(player);
-    }
+    document.getElementById("food").innerText =
+        "FOOD: " + player.resources.FOOD;
 
-    function updateUI(player) {
+    document.getElementById("wood").innerText =
+        "WOOD: " + player.resources.WOOD;
 
-        document.getElementById("playerName").innerText =
-            "Имя: " + player.name;
+    document.getElementById("ore").innerText =
+        "ORE: " + player.resources.ORE;
 
-        document.getElementById("playerType").innerText =
-            "Класс: " + player.type;
+    renderFields(player);
+}
 
-        document.getElementById("food").innerText =
-            "FOOD: " + player.resources.FOOD;
+// ---------------- FIELDS ----------------
 
-        document.getElementById("wood").innerText =
-            "WOOD: " + player.resources.WOOD;
-
-        document.getElementById("ore").innerText =
-            "ORE: " + player.resources.ORE;
-        
-        renderFields(player);
-    }
-
-    // ---------------- ISLAND SWITCH ----------------
-
-    function showFarmerIsland() {
-        document.getElementById("farmerIsland").style.display = "block";
-        document.getElementById("woodIsland").style.display = "none";
-        document.getElementById("minerIsland").style.display = "none";
-    }
-
-    function showWoodIsland() {
-        document.getElementById("farmerIsland").style.display = "none";
-        document.getElementById("woodIsland").style.display = "block";
-        document.getElementById("minerIsland").style.display = "none";
-    }
-
-    function showMinerIsland() {
-        document.getElementById("farmerIsland").style.display = "none";
-        document.getElementById("woodIsland").style.display = "none";
-        document.getElementById("minerIsland").style.display = "block";
-    }
-    function renderFields(player) {
+function renderFields(player) {
 
     const container = document.getElementById("fieldsContainer");
 
     container.innerHTML = "";
 
-    if (!player.fields) return;
+    if (!player.fields || player.fields.length === 0) return;
 
     player.fields.forEach((field, index) => {
 
@@ -297,19 +238,50 @@
         div.style.left = (200 + index * 50) + "px";
         div.style.borderRadius = "8px";
 
-        // 🌱 состояние поля
-        if (field.planted) {
-            div.style.background = "#8B5A2B"; // земля
-        } 
-        else if (field.ready) {
-            div.style.background = "#FFD700"; // золото (готово)
-        } 
+        // 🌾 логика состояния
+        if (field.ready) {
+            div.style.background = "#FFD700"; // готово
+        }
+        else if (field.planted) {
+            div.style.background = "#8B5A2B"; // растёт
+        }
         else {
-            div.style.background = "#3CB371"; // зелёное (рост)
+            div.style.background = "#3CB371"; // пусто
         }
 
         container.appendChild(div);
     });
+}
+
+// ---------------- HARVEST ----------------
+
+async function harvest() {
+
+    await fetch(BASE_URL + "/game/harvest?name=Alex", {
+        method: "POST"
+    });
+
+    updatePlayer();
+}
+
+// ---------------- ISLANDS ----------------
+
+function showFarmerIsland() {
+    document.getElementById("farmerIsland").style.display = "block";
+    document.getElementById("woodIsland").style.display = "none";
+    document.getElementById("minerIsland").style.display = "none";
+}
+
+function showWoodIsland() {
+    document.getElementById("farmerIsland").style.display = "none";
+    document.getElementById("woodIsland").style.display = "block";
+    document.getElementById("minerIsland").style.display = "none";
+}
+
+function showMinerIsland() {
+    document.getElementById("farmerIsland").style.display = "none";
+    document.getElementById("woodIsland").style.display = "none";
+    document.getElementById("minerIsland").style.display = "block";
 }
 
 </script>
