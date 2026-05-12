@@ -7,60 +7,156 @@
 
     <style>
 
-        body {
-            background: #87CEEB;
-            font-family: Arial;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
+    body {
+        margin: 0;
+        font-family: Arial;
+        background: linear-gradient(#87CEEB, #4CAF50);
+        overflow-x: hidden;
+    }
 
-        h1 {
-            margin-top: 20px;
-        }
+    h1 {
+        text-align: center;
+        color: white;
+        padding-top: 20px;
+    }
 
-        .panel {
-            background: white;
-            width: 300px;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 10px;
-        }
+    .game {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
 
-        button {
-            padding: 10px 20px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
+    .island {
+        width: 900px;
+        height: 500px;
+        background: #6dbf4b;
+        border-radius: 40px;
+        position: relative;
+        border: 8px solid #4e8f35;
+        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    }
 
-    </style>
+    .panel {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+
+        background: white;
+        width: 220px;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .farm {
+        position: absolute;
+        bottom: 80px;
+        left: 120px;
+
+        width: 140px;
+        height: 140px;
+
+        background: #c58b45;
+        border: 5px solid #8b5a2b;
+        border-radius: 10px;
+    }
+
+    .tree {
+        position: absolute;
+        top: 140px;
+        right: 180px;
+
+        width: 100px;
+        height: 100px;
+
+        background: #2e8b57;
+        border-radius: 50%;
+    }
+
+    .tree::after {
+        content: '';
+        position: absolute;
+
+        width: 20px;
+        height: 60px;
+
+        background: #6b3e26;
+
+        left: 40px;
+        top: 80px;
+    }
+
+    .mine {
+        position: absolute;
+        bottom: 60px;
+        right: 120px;
+
+        width: 140px;
+        height: 100px;
+
+        background: gray;
+        border-radius: 20px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        background: #4CAF50;
+        color: white;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background: #45a049;
+    }
+
+</style>
 </head>
 
 <body>
 
-    <h1>🌴 Farm Game</h1>
+<h1>🌴 Farm Game</h1>
 
-    <div class="panel">
+<div class="game">
 
-        <h2>Игрок</h2>
+    <div class="island">
 
-        <p id="playerName">Имя: нет</p>
-        <p id="playerType">Класс: нет</p>
+        <div class="panel">
 
-        <h3>Ресурсы</h3>
+            <h2>Игрок</h2>
 
-        <p id="food">FOOD: 0</p>
-        <p id="wood">WOOD: 0</p>
-        <p id="ore">ORE: 0</p>
+            <p id="playerName">Имя: нет</p>
+            <p id="playerType">Класс: нет</p>
 
-        <button onclick="createPlayer()">
-            Создать игрока
-        </button>
-        <button onclick="nextTick()">
-    Следующий тик
-</button>
+            <h3>Ресурсы</h3>
+
+            <p id="food">FOOD: 0</p>
+            <p id="wood">WOOD: 0</p>
+            <p id="ore">ORE: 0</p>
+
+            <button onclick="createPlayer()">
+                Создать игрока
+            </button>
+
+            <button onclick="nextTick()">
+                Следующий тик
+            </button>
+
+        </div>
+
+        <div class="farm"></div>
+
+        <div class="tree"></div>
+
+        <div class="mine"></div>
 
     </div>
+
+</div>
 <script>
 
     let currentPlayer = null;
