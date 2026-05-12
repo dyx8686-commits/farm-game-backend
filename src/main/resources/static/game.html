@@ -40,13 +40,7 @@ h1 {
     cursor: pointer;
 }
 
-.farm {
-    bottom: 80px;
-    left: 120px;
-    width: 120px;
-    height: 120px;
-    background: #c58b45;
-}
+
 
 .shop {
     top: 220px;
@@ -131,7 +125,7 @@ h1 {
 
     <div id="farmerObjects">
 
-        <div class="farm"></div>
+        
         <div class="shop"></div>
 
         <div id="fields"></div>
@@ -187,13 +181,22 @@ async function load() {
 
 function renderWorld(player) {
 
-    clearWorld();
+    document.getElementById("farmerPlants").innerHTML = "";
+    document.getElementById("woodTrees").innerHTML = "";
+    document.getElementById("minerStones").innerHTML = "";
 
-    if (player.type === "FARMER") renderPlants();
-    if (player.type === "WOODCUTTER") renderTrees();
-    if (player.type === "MINER") renderStones();
+    if (player.type === "FARMER") {
+        renderPlants();
+    }
+
+    if (player.type === "WOODCUTTER") {
+        renderTrees();
+    }
+
+    if (player.type === "MINER") {
+        renderStones();
+    }
 }
-
 function clearWorld() {
     document.getElementById("farmerPlants").innerHTML = "";
     document.getElementById("woodTrees").innerHTML = "";
@@ -204,62 +207,82 @@ function clearWorld() {
 function renderPlants() {
 
     const c = document.getElementById("farmerPlants");
+    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
-        const d = document.createElement("div");
-        d.className = "plantObj";
 
-        d.style.left = (250 + (i % 3) * 60) + "px";
-        d.style.top = (200 + Math.floor(i / 3) * 60) + "px";
+        const d = document.createElement("div");
+
+        d.className = "field";
+
+        d.style.left = (240 + (i % 3) * 70) + "px";
+        d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
+
+        d.style.background = "#8B5A2B";
 
         d.onclick = () => {
-            if (selectedItem === "SEEDS") {
-                alert("🌱 Planted seed!");
-            }
+
+            if (selectedItem !== "SEEDS") return;
+
+            plant();
         };
 
         c.appendChild(d);
     }
+
 }
 
 // 🌲 WOODCUTTER
 function renderTrees() {
 
     const c = document.getElementById("woodTrees");
+    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
+
         const d = document.createElement("div");
+
         d.className = "treeObj";
 
-        d.style.left = (120 + (i % 3) * 80) + "px";
-        d.style.top = (120 + Math.floor(i / 3) * 80) + "px";
+        d.style.left = (180 + (i % 3) * 90) + "px";
+        d.style.top = (140 + Math.floor(i / 3) * 100) + "px";
 
-        d.onclick = () => {
-            if (selectedItem === "WOOD") {
-                alert("🪵 Chopped wood!");
-            }
+        d.onclick = async () => {
+
+            await fetch(BASE + "/game/wood?name=" + playerName, {
+                method:"POST"
+            });
+
+            load();
         };
 
         c.appendChild(d);
     }
 }
 
+
 // ⛏ MINER
 function renderStones() {
 
     const c = document.getElementById("minerStones");
+    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
+
         const d = document.createElement("div");
+
         d.className = "stoneObj";
 
-        d.style.left = (120 + (i % 3) * 80) + "px";
-        d.style.top = (250 + Math.floor(i / 3) * 70) + "px";
+        d.style.left = (180 + (i % 3) * 90) + "px";
+        d.style.top = (180 + Math.floor(i / 3) * 90) + "px";
 
-        d.onclick = () => {
-            if (selectedItem === "ORE") {
-                alert("⛏ Mined ore!");
-            }
+        d.onclick = async () => {
+
+            await fetch(BASE + "/game/mine?name=" + playerName, {
+                method:"POST"
+            });
+
+            load();
         };
 
         c.appendChild(d);
