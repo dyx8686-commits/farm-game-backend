@@ -41,4 +41,13 @@ public class GameController {
     public Player plant(@RequestParam String name) {
         return service.plant(name);
     }
+    @PostMapping("/wood")
+public Player wood(@RequestParam String name) {
+    return service.chopWood(name);
+}
+
+@PostMapping("/mine")
+public Player mine(@RequestParam String name) {
+    return service.mineOre(name);
+}
 }
