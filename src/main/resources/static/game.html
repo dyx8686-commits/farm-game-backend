@@ -5,6 +5,7 @@
 <title>Farm Game</title>
 
 <style>
+
 body {
     margin: 0;
     font-family: Arial;
@@ -23,8 +24,17 @@ h1 {
     margin-top: 20px;
 }
 
+/* ОСНОВА ОСТРОВА */
 .island {
-    /* 🌴 FARMER */
+    width: 900px;
+    height: 500px;
+    border-radius: 40px;
+    position: relative;
+    border: 8px solid #4e8f35;
+    transition: 0.3s;
+}
+
+/* 🌴 FARMER */
 .farmerIsland {
     background: #6dbf4b;
 }
@@ -38,13 +48,6 @@ h1 {
 .minerIsland {
     background: #777;
 }
-    width: 900px;
-    height: 500px;
-    background: #6dbf4b;
-    border-radius: 40px;
-    position: relative;
-    border: 8px solid #4e8f35;
-}
 
 .panel {
     position: absolute;
@@ -56,6 +59,22 @@ h1 {
     width: 220px;
 }
 
+button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: #4CAF50;
+    color: white;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+/* 🌾 FARM */
 .farm {
     position: absolute;
     bottom: 80px;
@@ -67,45 +86,93 @@ h1 {
     cursor: pointer;
 }
 
-button {
-    width: 100%;
-    margin-top: 5px;
-    padding: 8px;
-    cursor: pointer;
+/* 🌲 TREE */
+.tree {
+    position: absolute;
+    top: 150px;
+    right: 180px;
+    width: 100px;
+    height: 100px;
+    background: #2e8b57;
+    border-radius: 50%;
 }
 
+.tree::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 60px;
+    background: #6b3e26;
+    left: 40px;
+    top: 80px;
+}
+
+/* ⛏ MINE */
+.mine {
+    position: absolute;
+    bottom: 80px;
+    right: 120px;
+    width: 140px;
+    height: 100px;
+    background: #555;
+    border-radius: 20px;
+}
+
+/* 🌱 ПОЛЯ */
 .field {
     width: 40px;
     height: 40px;
     position: absolute;
     border-radius: 6px;
 }
+
 </style>
 
 </head>
 
 <body>
 
-<h1>🌴 Farm Island</h1>
+<h1>🌴 Farm Game</h1>
 
 <div class="game">
 
-<div class="island">
+<div id="island" class="island">
 
     <!-- ПАНЕЛЬ -->
     <div class="panel">
+
         <div id="info">Loading...</div>
 
         <button onclick="plant()">🌱 Plant seed</button>
+
         <button onclick="harvest()">🌾 Harvest</button>
+
         <button onclick="buySeeds()">🛒 Buy seeds (5 FOOD)</button>
+
     </div>
 
-    <!-- ФЕРМА -->
-    <div class="farm" onclick="tick()"></div>
+    <!-- 🌴 FARMER -->
+    <div id="farmerObjects">
 
-    <!-- ПОЛЯ -->
-    <div id="fields"></div>
+        <div class="farm" onclick="tick()"></div>
+
+        <div id="fields"></div>
+
+    </div>
+
+    <!-- 🌲 WOODCUTTER -->
+    <div id="woodObjects" style="display:none;">
+
+        <div class="tree"></div>
+
+    </div>
+
+    <!-- ⛏ MINER -->
+    <div id="minerObjects" style="display:none;">
+
+        <div class="mine"></div>
+
+    </div>
 
 </div>
 
@@ -117,14 +184,17 @@ const BASE = "https://farm-game-backend-eo4y.onrender.com";
 
 let playerName = new URLSearchParams(window.location.search).get("name");
 
-// ---------------- загрузка игрока ----------------
+// ---------------- ЗАГРУЗКА ----------------
 
 async function load() {
 
     const res = await fetch(BASE + "/game/players");
+
     const players = await res.json();
 
     const player = players.find(p => p.name === playerName);
+
+    if (!player) return;
 
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
@@ -136,41 +206,96 @@ async function load() {
     `;
 
     renderFields(player);
+
+    changeIsland(player.type);
 }
 
-// ---------------- тик ----------------
+// ---------------- ОСТРОВА ----------------
+
+function changeIsland(type) {
+
+    const island = document.getElementById("island");
+
+    island.classList.remove(
+        "farmerIsland",
+        "woodIsland",
+        "minerIsland"
+    );
+
+    // скрываем все
+    document.getElementById("farmerObjects").style.display = "none";
+    document.getElementById("woodObjects").style.display = "none";
+    document.getElementById("minerObjects").style.display = "none";
+
+    // FARMER
+    if (type === "FARMER") {
+
+        island.classList.add("farmerIsland");
+
+        document.getElementById("farmerObjects").style.display = "block";
+    }
+
+    // WOODCUTTER
+    if (type === "WOODCUTTER") {
+
+        island.classList.add("woodIsland");
+
+        document.getElementById("woodObjects").style.display = "block";
+    }
+
+    // MINER
+    if (type === "MINER") {
+
+        island.classList.add("minerIsland");
+
+        document.getElementById("minerObjects").style.display = "block";
+    }
+}
+
+// ---------------- TICK ----------------
 
 async function tick() {
+
     await fetch(BASE + "/game/tick");
+
     load();
 }
 
-// ---------------- посадка ----------------
+// ---------------- PLANT ----------------
 
 async function plant() {
+
     await fetch(BASE + "/game/plant?name=" + playerName);
+
     load();
 }
 
-// ---------------- сбор ----------------
+// ---------------- HARVEST ----------------
 
 async function harvest() {
+
     await fetch(BASE + "/game/harvest?name=" + playerName);
+
     load();
 }
 
-// ---------------- магазин ----------------
+// ---------------- SHOP ----------------
 
 async function buySeeds() {
-    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1");
+
+    await fetch(
+        BASE + "/game/shop/seeds?name=" + playerName + "&amount=1"
+    );
+
     load();
 }
 
-// ---------------- поля ----------------
+// ---------------- ПОЛЯ ----------------
 
 function renderFields(player) {
 
     const container = document.getElementById("fields");
+
     container.innerHTML = "";
 
     if (!player.fields) return;
@@ -180,18 +305,27 @@ function renderFields(player) {
         const div = document.createElement("div");
 
         div.className = "field";
+
         div.style.left = (300 + i * 50) + "px";
+
         div.style.bottom = "120px";
 
-        if (f.planted) div.style.background = "#8B5A2B";
-        else if (f.ready) div.style.background = "#FFD700";
-        else div.style.background = "#3CB371";
+        if (f.planted) {
+            div.style.background = "#8B5A2B";
+        }
+        else if (f.ready) {
+            div.style.background = "#FFD700";
+        }
+        else {
+            div.style.background = "#3CB371";
+        }
 
         container.appendChild(div);
     });
 }
 
-// авто-обновление
+// ---------------- АВТО ОБНОВЛЕНИЕ ----------------
+
 setInterval(load, 3000);
 
 load();
