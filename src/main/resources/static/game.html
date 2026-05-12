@@ -24,7 +24,6 @@ h1 {
     margin-top: 20px;
 }
 
-/* ОСНОВА ОСТРОВА */
 .island {
     width: 900px;
     height: 500px;
@@ -33,13 +32,8 @@ h1 {
     border: 8px solid #4e8f35;
 }
 
-/* 🌴 FARMER */
 .farmerIsland { background: #6dbf4b; }
-
-/* 🌲 WOODCUTTER */
 .woodIsland { background: #2f6b2f; }
-
-/* ⛏ MINER */
 .minerIsland { background: #777; }
 
 .panel {
@@ -67,7 +61,6 @@ button:hover {
     background: #45a049;
 }
 
-/* объекты */
 .farm, .tree, .mine {
     position: absolute;
     border-radius: 10px;
@@ -98,7 +91,6 @@ button:hover {
     background: #555;
 }
 
-/* поля */
 .field {
     width: 40px;
     height: 40px;
@@ -118,7 +110,6 @@ button:hover {
 
 <div id="island" class="island">
 
-    <!-- PANEL -->
     <div class="panel">
 
         <div id="info">Loading...</div>
@@ -134,18 +125,15 @@ button:hover {
 
     </div>
 
-    <!-- FARMER -->
     <div id="farmerObjects">
         <div class="farm" onclick="tick()"></div>
         <div id="fields"></div>
     </div>
 
-    <!-- WOOD -->
     <div id="woodObjects" style="display:none;">
         <div class="tree" onclick="chopWood()"></div>
     </div>
 
-    <!-- MINE -->
     <div id="minerObjects" style="display:none;">
         <div class="mine" onclick="mineOre()"></div>
     </div>
@@ -170,16 +158,18 @@ async function load() {
 
     if (!player) return;
 
+    const resObj = player.resources || {};
+
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
         Class: ${player.type}<br><br>
 
-        FOOD: ${player.resources.FOOD}<br>
-        WOOD: ${player.resources.WOOD}<br>
-        ORE: ${player.resources.ORE}<br><br>
+        FOOD: ${resObj.FOOD ?? 0}<br>
+        WOOD: ${resObj.WOOD ?? 0}<br>
+        ORE: ${resObj.ORE ?? 0}<br><br>
 
-        SEEDS: ${player.seeds}<br>
-        GOLD: ${player.gold ?? 0}<br>
+        SEEDS: ${player.seeds ?? 0}<br>
+        GOLD: ${resObj.GOLD ?? 0}<br>
     `;
 
     renderFields(player);
@@ -236,8 +226,6 @@ async function buySeeds() {
     load();
 }
 
-// ================= SELL =================
-
 async function sellWood() {
     await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", { method: "POST" });
     load();
@@ -248,8 +236,6 @@ async function sellOre() {
     load();
 }
 
-// ================= RESOURCES =================
-
 async function chopWood() {
     await fetch(BASE + "/game/wood?name=" + playerName, { method: "POST" });
     load();
@@ -259,8 +245,6 @@ async function mineOre() {
     await fetch(BASE + "/game/mine?name=" + playerName, { method: "POST" });
     load();
 }
-
-// ================= NPC =================
 
 function goNpcIsland() {
     window.location.href = "npc.html?name=" + playerName;
