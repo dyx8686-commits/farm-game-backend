@@ -163,14 +163,14 @@ button:hover {
     <!-- 🌲 WOODCUTTER -->
     <div id="woodObjects" style="display:none;">
 
-        <div class="tree"></div>
+        <div class="tree" onclick="chopWood()"></div>
 
     </div>
 
     <!-- ⛏ MINER -->
     <div id="minerObjects" style="display:none;">
 
-        <div class="mine"></div>
+        <div class="mine" onclick="mineOre()"></div>
 
     </div>
 
@@ -322,6 +322,31 @@ function renderFields(player) {
 
         container.appendChild(div);
     });
+}
+    // 🌲 рубка дерева
+async function chopWood() {
+
+    await fetch(
+        BASE + "/game/wood?name=" + playerName,
+        {
+            method: "POST"
+        }
+    );
+
+    load();
+}
+
+// ⛏ добыча руды
+async function mineOre() {
+
+    await fetch(
+        BASE + "/game/mine?name=" + playerName,
+        {
+            method: "POST"
+        }
+    );
+
+    load();
 }
 
 // ---------------- АВТО ОБНОВЛЕНИЕ ----------------
