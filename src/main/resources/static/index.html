@@ -65,31 +65,7 @@
 
     let currentPlayer = null;
 
-    async function createPlayer() 
-        async function nextTick() {
-
-    await fetch(
-        "https://farm-game-backend-eo4y.onrender.com/game/tick"
-    );
-
-    const response = await fetch(
-        "https://farm-game-backend-eo4y.onrender.com/game/players"
-    );
-
-    const players = await response.json();
-
-    const player = players[0];
-
-    document.getElementById("food").innerText =
-        "FOOD: " + player.resources.FOOD;
-
-    document.getElementById("wood").innerText =
-        "WOOD: " + player.resources.WOOD;
-
-    document.getElementById("ore").innerText =
-        "ORE: " + player.resources.ORE;
-}
-    {
+    async function createPlayer() {
 
         const response = await fetch(
             "https://farm-game-backend-eo4y.onrender.com/game/player?name=Alex&type=FARMER"
@@ -104,6 +80,30 @@
 
         document.getElementById("playerType").innerText =
             "Класс: " + player.type;
+
+        document.getElementById("food").innerText =
+            "FOOD: " + player.resources.FOOD;
+
+        document.getElementById("wood").innerText =
+            "WOOD: " + player.resources.WOOD;
+
+        document.getElementById("ore").innerText =
+            "ORE: " + player.resources.ORE;
+    }
+
+    async function nextTick() {
+
+        await fetch(
+            "https://farm-game-backend-eo4y.onrender.com/game/tick"
+        );
+
+        const response = await fetch(
+            "https://farm-game-backend-eo4y.onrender.com/game/players"
+        );
+
+        const players = await response.json();
+
+        const player = players[0];
 
         document.getElementById("food").innerText =
             "FOOD: " + player.resources.FOOD;
