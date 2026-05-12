@@ -152,8 +152,13 @@
 
         <!-- FARMER ISLAND -->
         <div id="farmerIsland">
-            <div class="farm" onclick="farmClick()"></div>
-        </div>
+
+    <div class="farm" onclick="farmClick()"></div>
+
+    <!-- 🌱 ПОЛЯ -->
+    <div id="fieldsContainer"></div>
+
+</div>
 
         <!-- WOODCUTTER ISLAND -->
         <div id="woodIsland" style="display:none;">
@@ -250,6 +255,8 @@
 
         document.getElementById("ore").innerText =
             "ORE: " + player.resources.ORE;
+        
+        renderFields(player);
     }
 
     // ---------------- ISLAND SWITCH ----------------
@@ -271,6 +278,39 @@
         document.getElementById("woodIsland").style.display = "none";
         document.getElementById("minerIsland").style.display = "block";
     }
+    function renderFields(player) {
+
+    const container = document.getElementById("fieldsContainer");
+
+    container.innerHTML = "";
+
+    if (!player.fields) return;
+
+    player.fields.forEach((field, index) => {
+
+        const div = document.createElement("div");
+
+        div.style.width = "40px";
+        div.style.height = "40px";
+        div.style.position = "absolute";
+        div.style.bottom = "20px";
+        div.style.left = (200 + index * 50) + "px";
+        div.style.borderRadius = "8px";
+
+        // 🌱 состояние поля
+        if (field.planted) {
+            div.style.background = "#8B5A2B"; // земля
+        } 
+        else if (field.ready) {
+            div.style.background = "#FFD700"; // золото (готово)
+        } 
+        else {
+            div.style.background = "#3CB371"; // зелёное (рост)
+        }
+
+        container.appendChild(div);
+    });
+}
 
 </script>
 
