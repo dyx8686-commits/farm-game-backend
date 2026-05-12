@@ -92,7 +92,6 @@ button:hover {
 }
 
 .shop {
-    position: absolute;
     top: 220px;
     left: 200px;
     width: 90px;
@@ -109,7 +108,8 @@ button:hover {
     border-radius: 6px;
 }
 
-/* MODAL */
+/* ===== SHOP ===== */
+
 #shopModal {
     display:none;
     position:fixed;
@@ -120,12 +120,36 @@ button:hover {
     background:rgba(0,0,0,0.6);
 }
 
-#shopModal .content {
-    width:300px;
-    margin:100px auto;
-    background:white;
-    padding:20px;
-    border-radius:10px;
+.shop-box {
+    width: 420px;
+    margin: 80px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.item {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.item img {
+    width: 60px;
+    height: 60px;
+}
+
+.item button {
+    margin-top: 5px;
+    font-size: 12px;
 }
 
 </style>
@@ -147,48 +171,56 @@ button:hover {
         <button onclick="plant()">🌱 Plant</button>
         <button onclick="harvest()">🌾 Harvest</button>
 
-        <button onclick="goNpcIsland()">🏪 NPC Island</button>
+        <button onclick="openShop()">🏪 Open Shop</button>
 
     </div>
 
-    <!-- SHOP (НА ВСЕХ ОСТРОВАХ) -->
-    <div class="shop" onclick="openShop()"></div>
-
-    <!-- FARMER -->
     <div id="farmerObjects">
         <div class="farm" onclick="tick()"></div>
+        <div class="shop" onclick="openShop()"></div>
         <div id="fields"></div>
     </div>
 
-    <!-- WOOD -->
-    <div id="woodObjects" style="display:none;">
-        <div class="tree" onclick="chopWood()"></div>
-    </div>
-
-    <!-- MINER -->
-    <div id="minerObjects" style="display:none;">
-        <div class="mine" onclick="mineOre()"></div>
-    </div>
-
 </div>
 
 </div>
 
-<!-- SHOP MODAL -->
+<!-- ================= SHOP ================= -->
+
 <div id="shopModal">
-    <div class="content">
+    <div class="shop-box">
 
         <h2>🏪 Shop</h2>
 
-        <button onclick="buySeeds()">🛒 Buy seeds (1 = 5 FOOD)</button>
+        <div class="shop-grid">
 
-        <hr>
+            <div class="item">
+                <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png">
+                <div>Seeds</div>
+                <button onclick="buySeeds()">Buy (5 FOOD)</button>
+            </div>
 
-        <button onclick="sellWood()">💰 Sell WOOD</button>
-        <button onclick="sellOre()">💰 Sell ORE</button>
-        <button onclick="sellFood()">🍞 Sell FOOD</button>
+            <div class="item">
+                <img src="https://cdn-icons-png.flaticon.com/512/415/415682.png">
+                <div>Wood</div>
+                <button onclick="sellWood()">Sell</button>
+            </div>
 
-        <br><br>
+            <div class="item">
+                <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png">
+                <div>Ore</div>
+                <button onclick="sellOre()">Sell</button>
+            </div>
+
+            <div class="item">
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
+                <div>Food</div>
+                <button onclick="sellFood()">Sell</button>
+            </div>
+
+        </div>
+
+        <br>
         <button onclick="closeShop()">❌ Close</button>
 
     </div>
@@ -199,7 +231,7 @@ button:hover {
 const BASE = "https://farm-game-backend-eo4y.onrender.com";
 let playerName = new URLSearchParams(window.location.search).get("name");
 
-// ================= LOAD =================
+// ===== LOAD =====
 
 async function load() {
 
@@ -207,61 +239,36 @@ async function load() {
     const players = await res.json();
 
     const player = players.find(p => p.name === playerName);
-
     if (!player) return;
 
-    const resObj = player.resources || {};
+    const r = player.resources || {};
 
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
         Class: ${player.type}<br><br>
 
-        FOOD: ${resObj.FOOD ?? 0}<br>
-        WOOD: ${resObj.WOOD ?? 0}<br>
-        ORE: ${resObj.ORE ?? 0}<br><br>
+        FOOD: ${r.FOOD ?? 0}<br>
+        WOOD: ${r.WOOD ?? 0}<br>
+        ORE: ${r.ORE ?? 0}<br>
+        GOLD: ${r.GOLD ?? 0}<br><br>
 
-        SEEDS: ${player.seeds ?? 0}<br>
-        GOLD: ${resObj.GOLD ?? 0}<br>
+        SEEDS: ${player.seeds ?? 0}
     `;
 
     renderFields(player);
-    changeIsland(player.type);
 }
 
-// ================= ISLAND =================
+// ===== SHOP =====
 
-function changeIsland(type) {
-
-    const island = document.getElementById("island");
-
-    island.classList.remove("farmerIsland","woodIsland","minerIsland");
-
-    document.getElementById("farmerObjects").style.display = "none";
-    document.getElementById("woodObjects").style.display = "none";
-    document.getElementById("minerObjects").style.display = "none";
-
-    if (type === "FARMER") {
-        island.classList.add("farmerIsland");
-        document.getElementById("farmerObjects").style.display = "block";
-    }
-
-    if (type === "WOODCUTTER") {
-        island.classList.add("woodIsland");
-        document.getElementById("woodObjects").style.display = "block";
-    }
-
-    if (type === "MINER") {
-        island.classList.add("minerIsland");
-        document.getElementById("minerObjects").style.display = "block";
-    }
+function openShop() {
+    document.getElementById("shopModal").style.display = "block";
 }
 
-// ================= ACTIONS =================
-
-async function tick() {
-    await fetch(BASE + "/game/tick");
-    load();
+function closeShop() {
+    document.getElementById("shopModal").style.display = "none";
 }
+
+// ===== ACTIONS =====
 
 async function plant() {
     await fetch(BASE + "/game/plant?name=" + playerName);
@@ -273,53 +280,32 @@ async function harvest() {
     load();
 }
 
+async function tick() {
+    await fetch(BASE + "/game/tick");
+    load();
+}
+
 async function buySeeds() {
     await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1");
     load();
 }
 
 async function sellWood() {
-    await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", { method: "POST" });
+    await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", {method:"POST"});
     load();
 }
 
 async function sellOre() {
-    await fetch(BASE + "/game/sell/ore?name=" + playerName + "&amount=5", { method: "POST" });
+    await fetch(BASE + "/game/sell/ore?name=" + playerName + "&amount=5", {method:"POST"});
     load();
 }
 
 async function sellFood() {
-    await fetch(BASE + "/game/sell/food?name=" + playerName + "&amount=10", { method: "POST" });
+    await fetch(BASE + "/game/sell/food?name=" + playerName + "&amount=5", {method:"POST"});
     load();
 }
 
-async function chopWood() {
-    await fetch(BASE + "/game/wood?name=" + playerName, { method: "POST" });
-    load();
-}
-
-async function mineOre() {
-    await fetch(BASE + "/game/mine?name=" + playerName, { method: "POST" });
-    load();
-}
-
-// ================= SHOP =================
-
-function openShop() {
-    document.getElementById("shopModal").style.display = "block";
-}
-
-function closeShop() {
-    document.getElementById("shopModal").style.display = "none";
-}
-
-// ================= NPC =================
-
-function goNpcIsland() {
-    window.location.href = "npc.html?name=" + playerName;
-}
-
-// ================= FIELDS =================
+// ===== FIELDS =====
 
 function renderFields(player) {
 
@@ -331,20 +317,20 @@ function renderFields(player) {
     player.fields.forEach((f, i) => {
 
         const div = document.createElement("div");
-
         div.className = "field";
+
         div.style.left = (300 + i * 50) + "px";
         div.style.bottom = "120px";
 
-        if (f.planted) div.style.background = "#8B5A2B";
-        else if (f.ready) div.style.background = "#FFD700";
+        if (f.ready) div.style.background = "#FFD700";
+        else if (f.planted) div.style.background = "#8B5A2B";
         else div.style.background = "#3CB371";
 
         container.appendChild(div);
     });
 }
 
-// ================= START =================
+// ===== START =====
 
 setInterval(load, 3000);
 load();
