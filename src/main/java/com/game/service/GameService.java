@@ -129,6 +129,35 @@ public class GameService {
         }
 
         return null;
+        // 🌲 рубка дерева
+public Player chopWood(String name) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    player.getResources().put(
+            "WOOD",
+            player.getResources().get("WOOD") + 3
+    );
+
+    return player;
+}
+
+// ⛏ добыча руды
+public Player mineOre(String name) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    player.getResources().put(
+            "ORE",
+            player.getResources().get("ORE") + 2
+    );
+
+    return player;
+}
     }
 
     // 🛒 магазин семян
@@ -151,4 +180,5 @@ public class GameService {
 
         return player;
     }
+    
 }
