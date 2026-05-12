@@ -228,22 +228,37 @@ async function buySeeds() {
 }
 
 async function sellWood() {
-    await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", { method: "POST" });
+    await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", {
+        method: "POST"
+    });
     load();
 }
 
 async function sellOre() {
-    await fetch(BASE + "/game/sell/ore?name=" + playerName + "&amount=5", { method: "POST" });
+    await fetch(BASE + "/game/sell/ore?name=" + playerName + "&amount=5", {
+        method: "POST"
+    });
+    load();
+}
+
+async function sellFood() {
+    await fetch(BASE + "/game/sell/food?name=" + playerName + "&amount=10", {
+        method: "POST"
+    });
     load();
 }
 
 async function chopWood() {
-    await fetch(BASE + "/game/wood?name=" + playerName, { method: "POST" });
+    await fetch(BASE + "/game/wood?name=" + playerName, {
+        method: "POST"
+    });
     load();
 }
 
 async function mineOre() {
-    await fetch(BASE + "/game/mine?name=" + playerName, { method: "POST" });
+    await fetch(BASE + "/game/mine?name=" + playerName, {
+        method: "POST"
+    });
     load();
 }
 
