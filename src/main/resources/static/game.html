@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Farm Game</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(#87CEEB, #4CAF50);
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    padding-top: 10px;
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.island {
+    width: 900px;
+    height: 500px;
+    background: #6dbf4b;
+    border-radius: 40px;
+    position: relative;
+    border: 8px solid #4e8f35;
+}
+
+.panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 220px;
+}
+
+.farm {
+    position: absolute;
+    bottom: 80px;
+    left: 120px;
+    width: 120px;
+    height: 120px;
+    background: #c58b45;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.field {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    border-radius: 6px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🌴 Farm Island</h1>
+
+<div class="game">
+
+<div class="island">
+
+    <!-- ПАНЕЛЬ -->
+    <div class="panel">
+        <div id="info">Loading...</div>
+
+        <button onclick="plant()">🌱 Plant seed</button>
+        <button onclick="harvest()">🌾 Harvest</button>
+        <button onclick="buySeeds()">🛒 Buy seeds (5 FOOD)</button>
+    </div>
+
+    <!-- ФЕРМА -->
+    <div class="farm" onclick="tick()"></div>
+
+    <!-- ПОЛЯ -->
+    <div id="fields"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const BASE = "https://farm-game-backend-eo4y.onrender.com";
+
+let playerName = new URLSearchParams(window.location.search).get("name");
+
+// ---------------- загрузка игрока ----------------
+
+async function load() {
+
+    const res = await fetch(BASE + "/game/players");
+    const players = await res.json();
+
+    const player = players.find(p => p.name === playerName);
+
+    document.getElementById("info").innerHTML = `
+        <b>${player.name}</b><br>
+        Class: ${player.type}<br>
+        FOOD: ${player.resources.FOOD}<br>
+        WOOD: ${player.resources.WOOD}<br>
+        ORE: ${player.resources.ORE}<br>
+        Seeds: ${player.seeds}
+    `;
+
+    renderFields(player);
+}
+
+// ---------------- тик ----------------
+
+async function tick() {
+    await fetch(BASE + "/game/tick");
+    load();
+}
+
+// ---------------- посадка ----------------
+
+async function plant() {
+    await fetch(BASE + "/game/plant?name=" + playerName);
+    load();
+}
+
+// ---------------- сбор ----------------
+
+async function harvest() {
+    await fetch(BASE + "/game/harvest?name=" + playerName);
+    load();
+}
+
+// ---------------- магазин ----------------
+
+async function buySeeds() {
+    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1");
+    load();
+}
+
+// ---------------- поля ----------------
+
+function renderFields(player) {
+
+    const container = document.getElementById("fields");
+    container.innerHTML = "";
+
+    if (!player.fields) return;
+
+    player.fields.forEach((f, i) => {
+
+        const div = document.createElement("div");
+
+        div.className = "field";
+        div.style.left = (300 + i * 50) + "px";
+        div.style.bottom = "120px";
+
+        if (f.planted) div.style.background = "#8B5A2B";
+        else if (f.ready) div.style.background = "#FFD700";
+        else div.style.background = "#3CB371";
+
+        container.appendChild(div);
+    });
+}
+
+// авто-обновление
+setInterval(load, 3000);
+
+load();
+
+</script>
+
+</body>
+</html>
