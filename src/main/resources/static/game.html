@@ -33,8 +33,6 @@ h1 {
 }
 
 .farmerIsland { background: #6dbf4b; }
-.woodIsland { background: #2f6b2f; }
-.minerIsland { background: #777; }
 
 .panel {
     position: absolute;
@@ -61,51 +59,17 @@ button:hover {
     background: #45a049;
 }
 
-.farm, .tree, .mine {
+/* ===== PLAYER ===== */
+
+#player {
     position: absolute;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.farm {
-    bottom: 80px;
-    left: 120px;
-    width: 120px;
-    height: 120px;
-    background: #c58b45;
-}
-
-.tree {
-    top: 150px;
-    right: 180px;
-    width: 100px;
-    height: 100px;
-    background: #2e8b57;
-}
-
-.mine {
-    bottom: 80px;
-    right: 120px;
-    width: 140px;
-    height: 100px;
-    background: #555;
-}
-
-.shop {
-    top: 220px;
-    left: 200px;
-    width: 90px;
-    height: 90px;
-    background: #ffcc00;
-    border-radius: 12px;
-    cursor: pointer;
-}
-
-.field {
-    width: 40px;
-    height: 40px;
-    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: red;
     border-radius: 6px;
+    left: 420px;
+    top: 260px;
+    box-shadow: 0 0 10px rgba(255,0,0,0.6);
 }
 
 /* ===== INVENTORY ===== */
@@ -126,50 +90,17 @@ button:hover {
     cursor: pointer;
 }
 
-.inv-item:hover {
-    background: #f0f0f0;
-}
-
 .selected {
     background: #c8f7c5 !important;
 }
 
-/* ===== SHOP ===== */
+/* ===== FIELD ===== */
 
-#shopModal {
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-}
-
-.shop-box {
-    width: 420px;
-    margin: 80px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-}
-
-.shop-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.item {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-}
-
-.item img {
-    width: 60px;
-    height: 60px;
+.field {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    border-radius: 6px;
 }
 
 </style>
@@ -190,55 +121,17 @@ button:hover {
         <button onclick="plant()">🌱 Plant</button>
         <button onclick="harvest()">🌾 Harvest</button>
 
-        <button onclick="openShop()">🏪 Shop</button>
-
     </div>
 
-    <!-- INVENTORY -->
     <div class="inventory" id="inventory"></div>
 
     <div id="farmerObjects">
-        <div class="farm" onclick="tick()"></div>
-        <div class="shop" onclick="openShop()"></div>
         <div id="fields"></div>
+        <div id="player"></div>
     </div>
 
 </div>
 
-</div>
-
-<!-- SHOP -->
-<div id="shopModal">
-    <div class="shop-box">
-        <h2>🏪 Shop</h2>
-
-        <div class="shop-grid">
-
-            <div class="item">
-                <div>🌾 Seeds</div>
-                <button onclick="buySeeds()">Buy</button>
-            </div>
-
-            <div class="item">
-                <div>🪵 Wood</div>
-                <button onclick="sellWood()">Sell</button>
-            </div>
-
-            <div class="item">
-                <div>⛏ Ore</div>
-                <button onclick="sellOre()">Sell</button>
-            </div>
-
-            <div class="item">
-                <div>🍞 Food</div>
-                <button onclick="sellFood()">Sell</button>
-            </div>
-
-        </div>
-
-        <br>
-        <button onclick="closeShop()">❌ Close</button>
-    </div>
 </div>
 
 <script>
@@ -273,6 +166,17 @@ async function load() {
 
     renderInventory(r);
     renderFields(player);
+    spawnPlayer();
+}
+
+// ===== PLAYER =====
+
+function spawnPlayer() {
+    const p = document.getElementById("player");
+    if (!p) return;
+
+    p.style.left = "420px";
+    p.style.top = "260px";
 }
 
 // ===== INVENTORY =====
@@ -296,15 +200,12 @@ function renderInventory(r) {
         const div = document.createElement("div");
         div.className = "inv-item";
 
-        if (selectedItem === i.name) {
-            div.classList.add("selected");
-        }
+        if (selectedItem === i.name) div.classList.add("selected");
 
-        div.innerHTML = `${i.icon} ${i.name} : ${r[i.name] ?? 0}`;
+        div.innerHTML = `${i.icon} ${i.name}: ${r[i.name] ?? 0}`;
 
         div.onclick = () => {
             selectedItem = i.name;
-            load();
         };
 
         inv.appendChild(div);
@@ -321,41 +222,6 @@ async function plant() {
 async function harvest() {
     await fetch(BASE + "/game/harvest?name=" + playerName);
     load();
-}
-
-async function tick() {
-    await fetch(BASE + "/game/tick");
-    load();
-}
-
-async function sellWood() {
-    await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", {method:"POST"});
-    load();
-}
-
-async function sellOre() {
-    await fetch(BASE + "/game/sell/ore?name=" + playerName + "&amount=5", {method:"POST"});
-    load();
-}
-
-async function sellFood() {
-    await fetch(BASE + "/game/sell/food?name=" + playerName + "&amount=5", {method:"POST"});
-    load();
-}
-
-async function buySeeds() {
-    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1");
-    load();
-}
-
-// ===== SHOP =====
-
-function openShop() {
-    document.getElementById("shopModal").style.display = "block";
-}
-
-function closeShop() {
-    document.getElementById("shopModal").style.display = "none";
 }
 
 // ===== FIELDS =====
