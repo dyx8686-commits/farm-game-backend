@@ -61,7 +61,9 @@ button:hover {
     background: #45a049;
 }
 
-.farm, .tree, .mine {
+/* ===== OBJECTS ===== */
+
+.farm, .treeObj, .stoneObj, .shop {
     position: absolute;
     border-radius: 10px;
     cursor: pointer;
@@ -75,22 +77,6 @@ button:hover {
     background: #c58b45;
 }
 
-.tree {
-    top: 150px;
-    right: 180px;
-    width: 100px;
-    height: 100px;
-    background: #2e8b57;
-}
-
-.mine {
-    bottom: 80px;
-    right: 120px;
-    width: 140px;
-    height: 100px;
-    background: #555;
-}
-
 .shop {
     top: 220px;
     left: 200px;
@@ -98,17 +84,10 @@ button:hover {
     height: 90px;
     background: #ffcc00;
     border-radius: 12px;
-    cursor: pointer;
-}
-
-.field {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    border-radius: 6px;
 }
 
 /* ===== PLAYER ===== */
+
 #player {
     position: absolute;
     width: 30px;
@@ -118,6 +97,15 @@ button:hover {
     left: 420px;
     top: 260px;
     box-shadow: 0 0 10px rgba(255,0,0,0.6);
+}
+
+/* ===== FIELD ===== */
+
+.field {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    border-radius: 6px;
 }
 
 /* ===== INVENTORY ===== */
@@ -138,50 +126,28 @@ button:hover {
     cursor: pointer;
 }
 
-.inv-item:hover {
-    background: #f0f0f0;
-}
-
 .selected {
     background: #c8f7c5 !important;
 }
 
-/* ===== SHOP ===== */
+/* ===== GENERATED OBJECTS ===== */
 
-#shopModal {
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
+.treeObj {
+    width: 40px;
+    height: 40px;
+    background: #2e8b57;
 }
 
-.shop-box {
-    width: 420px;
-    margin: 80px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
+.stoneObj {
+    width: 40px;
+    height: 40px;
+    background: #666;
 }
 
-.shop-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.item {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-}
-
-.item img {
-    width: 60px;
-    height: 60px;
+.plantObj {
+    width: 40px;
+    height: 40px;
+    background: #3CB371;
 }
 
 </style>
@@ -201,7 +167,6 @@ button:hover {
 
         <button onclick="plant()">🌱 Plant</button>
         <button onclick="harvest()">🌾 Harvest</button>
-
         <button onclick="openShop()">🏪 Shop</button>
 
     </div>
@@ -209,49 +174,19 @@ button:hover {
     <div class="inventory" id="inventory"></div>
 
     <div id="farmerObjects">
-        <div class="farm" onclick="tick()"></div>
+        <div class="farm"></div>
         <div class="shop" onclick="openShop()"></div>
+
         <div id="fields"></div>
         <div id="player"></div>
+
+        <div id="farmerPlants"></div>
+        <div id="woodTrees"></div>
+        <div id="minerStones"></div>
     </div>
 
 </div>
 
-</div>
-
-<!-- SHOP -->
-<div id="shopModal">
-    <div class="shop-box">
-
-        <h2>🏪 Shop</h2>
-
-        <div class="shop-grid">
-
-            <div class="item">
-                <div>🌾 Seeds</div>
-                <button onclick="buySeeds()">Buy</button>
-            </div>
-
-            <div class="item">
-                <div>🪵 Wood</div>
-                <button onclick="sellWood()">Sell</button>
-            </div>
-
-            <div class="item">
-                <div>⛏ Ore</div>
-                <button onclick="sellOre()">Sell</button>
-            </div>
-
-            <div class="item">
-                <div>🍞 Food</div>
-                <button onclick="sellFood()">Sell</button>
-            </div>
-
-        </div>
-
-        <br>
-        <button onclick="closeShop()">❌ Close</button>
-    </div>
 </div>
 
 <script>
@@ -261,7 +196,7 @@ let playerName = new URLSearchParams(window.location.search).get("name");
 
 let selectedItem = null;
 
-// ===== LOAD =====
+// ================= LOAD =================
 
 async function load() {
 
@@ -286,21 +221,93 @@ async function load() {
 
     renderInventory(r);
     renderFields(player);
+    renderWorld();
     updatePlayerPosition();
 }
 
-// ===== PLAYER =====
+// ================= WORLD =================
+
+function renderWorld() {
+
+    renderPlants();
+    renderTrees();
+    renderStones();
+}
+
+// 🌱 FARMER (6 грядок)
+
+function renderPlants() {
+
+    const c = document.getElementById("farmerPlants");
+    if (!c) return;
+
+    c.innerHTML = "";
+
+    for (let i = 0; i < 6; i++) {
+
+        const d = document.createElement("div");
+        d.className = "plantObj";
+
+        d.style.left = (200 + (i % 3) * 60) + "px";
+        d.style.top = (220 + Math.floor(i / 3) * 60) + "px";
+
+        c.appendChild(d);
+    }
+}
+
+// 🌲 WOODCUTTER (6 деревьев)
+
+function renderTrees() {
+
+    const c = document.getElementById("woodTrees");
+    if (!c) return;
+
+    c.innerHTML = "";
+
+    for (let i = 0; i < 6; i++) {
+
+        const d = document.createElement("div");
+        d.className = "treeObj";
+
+        d.style.left = (140 + (i % 3) * 80) + "px";
+        d.style.top = (120 + Math.floor(i / 3) * 90) + "px";
+
+        c.appendChild(d);
+    }
+}
+
+// ⛏ MINER (6 камней)
+
+function renderStones() {
+
+    const c = document.getElementById("minerStones");
+    if (!c) return;
+
+    c.innerHTML = "";
+
+    for (let i = 0; i < 6; i++) {
+
+        const d = document.createElement("div");
+        d.className = "stoneObj";
+
+        d.style.left = (140 + (i % 3) * 80) + "px";
+        d.style.top = (200 + Math.floor(i / 3) * 80) + "px";
+
+        c.appendChild(d);
+    }
+}
+
+// ================= PLAYER =================
 
 function updatePlayerPosition() {
     const p = document.getElementById("player");
     if (!p) return;
 
-    // пока статично (потом добавим движение на NPC острове)
     p.style.left = "420px";
     p.style.top = "260px";
 }
 
-// ===== INVENTORY =====
+// ================= INVENTORY =================
 
 function renderInventory(r) {
 
@@ -318,25 +325,23 @@ function renderInventory(r) {
 
     items.forEach(i => {
 
-        const div = document.createElement("div");
-        div.className = "inv-item";
+        const d = document.createElement("div");
+        d.className = "inv-item";
 
-        if (selectedItem === i.name) {
-            div.classList.add("selected");
-        }
+        if (selectedItem === i.name) d.classList.add("selected");
 
-        div.innerHTML = `${i.icon} ${i.name} : ${r[i.name] ?? 0}`;
+        d.innerHTML = `${i.icon} ${i.name}: ${r[i.name] ?? 0}`;
 
-        div.onclick = () => {
+        d.onclick = () => {
             selectedItem = i.name;
             load();
         };
 
-        inv.appendChild(div);
+        inv.appendChild(d);
     });
 }
 
-// ===== ACTIONS =====
+// ================= ACTIONS =================
 
 async function plant() {
     await fetch(BASE + "/game/plant?name=" + playerName);
@@ -348,67 +353,32 @@ async function harvest() {
     load();
 }
 
-async function tick() {
-    await fetch(BASE + "/game/tick");
-    load();
-}
-
-async function sellWood() {
-    await fetch(BASE + "/game/sell/wood?name=" + playerName + "&amount=10", {method:"POST"});
-    load();
-}
-
-async function sellOre() {
-    await fetch(BASE + "/game/sell/ore?name=" + playerName + "&amount=5", {method:"POST"});
-    load();
-}
-
-async function sellFood() {
-    await fetch(BASE + "/game/sell/food?name=" + playerName + "&amount=5", {method:"POST"});
-    load();
-}
-
-async function buySeeds() {
-    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1");
-    load();
-}
-
-// ===== SHOP =====
-
-function openShop() {
-    document.getElementById("shopModal").style.display = "block";
-}
-
-function closeShop() {
-    document.getElementById("shopModal").style.display = "none";
-}
-
-// ===== FIELDS =====
+// ================= FIELDS =================
 
 function renderFields(player) {
 
-    const container = document.getElementById("fields");
-    container.innerHTML = "";
+    const c = document.getElementById("fields");
+    c.innerHTML = "";
 
     if (!player.fields) return;
 
     player.fields.forEach((f, i) => {
 
-        const div = document.createElement("div");
-        div.className = "field";
+        const d = document.createElement("div");
+        d.className = "field";
 
-        div.style.left = (300 + i * 50) + "px";
-        div.style.bottom = "120px";
+        d.style.left = (300 + i * 50) + "px";
+        d.style.bottom = "120px";
 
-        if (f.ready) div.style.background = "#FFD700";
-        else if (f.planted) div.style.background = "#8B5A2B";
-        else div.style.background = "#3CB371";
+        if (f.ready) d.style.background = "#FFD700";
+        else if (f.planted) d.style.background = "#8B5A2B";
+        else d.style.background = "#3CB371";
 
-        container.appendChild(div);
+        c.appendChild(d);
     });
 }
 
-// ===== START =====
+// ================= LOOP =================
 
 setInterval(load, 3000);
 load();
