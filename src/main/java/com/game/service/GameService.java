@@ -130,4 +130,26 @@ public class GameService {
 
         return null;
     }
+    public Player buySeeds(String name, int amount) {
+
+    Player player = getPlayer(name);
+
+    if (player == null) return null;
+
+    int cost = amount * 5; // 1 seed = 5 FOOD
+
+    int food = player.getResources().get("FOOD");
+
+    if (food < cost) {
+        return player; // не хватает еды
+    }
+
+    // списываем FOOD
+    player.getResources().put("FOOD", food - cost);
+
+    // добавляем seeds
+    player.setSeeds(player.getSeeds() + amount);
+
+    return player;
+}
 }
