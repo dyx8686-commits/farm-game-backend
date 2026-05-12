@@ -21,17 +21,17 @@ public class GameService {
         return player;
     }
 
-    // 📋 получить всех игроков
+    // 📋 все игроки
     public List<Player> getPlayers() {
         return players;
     }
 
-    // ⏱ tick (ресурсы + рост растений)
+    // ⏱ тик игры
     public void tick() {
 
         for (Player player : players) {
 
-            // 🌱 рост растений
+            // 🌱 рост полей
             if (player.getFields() != null) {
 
                 for (Field field : player.getFields()) {
@@ -48,7 +48,7 @@ public class GameService {
                 }
             }
 
-            // 💰 ресурсы
+            // 💰 авто ресурсы
             switch (player.getType()) {
 
                 case "FARMER":
@@ -117,11 +117,6 @@ public class GameService {
         }
 
         return player;
-        @PostMapping("/shop/seeds")
-public Player buySeeds(@RequestParam String name,
-                       @RequestParam int amount) {
-    return service.buySeeds(name, amount);
-}
     }
 
     // 🔍 найти игрока
@@ -135,26 +130,25 @@ public Player buySeeds(@RequestParam String name,
 
         return null;
     }
+
+    // 🛒 магазин семян
     public Player buySeeds(String name, int amount) {
 
-    Player player = getPlayer(name);
+        Player player = getPlayer(name);
 
-    if (player == null) return null;
+        if (player == null) return null;
 
-    int cost = amount * 5; // 1 seed = 5 FOOD
+        int cost = amount * 5;
 
-    int food = player.getResources().get("FOOD");
+        int food = player.getResources().get("FOOD");
 
-    if (food < cost) {
-        return player; // не хватает еды
+        if (food < cost) {
+            return player;
+        }
+
+        player.getResources().put("FOOD", food - cost);
+        player.setSeeds(player.getSeeds() + amount);
+
+        return player;
     }
-
-    // списываем FOOD
-    player.getResources().put("FOOD", food - cost);
-
-    // добавляем seeds
-    player.setSeeds(player.getSeeds() + amount);
-
-    return player;
-}
 }
