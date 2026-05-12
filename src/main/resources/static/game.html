@@ -66,7 +66,6 @@ h1 {
     border-radius: 6px;
     left: 420px;
     top: 260px;
-    box-shadow: 0 0 10px rgba(255,0,0,0.6);
 }
 
 /* FIELD */
@@ -98,7 +97,7 @@ h1 {
     background: #c8f7c5 !important;
 }
 
-/* WORLD */
+/* WORLD OBJECTS */
 .plantObj, .treeObj, .stoneObj {
     position: absolute;
     width: 35px;
@@ -136,7 +135,6 @@ h1 {
         <div class="shop"></div>
 
         <div id="fields"></div>
-
         <div id="player"></div>
 
         <div id="farmerPlants"></div>
@@ -185,25 +183,26 @@ async function load() {
     updatePlayer();
 }
 
-// ================= WORLD CONTROL =================
+// ================= WORLD =================
 
 function renderWorld(player) {
 
-    const plants = document.getElementById("farmerPlants");
-    const trees = document.getElementById("woodTrees");
-    const stones = document.getElementById("minerStones");
-
-    plants.innerHTML = "";
-    trees.innerHTML = "";
-    stones.innerHTML = "";
+    clearWorld();
 
     if (player.type === "FARMER") renderPlants();
     if (player.type === "WOODCUTTER") renderTrees();
     if (player.type === "MINER") renderStones();
 }
 
+function clearWorld() {
+    document.getElementById("farmerPlants").innerHTML = "";
+    document.getElementById("woodTrees").innerHTML = "";
+    document.getElementById("minerStones").innerHTML = "";
+}
+
 // 🌱 FARMER
 function renderPlants() {
+
     const c = document.getElementById("farmerPlants");
 
     for (let i = 0; i < 6; i++) {
@@ -213,12 +212,19 @@ function renderPlants() {
         d.style.left = (250 + (i % 3) * 60) + "px";
         d.style.top = (200 + Math.floor(i / 3) * 60) + "px";
 
+        d.onclick = () => {
+            if (selectedItem === "SEEDS") {
+                alert("🌱 Planted seed!");
+            }
+        };
+
         c.appendChild(d);
     }
 }
 
 // 🌲 WOODCUTTER
 function renderTrees() {
+
     const c = document.getElementById("woodTrees");
 
     for (let i = 0; i < 6; i++) {
@@ -228,12 +234,19 @@ function renderTrees() {
         d.style.left = (120 + (i % 3) * 80) + "px";
         d.style.top = (120 + Math.floor(i / 3) * 80) + "px";
 
+        d.onclick = () => {
+            if (selectedItem === "WOOD") {
+                alert("🪵 Chopped wood!");
+            }
+        };
+
         c.appendChild(d);
     }
 }
 
 // ⛏ MINER
 function renderStones() {
+
     const c = document.getElementById("minerStones");
 
     for (let i = 0; i < 6; i++) {
@@ -242,6 +255,12 @@ function renderStones() {
 
         d.style.left = (120 + (i % 3) * 80) + "px";
         d.style.top = (250 + Math.floor(i / 3) * 70) + "px";
+
+        d.onclick = () => {
+            if (selectedItem === "ORE") {
+                alert("⛏ Mined ore!");
+            }
+        };
 
         c.appendChild(d);
     }
@@ -281,7 +300,7 @@ function renderInventory(r) {
         d.innerHTML = `${i.icon} ${i.name}: ${r[i.name] ?? 0}`;
 
         d.onclick = () => {
-            selectedItem = i.name;
+            selectedItem = i.name === selectedItem ? null : i.name;
             load();
         };
 
@@ -292,6 +311,7 @@ function renderInventory(r) {
 // ================= ACTIONS =================
 
 async function plant() {
+    if (selectedItem !== "SEEDS") return alert("Select SEEDS first");
     await fetch(BASE + "/game/plant?name=" + playerName);
     load();
 }
@@ -299,31 +319,6 @@ async function plant() {
 async function harvest() {
     await fetch(BASE + "/game/harvest?name=" + playerName);
     load();
-}
-
-// ================= FIELDS =================
-
-function renderFields(player) {
-
-    const c = document.getElementById("fields");
-    c.innerHTML = "";
-
-    if (!player.fields) return;
-
-    player.fields.forEach((f, i) => {
-
-        const d = document.createElement("div");
-        d.className = "field";
-
-        d.style.left = (300 + i * 50) + "px";
-        d.style.bottom = "120px";
-
-        if (f.ready) d.style.background = "#FFD700";
-        else if (f.planted) d.style.background = "#8B5A2B";
-        else d.style.background = "#3CB371";
-
-        c.appendChild(d);
-    });
 }
 
 // ================= LOOP =================
