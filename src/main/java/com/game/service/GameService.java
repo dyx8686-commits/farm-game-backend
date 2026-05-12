@@ -218,4 +218,63 @@ public Player sellOre(String name, int amount) {
 
     return player;
 }
+    // 💰 продать дерево
+public Player sellWood(String name, int amount) {
+
+    Player player = getPlayer(name);
+    if (player == null) return null;
+
+    int wood = player.getResources().get("WOOD");
+
+    if (wood < amount) return player;
+
+    player.getResources().put("WOOD", wood - amount);
+
+    player.getResources().put(
+            "GOLD",
+            player.getResources().get("GOLD") + amount * 2
+    );
+
+    return player;
+}
+
+// 💰 продать руду
+public Player sellOre(String name, int amount) {
+
+    Player player = getPlayer(name);
+    if (player == null) return null;
+
+    int ore = player.getResources().get("ORE");
+
+    if (ore < amount) return player;
+
+    player.getResources().put("ORE", ore - amount);
+
+    player.getResources().put(
+            "GOLD",
+            player.getResources().get("GOLD") + amount * 5
+    );
+
+    return player;
+}
+
+// 💰 продать еду
+public Player sellFood(String name, int amount) {
+
+    Player player = getPlayer(name);
+    if (player == null) return null;
+
+    int food = player.getResources().get("FOOD");
+
+    if (food < amount) return player;
+
+    player.getResources().put("FOOD", food - amount);
+
+    player.getResources().put(
+            "GOLD",
+            player.getResources().get("GOLD") + amount
+    );
+
+    return player;
+}
 }
