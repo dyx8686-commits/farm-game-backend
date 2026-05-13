@@ -318,7 +318,7 @@ function renderPlants(player) {
 
         d.style.background = "#8B5A2B";
 
-        d.onclick = async () => {
+       d.onclick = () => useItemOnWorld("FIELD");
 
             if (selectedItem !== "SEEDS") {
                 alert("Select SEEDS in inventory");
@@ -348,7 +348,7 @@ function renderTrees() {
         d.style.left = (180 + (i % 3) * 90) + "px";
         d.style.top = (140 + Math.floor(i / 3) * 100) + "px";
 
-        d.onclick = async () => {
+        d.onclick = () => useItemOnWorld("TREE");
 
             await fetch(BASE + "/game/wood?name=" + playerName, {
                 method: "POST"
@@ -375,7 +375,7 @@ function renderStones() {
         d.style.left = (180 + (i % 3) * 90) + "px";
         d.style.top = (180 + Math.floor(i / 3) * 90) + "px";
 
-        d.onclick = async () => {
+        d.onclick = () => useItemOnWorld("STONE");
 
             await fetch(BASE + "/game/mine?name=" + playerName, {
                 method: "POST"
@@ -591,6 +591,51 @@ function closeShop() {
         inv.style.display = "block";
     } else {
         inv.style.display = "none";
+    }
+function useItemOnWorld(target) {
+
+    if (!selectedItem) {
+        alert("Выбери предмет в инвентаре");
+        return;
+    }
+
+    // FARM
+    if (target === "FIELD") {
+
+        if (selectedItem !== "SEEDS") {
+            alert("На поле можно использовать только семена");
+            return;
+        }
+
+        fetch(BASE + "/game/plant?name=" + playerName, {
+            method: "POST"
+        }).then(load);
+    }
+
+    // WOOD
+    if (target === "TREE") {
+
+        if (selectedItem !== "SAPLING") {
+            alert("На дереве можно использовать только саженец");
+            return;
+        }
+
+        fetch(BASE + "/game/wood?name=" + playerName, {
+            method: "POST"
+        }).then(load);
+    }
+
+    // MINE
+    if (target === "STONE") {
+
+        if (selectedItem !== "ORE_BOX") {
+            alert("На шахте нужна коробка для руды");
+            return;
+        }
+
+        fetch(BASE + "/game/mine?name=" + playerName, {
+            method: "POST"
+        }).then(load);
     }
 }
 
