@@ -10,23 +10,24 @@ public class Player {
     private String name;
     private String type;
 
-    private Map<String, Integer> resources = new HashMap<>();
+    // 🎒 ЕДИНЫЙ ИНВЕНТАРЬ
+    private Map<String, Integer> inventory = new HashMap<>();
 
-    private int gold = 0;
-
-    private int seeds = 5;
     private List<Field> fields = new ArrayList<>();
 
     public Player(String name, String type) {
 
         this.name = name;
         this.type = type;
-        this.gold = 0;
 
-        resources.put("FOOD", 0);
-        resources.put("WOOD", 0);
-        resources.put("ORE", 0);
-        resources.put("GOLD", 0);
+        // стартовые ресурсы
+        inventory.put("FOOD", 0);
+        inventory.put("WOOD", 0);
+        inventory.put("ORE", 0);
+        inventory.put("GOLD", 0);
+        inventory.put("SEEDS", 5);   // стартовые семена
+        inventory.put("SAPLING", 0); // для лесника
+        inventory.put("ORE_BOX", 0);  // для шахтера
     }
 
     // ===== BASIC INFO =====
@@ -39,21 +40,17 @@ public class Player {
         return type;
     }
 
-    // ===== RESOURCES =====
+    // ===== INVENTORY =====
 
-    public Map<String, Integer> getResources() {
-        return resources;
+    public Map<String, Integer> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Map<String, Integer> inventory) {
+        this.inventory = inventory;
     }
 
     // ===== FARM SYSTEM =====
-
-    public int getSeeds() {
-        return seeds;
-    }
-
-    public void setSeeds(int seeds) {
-        this.seeds = seeds;
-    }
 
     public List<Field> getFields() {
         return fields;
@@ -62,11 +59,4 @@ public class Player {
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
-    public int getGold() {
-    return gold;
-}
-
-public void setGold(int gold) {
-    this.gold = gold;
-}
 }
