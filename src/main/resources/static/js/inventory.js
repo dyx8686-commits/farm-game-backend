@@ -1,3 +1,4 @@
+window.renderInventory = renderInventory;
 let selectedItem = null;
 
 // открыть / закрыть инвентарь
