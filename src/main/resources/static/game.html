@@ -207,9 +207,7 @@ function renderPlants(player) {
     const c = document.getElementById("farmerPlants");
     c.innerHTML = "";
 
-    if (!player.fields) return;
-
-    player.fields.forEach((f, i) => {
+    for (let i = 0; i < 6; i++) {
 
         const d = document.createElement("div");
 
@@ -218,49 +216,23 @@ function renderPlants(player) {
         d.style.left = (240 + (i % 3) * 70) + "px";
         d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
 
-        // СОСТОЯНИЕ ГРЯДКИ
-
-        if (f.ready) {
-            d.style.background = "#FFD700";
-        }
-        else if (f.planted) {
-            d.style.background = "#8B5A2B";
-        }
-        else {
-            d.style.background = "#3CB371";
-        }
-
+        d.style.background = "#8B5A2B";
         d.style.border = "2px solid #5c3b15";
-
-        // КЛИК ПО ГРЯДКЕ
 
         d.onclick = async () => {
 
-            // СОБРАТЬ
-            if (f.ready) {
-
-                await fetch(BASE + "/game/harvest?name=" + playerName);
-
-                load();
+            if (selectedItem !== "SEEDS") {
+                alert("Select SEEDS in inventory");
                 return;
             }
 
-            // ПОСАДИТЬ
-            if (!f.planted) {
+            await fetch(BASE + "/game/plant?name=" + playerName);
 
-                if (selectedItem !== "SEEDS") {
-                    alert("Select SEEDS in inventory");
-                    return;
-                }
-
-                await fetch(BASE + "/game/plant?name=" + playerName);
-
-                load();
-            }
+            load();
         };
 
         c.appendChild(d);
-    });
+    }
 }
 
 // 🌲 WOODCUTTER
