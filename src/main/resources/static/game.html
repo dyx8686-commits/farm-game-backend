@@ -303,11 +303,18 @@ function renderWorld(player) {
 }
 
 // 🌱 FARMER
-function renderPlants(player) {
+    let fieldState = Array.from({ length: 6 }, () => ({
+    stage: "EMPTY",
+    timer: 0
+}));
+function renderPlants() {
 
     const c = document.getElementById("farmerPlants");
+    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
+
+        const state = fieldState[i];
 
         const d = document.createElement("div");
 
@@ -316,26 +323,83 @@ function renderPlants(player) {
         d.style.left = (240 + (i % 3) * 70) + "px";
         d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
 
-        d.style.background = "#8B5A2B";
+        // 🌱 ПУСТО
+        if (state.stage === "EMPTY") {
 
-       d.onclick = () => useItemOnWorld("FIELD");
+            d.style.background = "#8B5A2B";
+            d.innerText = "+";
 
-            if (selectedItem !== "SEEDS") {
-                alert("Select SEEDS in inventory");
-                return;
-            }
+            d.onclick = () => plantSeed(i);
+        }
 
-            await fetch(BASE + "/game/plant?name=" + playerName);
+        // 🌱 СЕМЯ
+        if (state.stage === "SEED") {
 
-            load();
-        };
+            d.style.background = "#A0522D";
+            d.innerText = "🌱";
+
+            setTimeout(() => {
+                fieldState[i].stage = "GROWING";
+                renderPlants();
+            }, 5000); // быстрое прорастание
+        }
+
+        // 🌿 РАСТЁТ
+        if (state.stage === "GROWING") {
+
+            d.style.background = "#7CFC00";
+            d.innerText = "🌿";
+
+            setTimeout(() => {
+                fieldState[i].stage = "READY";
+                renderPlants();
+            }, 10000); // рост
+        }
+
+        // 🌾 ГОТОВО
+        if (state.stage === "READY") {
+
+            d.style.background = "#FFD700";
+            d.innerText = "🌾";
+
+            d.onclick = async () => {
+
+                await fetch(BASE + "/game/harvest?name=" + playerName);
+
+                fieldState[i] = {
+                    stage: "EMPTY",
+                    timer: 0
+                };
+
+                renderPlants();
+                load();
+            };
+        }
 
         c.appendChild(d);
     }
+    function plantSeed(index) {
+
+    if (selectedItem !== "SEEDS") {
+        alert("Выбери семена");
+        return;
+    }
+
+    fieldState[index] = {
+        stage: "SEED",
+        timer: Date.now()
+    };
+
+    renderPlants();
+    load();
+}
 }
 
 // 🌲 WOODCUTTER
-let treeState = Array(6).fill(true);
+let treeState = Array(6).fill({
+    stage: "EMPTY", // EMPTY | SAPLING | TREE
+    timer: 0
+});
 
 function renderTrees() {
 
@@ -344,29 +408,85 @@ function renderTrees() {
 
     for (let i = 0; i < 6; i++) {
 
+        const state = treeState[i];
+
         const d = document.createElement("div");
 
-        if (!treeState[i]) continue;
+        // 🌱 ПУСТОЕ МЕСТО
+        if (state.stage === "EMPTY") {
+            continue;
+        }
 
-        d.className = "treeObj";
+        // 🌱 САЖЕНЕЦ
+        if (state.stage === "SAPLING") {
+            d.className = "treeObj";
+            d.style.background = "#8B4513";
 
+            d.innerText = "🌱";
+
+            setTimeout(() => {
+                treeState[i].stage = "TREE";
+                renderTrees();
+            }, 10000); // 10 сек рост
+        }
+
+        // 🌳 ДЕРЕВО
+        if (state.stage === "TREE") {
+            d.className = "treeObj";
+            d.style.background = "#2e8b57";
+            d.innerText = "🌳";
+
+            d.onclick = async () => {
+
+                await fetch(BASE + "/game/wood?name=" + playerName, {
+                    method: "POST"
+                });
+
+                // 💥 срубили → теперь пусто
+                treeState[i] = {
+                    stage: "EMPTY",
+                    timer: 0
+                };
+
+                renderTrees();
+                load();
+            };
+        }
+
+        d.style.position = "absolute";
         d.style.left = (180 + (i % 3) * 90) + "px";
         d.style.top = (140 + Math.floor(i / 3) * 100) + "px";
 
-        d.onclick = async () => {
-
-            await fetch(BASE + "/game/wood?name=" + playerName, {
-                method: "POST"
-            });
-
-            treeState[i] = false; // 💥 дерево исчезает
-
-            renderTrees();
-            load();
-        };
-
         c.appendChild(d);
     }
+    if (state.stage === "EMPTY") {
+
+    d.className = "treeObj";
+    d.style.background = "#5a3d1a";
+    d.innerText = "+";
+
+    d.onclick = () => plantTree(i);
+}
+    function plantTree(index) {
+
+    if (selectedItem !== "SAPLING") {
+        alert("Выбери саженец");
+        return;
+    }
+
+    if (treeState[index].stage !== "EMPTY") {
+        alert("Тут уже что-то есть");
+        return;
+    }
+
+    treeState[index] = {
+        stage: "SAPLING",
+        timer: Date.now()
+    };
+
+    load();
+    renderTrees();
+}
 }
 
 // ⛏ MINER
