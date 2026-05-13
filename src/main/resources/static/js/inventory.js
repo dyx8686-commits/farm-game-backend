@@ -92,3 +92,5 @@ function getSelectedItem() {
 function clearSelectedItem() {
     selectedItem = null;
 }
+window.openInventory = openInventory;
+}
