@@ -363,8 +363,6 @@ function renderInventory(r) {
     });
 }
 
-// ================= ACTIONS =================
-
 
 
 // ================= ACTIONS =================
@@ -422,7 +420,13 @@ function closeShop() {
 // ===== BUY FUNCTIONS (ОДИН ВАРИАНТ КАЖДОЙ) =====
 
 async function buySeeds() {
-    await fetch(BASE + "/game/shop/seeds?name=" + playerName, { method: "POST" });
+    const res = await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1", {
+        method: "POST"
+    });
+
+    const text = await res.text();
+    console.log("BUY SEEDS RESPONSE:", text);
+
     load();
 }
 
