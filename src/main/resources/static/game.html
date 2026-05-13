@@ -159,11 +159,7 @@ background:rgba(0,0,0,0.6);
     border-radius:12px;
     ">
 
-        <h2>🏪 Shop</h2>
-
-        <button onclick="buySeeds()">
-            Buy Seeds
-        </button>
+        <div id="shopContent"></div>
 
         <button onclick="closeShop()">
             Close
@@ -375,7 +371,56 @@ async function harvest() {
     await fetch(BASE + "/game/harvest?name=" + playerName);
     load();
 }
-    function openShop() {
+    async function openShop() {
+
+    const res = await fetch(BASE + "/game/players");
+    const players = await res.json();
+
+    const player = players.find(p => p.name === playerName);
+
+    if (!player) return;
+
+    const content = document.getElementById("shopContent");
+
+    // FARMER
+
+    if (player.type === "FARMER") {
+
+        content.innerHTML = `
+            <h2>🌱 Farmer Shop</h2>
+
+            <button onclick="buySeeds()">
+                Buy Seeds
+            </button>
+        `;
+    }
+
+    // WOODCUTTER
+
+    if (player.type === "WOODCUTTER") {
+
+        content.innerHTML = `
+            <h2>🌲 Wood Shop</h2>
+
+            <button onclick="buySapling()">
+                Buy Sapling
+            </button>
+        `;
+    }
+
+    // MINER
+
+    if (player.type === "MINER") {
+
+        content.innerHTML = `
+            <h2>⛏ Miner Shop</h2>
+
+            <button onclick="buyOreBox()">
+                Buy Ore Box
+            </button>
+        `;
+    }
+
     document.getElementById("shopModal").style.display = "block";
 }
 
@@ -393,6 +438,13 @@ async function buySeeds() {
     );
 
     load();
+}
+    function buySapling() {
+    alert("Saplings coming soon");
+}
+
+function buyOreBox() {
+    alert("Ore shop coming soon");
 }
 
 // ================= LOOP =================
