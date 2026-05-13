@@ -176,18 +176,19 @@ async function load() {
     const player = players.find(p => p.name === playerName);
     if (!player) return;
 
-    const inv = player.resources || {};
+    const inv = player.inventory || {};
 
-    document.getElementById("info").innerHTML = `
-        <b>${player.name}</b><br>
-        CLASS: ${player.type}<br><br>
+document.getElementById("info").innerHTML = `
+    <b>${player.name}</b><br>
+    CLASS: ${player.type}<br><br>
 
-        FOOD: ${inv.FOOD ?? 0}<br>
-        WOOD: ${inv.WOOD ?? 0}<br>
-        ORE: ${inv.ORE ?? 0}<br>
-        GOLD: ${inv.GOLD ?? 0}<br>
-        SEEDS: ${player.seeds ?? 0}
-    `;
+    FOOD: ${inv.FOOD ?? 0}<br>
+    WOOD: ${inv.WOOD ?? 0}<br>
+    ORE: ${inv.ORE ?? 0}<br>
+    GOLD: ${inv.GOLD ?? 0}<br>
+    SEEDS: ${inv.SEEDS ?? 0}<br>
+    SAPLING: ${inv.SAPLING ?? 0}<br>
+`;
 
     renderInventory(inv);
     renderWorld(player);
@@ -297,33 +298,37 @@ function renderStones() {
 
 function renderInventory(inv) {
 
-    const el = document.getElementById("inventory");
+    const inventory = document.getElementById("inventory");
 
     const items = [
-        {name:"FOOD", icon:"🍞"},
-        {name:"WOOD", icon:"🪵"},
-        {name:"ORE", icon:"⛏"},
-        {name:"GOLD", icon:"💰"},
-        {name:"SEEDS", icon:"🌾"}
+        { name: "FOOD", icon: "🍞" },
+        { name: "WOOD", icon: "🪵" },
+        { name: "ORE", icon: "⛏" },
+        { name: "GOLD", icon: "💰" },
+        { name: "SEEDS", icon: "🌾" },
+        { name: "SAPLING", icon: "🌱" },
+        { name: "ORE_BOX", icon: "📦" }
     ];
 
-    el.innerHTML = "";
+    inventory.innerHTML = "";
 
     items.forEach(i => {
 
-        const d = document.createElement("div");
-        d.className = "inv-item";
+        const div = document.createElement("div");
+        div.className = "inv-item";
 
-        if (selectedItem === i.name) d.classList.add("selected");
+        if (selectedItem === i.name) {
+            div.classList.add("selected");
+        }
 
-        d.innerHTML = `${i.icon} ${i.name}: ${inv[i.name] ?? 0}`;
+        div.innerHTML = `${i.icon} ${i.name}: ${inv[i.name] ?? 0}`;
 
-        d.onclick = () => {
-            selectedItem = i.name === selectedItem ? null : i.name;
+        div.onclick = () => {
+            selectedItem = selectedItem === i.name ? null : i.name;
             load();
         };
 
-        el.appendChild(d);
+        inventory.appendChild(div);
     });
 }
 
@@ -348,20 +353,26 @@ async function openShop() {
     let shopItems = [];
 
     if (player.type === "FARMER") {
-        shopItems = [{ name: "SEEDS", action: "buySeeds()" }];
+        shopItems = [
+            { name: "SEEDS", item: "SEEDS" }
+        ];
     }
 
     if (player.type === "WOODCUTTER") {
-        shopItems = [{ name: "SAPLING", action: "buySapling()" }];
+        shopItems = [
+            { name: "SAPLING", item: "SAPLING" }
+        ];
     }
 
     if (player.type === "MINER") {
-        shopItems = [{ name: "ORE_BOX", action: "buyOreBox()" }];
+        shopItems = [
+            { name: "ORE BOX", item: "ORE_BOX" }
+        ];
     }
 
     document.getElementById("shopContent").innerHTML =
         shopItems.map(i => `
-            <button onclick="${i.action}">
+            <button onclick="buyItem('${i.item}')">
                 Buy ${i.name}
             </button>
         `).join("");
@@ -369,25 +380,18 @@ async function openShop() {
     document.getElementById("shopModal").style.display = "block";
 }
 
-function closeShop() {
-    document.getElementById("shopModal").style.display = "none";
-}
-
 // ================= BUY =================
 
-async function buySeeds() {
-    await fetch(BASE + "/game/buySeeds?name=" + playerName + "&amount=1", {
-        method: "POST"
-    });
+async function buyItem(item) {
+
+    await fetch(
+        BASE + "/game/shop/buy?name=" + playerName + "&item=" + item + "&amount=1",
+        {
+            method: "POST"
+        }
+    );
+
     load();
-}
-
-async function buySapling() {
-    alert("Saplings coming soon");
-}
-
-async function buyOreBox() {
-    alert("Ore box coming soon");
 }
 
 // ================= LOOP =================
