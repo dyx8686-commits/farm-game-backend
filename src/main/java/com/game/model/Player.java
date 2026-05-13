@@ -20,26 +20,26 @@ public class Player {
     this.name = name;
     this.type = type;
 
-    inventory.put("FOOD", 0);
-    inventory.put("WOOD", 0);
-    inventory.put("ORE", 0);
-    inventory.put("GOLD", 0);
-    inventory.put("SEEDS", 5);
+    inventory.put("FOOD", 25);
+inventory.put("WOOD", 40);
+inventory.put("ORE", 15);
+inventory.put("GOLD", 120);
 
-    // 🌾 FARMER SEEDS
-    inventory.put("WHEAT_SEEDS", 0);
-    inventory.put("CORN_SEEDS", 0);
-    inventory.put("POTATO_SEEDS", 0);
+// 🌾 FARMER
+inventory.put("WHEAT_SEEDS", 12);
+inventory.put("CORN_SEEDS", 7);
+inventory.put("POTATO_SEEDS", 5);
 
-    // 🌲 WOODCUTTER
-    inventory.put("OAK_SAPLING", 0);
-    inventory.put("PINE_SAPLING", 0);
+// 🌲 WOODCUTTER
+inventory.put("OAK_SAPLING", 8);
+inventory.put("PINE_SAPLING", 4);
 
-    // ⛏ MINER
-    inventory.put("COPPER_ORE", 0);
-    inventory.put("IRON_ORE", 0);
-    inventory.put("GOLD_ORE_BOX", 0);
-}
+// ⛏ MINER
+inventory.put("COPPER_ORE", 13);
+inventory.put("IRON_ORE", 6);
+inventory.put("GOLD_ORE_BOX", 2);
+
+        
     // ===== BASIC INFO =====
 
     public String getName() {
