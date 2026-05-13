@@ -420,12 +420,9 @@ function closeShop() {
 // ===== BUY FUNCTIONS (ОДИН ВАРИАНТ КАЖДОЙ) =====
 
 async function buySeeds() {
-    const res = await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1", {
+    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1", {
         method: "POST"
     });
-
-    const text = await res.text();
-    console.log("BUY SEEDS RESPONSE:", text);
 
     load();
 }
