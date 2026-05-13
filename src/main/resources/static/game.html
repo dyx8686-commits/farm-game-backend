@@ -335,25 +335,33 @@ function renderPlants(player) {
 }
 
 // 🌲 WOODCUTTER
+let treeState = Array(6).fill(true);
+
 function renderTrees() {
 
     const c = document.getElementById("woodTrees");
+    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
 
         const d = document.createElement("div");
+
+        if (!treeState[i]) continue;
 
         d.className = "treeObj";
 
         d.style.left = (180 + (i % 3) * 90) + "px";
         d.style.top = (140 + Math.floor(i / 3) * 100) + "px";
 
-        d.onclick = () => useItemOnWorld("TREE");
+        d.onclick = async () => {
 
             await fetch(BASE + "/game/wood?name=" + playerName, {
                 method: "POST"
             });
 
+            treeState[i] = false; // 💥 дерево исчезает
+
+            renderTrees();
             load();
         };
 
@@ -362,11 +370,15 @@ function renderTrees() {
 }
 
 // ⛏ MINER
+    let stoneState = Array(6).fill(true);
 function renderStones() {
 
     const c = document.getElementById("minerStones");
+    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
+
+        if (!stoneState[i]) continue;
 
         const d = document.createElement("div");
 
@@ -375,19 +387,21 @@ function renderStones() {
         d.style.left = (180 + (i % 3) * 90) + "px";
         d.style.top = (180 + Math.floor(i / 3) * 90) + "px";
 
-        d.onclick = () => useItemOnWorld("STONE");
+        d.onclick = async () => {
 
             await fetch(BASE + "/game/mine?name=" + playerName, {
                 method: "POST"
             });
 
+            stoneState[i] = false; // 💥 шахта истощается
+
+            renderStones();
             load();
         };
 
         c.appendChild(d);
     }
 }
-
 // ================= INVENTORY =================
 
 function renderInventory(inv) {
