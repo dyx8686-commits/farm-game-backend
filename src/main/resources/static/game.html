@@ -354,20 +354,25 @@ async function openShop() {
 
     if (player.type === "FARMER") {
         shopItems = [
-            { name: "SEEDS", item: "SEEDS" }
-        ];
+    { name: "Wheat Seeds", item: "WHEAT_SEEDS" },
+    { name: "Corn Seeds", item: "CORN_SEEDS" },
+    { name: "Potato Seeds", item: "POTATO_SEEDS" }
+];
     }
 
     if (player.type === "WOODCUTTER") {
         shopItems = [
-            { name: "SAPLING", item: "SAPLING" }
-        ];
+    { name: "Oak Sapling", item: "OAK_SAPLING" },
+    { name: "Pine Sapling", item: "PINE_SAPLING" }
+];
     }
 
     if (player.type === "MINER") {
         shopItems = [
-            { name: "ORE BOX", item: "ORE_BOX" }
-        ];
+    { name: "Copper Ore", item: "COPPER_ORE" },
+    { name: "Iron Ore", item: "IRON_ORE" },
+    { name: "Gold Ore Box", item: "GOLD_ORE_BOX" }
+];
     }
 
     document.getElementById("shopContent").innerHTML =
