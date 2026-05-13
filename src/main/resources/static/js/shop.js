@@ -90,14 +90,20 @@ async function openShop() {
 
 async function buyItem(item) {
 
-    await fetch(
+    console.log("BUY CLICK:", item);
+
+    const response = await fetch(
         BASE + "/game/shop/buy?name=" + playerName +
         "&item=" + item +
         "&amount=1",
-        { method: "POST" }
+        {
+            method: "POST"
+        }
     );
 
-    load(); // обновить игру после покупки
+    console.log("STATUS:", response.status);
+
+    load();
 }
 
 // ================= CLOSE SHOP =================
