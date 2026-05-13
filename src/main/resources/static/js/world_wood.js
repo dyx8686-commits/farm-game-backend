@@ -26,14 +26,7 @@ function renderTrees() {
         d.style.top = (140 + Math.floor(i / 3) * 100) + "px";
 
         // ================= EMPTY =================
-        if (state.stage === "EMPTY") {
-
-            d.style.background = "#5a3d1a";
-            d.innerText = "+";
-
-            d.onclick = () => plantTree(i);
-        }
-
+        
         // ================= SAPLING =================
         if (state.stage === "SAPLING") {
 
