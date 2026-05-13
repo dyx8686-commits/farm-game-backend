@@ -70,13 +70,17 @@ h1 {
 
 /* INVENTORY */
 .inventory {
-    position: absolute;
+    position: fixed;
+    top: 80px;
     right: 20px;
-    top: 20px;
-    width: 180px;
+    width: 260px;
+    max-height: 400px;
+    overflow-y: auto;
     background: white;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    z-index: 1000;
 }
 
 .inv-item {
@@ -116,7 +120,11 @@ h1 {
         <div id="info">Loading...</div>
     </div>
 
-    <div class="inventory" id="inventory"></div>
+    <button id="inventoryBtn" onclick="openInventory()">
+    🎒 Inventory
+</button>
+
+<div class="inventory" id="inventory" style="display:none;"></div>
 
     <div id="farmerObjects">
 
@@ -405,6 +413,16 @@ function closeShop() {
 
     document.getElementById("shopModal").style.display = "none";
 
+}
+    function openInventory() {
+
+    const inv = document.getElementById("inventory");
+
+    if (inv.style.display === "none") {
+        inv.style.display = "block";
+    } else {
+        inv.style.display = "none";
+    }
 }
 
 // ================= LOOP =================
