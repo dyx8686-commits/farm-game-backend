@@ -275,31 +275,71 @@ public Player buyOre(String name, int amount) {
 
     switch (item) {
 
-        case "SEEDS" -> {
+        // 🌾 FARMER SEEDS
+        case "WHEAT_SEEDS" -> {
             int cost = amount * 5;
-
-            if (inv.getOrDefault("FOOD", 0) < cost) return player;
-
-            inv.put("FOOD", inv.get("FOOD") - cost);
-            inv.put("SEEDS", inv.getOrDefault("SEEDS", 0) + amount);
-        }
-
-        case "SAPLING" -> {
-            int cost = amount * 6;
-
-            if (inv.getOrDefault("WOOD", 0) < cost) return player;
-
-            inv.put("WOOD", inv.get("WOOD") - cost);
-            inv.put("SAPLING", inv.getOrDefault("SAPLING", 0) + amount);
-        }
-
-        case "ORE_BOX" -> {
-            int cost = amount * 10;
-
             if (inv.getOrDefault("GOLD", 0) < cost) return player;
 
             inv.put("GOLD", inv.get("GOLD") - cost);
-            inv.put("ORE", inv.getOrDefault("ORE", 0) + amount * 5);
+            inv.put("WHEAT_SEEDS", inv.getOrDefault("WHEAT_SEEDS", 0) + amount);
+        }
+
+        case "CORN_SEEDS" -> {
+            int cost = amount * 7;
+            if (inv.getOrDefault("GOLD", 0) < cost) return player;
+
+            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("CORN_SEEDS", inv.getOrDefault("CORN_SEEDS", 0) + amount);
+        }
+
+        case "POTATO_SEEDS" -> {
+            int cost = amount * 6;
+            if (inv.getOrDefault("GOLD", 0) < cost) return player;
+
+            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("POTATO_SEEDS", inv.getOrDefault("POTATO_SEEDS", 0) + amount);
+        }
+
+        // 🌲 WOODCUTTER SAPLINGS
+        case "OAK_SAPLING" -> {
+            int cost = amount * 4;
+            if (inv.getOrDefault("WOOD", 0) < cost) return player;
+
+            inv.put("WOOD", inv.get("WOOD") - cost);
+            inv.put("OAK_SAPLING", inv.getOrDefault("OAK_SAPLING", 0) + amount);
+        }
+
+        case "PINE_SAPLING" -> {
+            int cost = amount * 6;
+            if (inv.getOrDefault("WOOD", 0) < cost) return player;
+
+            inv.put("WOOD", inv.get("WOOD") - cost);
+            inv.put("PINE_SAPLING", inv.getOrDefault("PINE_SAPLING", 0) + amount);
+        }
+
+        // ⛏ MINER RESOURCES
+        case "COPPER_ORE" -> {
+            int cost = amount * 3;
+            if (inv.getOrDefault("GOLD", 0) < cost) return player;
+
+            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("COPPER_ORE", inv.getOrDefault("COPPER_ORE", 0) + amount);
+        }
+
+        case "IRON_ORE" -> {
+            int cost = amount * 6;
+            if (inv.getOrDefault("GOLD", 0) < cost) return player;
+
+            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("IRON_ORE", inv.getOrDefault("IRON_ORE", 0) + amount);
+        }
+
+        case "GOLD_ORE_BOX" -> {
+            int cost = amount * 10;
+            if (inv.getOrDefault("GOLD", 0) < cost) return player;
+
+            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("GOLD_ORE", inv.getOrDefault("GOLD_ORE", 0) + amount);
         }
     }
 
