@@ -73,14 +73,60 @@ h1 {
     position: fixed;
     top: 80px;
     right: 20px;
-    width: 260px;
-    max-height: 400px;
-    overflow-y: auto;
-    background: white;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    width: 320px;
+    background: #c6c6c6;
+    padding: 12px;
+    border: 4px solid #555;
+    border-radius: 8px;
+    display: none;
     z-index: 1000;
+}
+
+/* GRID */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+/* SLOT */
+.inv-item {
+    width: 65px;
+    height: 65px;
+    background: #8b8b8b;
+    border: 3px solid #555;
+    border-radius: 6px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+
+    position: relative;
+}
+
+/* HOVER */
+.inv-item:hover {
+    background: #999;
+}
+
+/* SELECTED */
+.selected {
+    border: 3px solid yellow !important;
+}
+
+/* ITEM COUNT */
+.inv-count {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
 }
 
 .inv-item {
@@ -313,30 +359,51 @@ function renderInventory(inv) {
         { name: "WOOD", icon: "🪵" },
         { name: "ORE", icon: "⛏" },
         { name: "GOLD", icon: "💰" },
-        { name: "SEEDS", icon: "🌾" },
-        { name: "SAPLING", icon: "🌱" },
-        { name: "ORE_BOX", icon: "📦" }
+
+        { name: "WHEAT_SEEDS", icon: "🌾" },
+        { name: "CORN_SEEDS", icon: "🌽" },
+        { name: "POTATO_SEEDS", icon: "🥔" },
+
+        { name: "OAK_SAPLING", icon: "🌳" },
+        { name: "PINE_SAPLING", icon: "🌲" },
+
+        { name: "COPPER_ORE", icon: "🟤" },
+        { name: "IRON_ORE", icon: "⚙️" },
+        { name: "GOLD_ORE_BOX", icon: "📦" }
     ];
 
-    inventory.innerHTML = "";
+    inventory.innerHTML = `<div class="inventory-grid"></div>`;
+
+    const grid = inventory.querySelector(".inventory-grid");
 
     items.forEach(i => {
 
+        const amount = inv[i.name] ?? 0;
+
+        if (amount <= 0) return;
+
         const div = document.createElement("div");
+
         div.className = "inv-item";
 
         if (selectedItem === i.name) {
             div.classList.add("selected");
         }
 
-        div.innerHTML = `${i.icon} ${i.name}: ${inv[i.name] ?? 0}`;
+        div.innerHTML = `
+            <div>${i.icon}</div>
+            <div class="inv-count">${amount}</div>
+        `;
 
         div.onclick = () => {
-            selectedItem = selectedItem === i.name ? null : i.name;
+
+            selectedItem =
+                selectedItem === i.name ? null : i.name;
+
             load();
         };
 
-        inventory.appendChild(div);
+        grid.appendChild(div);
     });
 }
 
