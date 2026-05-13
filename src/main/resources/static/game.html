@@ -367,59 +367,50 @@ function renderInventory(r) {
 
 
 
+// ================= ACTIONS =================
+
 async function harvest() {
     await fetch(BASE + "/game/harvest?name=" + playerName);
     load();
 }
-    async function openShop() {
+
+// ===== SHOP =====
+
+async function openShop() {
 
     const res = await fetch(BASE + "/game/players");
     const players = await res.json();
 
     const player = players.find(p => p.name === playerName);
-
     if (!player) return;
+
+    let shopItems = [];
+
+    if (player.type === "FARMER") {
+        shopItems = [
+            { name: "SEEDS", action: "buySeeds()" }
+        ];
+    }
+
+    if (player.type === "WOODCUTTER") {
+        shopItems = [
+            { name: "SAPLING", action: "buySapling()" }
+        ];
+    }
+
+    if (player.type === "MINER") {
+        shopItems = [
+            { name: "PICKAXE", action: "buyPickaxe()" }
+        ];
+    }
 
     const content = document.getElementById("shopContent");
 
-    // FARMER
-
-    if (player.type === "FARMER") {
-
-        content.innerHTML = `
-            <h2>🌱 Farmer Shop</h2>
-
-            <button onclick="buySeeds()">
-                Buy Seeds
-            </button>
-        `;
-    }
-
-    // WOODCUTTER
-
-    if (player.type === "WOODCUTTER") {
-
-        content.innerHTML = `
-            <h2>🌲 Wood Shop</h2>
-
-            <button onclick="buySapling()">
-                Buy Sapling
-            </button>
-        `;
-    }
-
-    // MINER
-
-    if (player.type === "MINER") {
-
-        content.innerHTML = `
-            <h2>⛏ Miner Shop</h2>
-
-            <button onclick="buyOreBox()">
-                Buy Ore Box
-            </button>
-        `;
-    }
+    content.innerHTML = shopItems.map(i => `
+        <button onclick="${i.action}">
+            Buy ${i.name}
+        </button>
+    `).join("");
 
     document.getElementById("shopModal").style.display = "block";
 }
@@ -428,23 +419,19 @@ function closeShop() {
     document.getElementById("shopModal").style.display = "none";
 }
 
+// ===== BUY FUNCTIONS (ОДИН ВАРИАНТ КАЖДОЙ) =====
+
 async function buySeeds() {
-
-    await fetch(
-        BASE + "/game/shop/seeds?name=" + playerName + "&amount=1",
-        {
-            method: "POST"
-        }
-    );
-
+    await fetch(BASE + "/game/shop/seeds?name=" + playerName, { method: "POST" });
     load();
 }
-    function buySapling() {
+
+function buySapling() {
     alert("Saplings coming soon");
 }
 
-function buyOreBox() {
-    alert("Ore shop coming soon");
+function buyPickaxe() {
+    alert("Pickaxes coming soon");
 }
 
 // ================= LOOP =================
