@@ -118,6 +118,46 @@ h1 {
 .selected {
     border: 3px solid yellow !important;
 }
+/* ===== SHOP GRID ===== */
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.shop-item {
+
+    background: #8b8b8b;
+    border: 3px solid #555;
+    border-radius: 8px;
+
+    padding: 10px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    color: white;
+
+    transition: 0.2s;
+}
+
+.shop-item:hover {
+    background: #999;
+    transform: scale(1.03);
+}
+
+.shop-icon {
+    font-size: 32px;
+}
+
+.shop-price {
+    margin-top: 5px;
+    font-size: 13px;
+    color: gold;
+}
 
 /* ITEM COUNT */
 .inv-count {
@@ -423,39 +463,101 @@ async function openShop() {
     const players = await res.json();
 
     const player = players.find(p => p.name === playerName);
+
     if (!player) return;
 
     let shopItems = [];
 
+    // 🌾 FARMER
     if (player.type === "FARMER") {
+
         shopItems = [
-    { name: "Wheat Seeds", item: "WHEAT_SEEDS" },
-    { name: "Corn Seeds", item: "CORN_SEEDS" },
-    { name: "Potato Seeds", item: "POTATO_SEEDS" }
-];
+
+            {
+                item: "SEEDS",
+                icon: "🌾",
+                price: 5
+            },
+
+            {
+                item: "CARROT",
+                icon: "🥕",
+                price: 8
+            },
+
+            {
+                item: "WHEAT",
+                icon: "🌽",
+                price: 10
+            }
+        ];
     }
 
+    // 🌲 WOODCUTTER
     if (player.type === "WOODCUTTER") {
+
         shopItems = [
-    { name: "Oak Sapling", item: "OAK_SAPLING" },
-    { name: "Pine Sapling", item: "PINE_SAPLING" }
-];
+
+            {
+                item: "SAPLING",
+                icon: "🌳",
+                price: 12
+            },
+
+            {
+                item: "OAK_LOG",
+                icon: "🪵",
+                price: 15
+            }
+        ];
     }
 
+    // ⛏ MINER
     if (player.type === "MINER") {
+
         shopItems = [
-    { name: "Copper Ore", item: "COPPER_ORE" },
-    { name: "Iron Ore", item: "IRON_ORE" },
-    { name: "Gold Ore Box", item: "GOLD_ORE_BOX" }
-];
+
+            {
+                item: "ORE_BOX",
+                icon: "📦",
+                price: 20
+            },
+
+            {
+                item: "IRON_ORE",
+                icon: "⛓️",
+                price: 25
+            }
+        ];
     }
 
-    document.getElementById("shopContent").innerHTML =
-        shopItems.map(i => `
-            <button onclick="buyItem('${i.item}')">
-                Buy ${i.name}
-            </button>
-        `).join("");
+    document.getElementById("shopContent").innerHTML = `
+
+        <div class="shop-grid">
+
+            ${shopItems.map(i => `
+
+                <div class="shop-item"
+                     onclick="buyItem('${i.item}')">
+
+                    <div class="shop-icon">
+                        ${i.icon}
+                    </div>
+
+                    <div>
+                        ${i.item}
+                    </div>
+
+                    <div class="shop-price">
+                        💰 ${i.price}
+                    </div>
+
+                </div>
+
+            `).join("")}
+
+        </div>
+    `;
 
     document.getElementById("shopModal").style.display = "block";
 }
