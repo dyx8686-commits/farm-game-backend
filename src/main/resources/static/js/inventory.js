@@ -3,21 +3,16 @@ let selectedItem = null;
 // открыть / закрыть инвентарь
 function openInventory() {
     const inv = document.getElementById("inventory");
-
     if (!inv) return;
 
-    if (inv.style.display === "none" || inv.style.display === "") {
-        inv.style.display = "block";
-    } else {
-        inv.style.display = "none";
-    }
+    const isOpen = inv.style.display === "block";
+    inv.style.display = isOpen ? "none" : "block";
 }
 
 // рендер инвентаря
 function renderInventory(inv) {
 
     const inventory = document.getElementById("inventory");
-
     if (!inventory) return;
 
     const items = [
@@ -37,13 +32,13 @@ function renderInventory(inv) {
         { name: "PINE_SAPLING", icon: "🌲" }
     ];
 
+    // header + grid
     inventory.innerHTML = `
         <div style="
             display:flex;
             justify-content:space-between;
             align-items:center;
             margin-bottom:10px;
-            color:#333;
             font-weight:bold;
         ">
             🎒 Inventory
@@ -58,7 +53,6 @@ function renderInventory(inv) {
     items.forEach(item => {
 
         const amount = inv[item.name] ?? 0;
-
         if (amount <= 0) return;
 
         const slot = document.createElement("div");
@@ -74,11 +68,14 @@ function renderInventory(inv) {
         `;
 
         slot.onclick = () => {
-            selectedItem = (selectedItem === item.name) ? null : item.name;
+
+            selectedItem =
+                selectedItem === item.name ? null : item.name;
+
             renderInventory(inv);
         };
 
-        inventory.appendChild(slot);
+        grid.appendChild(slot);
     });
 }
 
@@ -87,7 +84,7 @@ function getSelectedItem() {
     return selectedItem;
 }
 
-// очистка выбора (например после использования)
+// очистка выбора
 function clearSelectedItem() {
     selectedItem = null;
 }
