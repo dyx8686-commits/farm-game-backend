@@ -40,8 +40,6 @@ h1 {
     cursor: pointer;
 }
 
-
-
 .shop {
     top: 220px;
     left: 200px;
@@ -116,18 +114,14 @@ h1 {
 
     <div class="panel">
         <div id="info">Loading...</div>
-
-       
     </div>
 
     <div class="inventory" id="inventory"></div>
 
     <div id="farmerObjects">
 
-        
         <div class="shop" onclick="openShop()"></div>
 
-        
         <div id="player"></div>
 
         <div id="farmerPlants"></div>
@@ -139,8 +133,8 @@ h1 {
 </div>
 
 </div>
-    <!-- SHOP -->
 
+<!-- SHOP -->
 <div id="shopModal" style="
 display:none;
 position:fixed;
@@ -161,12 +155,8 @@ background:rgba(0,0,0,0.6);
 
         <div id="shopContent"></div>
 
-        <button onclick="closeShop()">
-            Close
-        </button>
-
+        <button onclick="closeShop()">Close</button>
     </div>
-
 </div>
 
 <script>
@@ -186,20 +176,20 @@ async function load() {
     const player = players.find(p => p.name === playerName);
     if (!player) return;
 
-    const r = player.resources || {};
+    const inv = player.resources || {};
 
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
         CLASS: ${player.type}<br><br>
 
-        FOOD: ${r.FOOD ?? 0}<br>
-        WOOD: ${r.WOOD ?? 0}<br>
-        ORE: ${r.ORE ?? 0}<br>
-        GOLD: ${r.GOLD ?? 0}<br>
+        FOOD: ${inv.FOOD ?? 0}<br>
+        WOOD: ${inv.WOOD ?? 0}<br>
+        ORE: ${inv.ORE ?? 0}<br>
+        GOLD: ${inv.GOLD ?? 0}<br>
         SEEDS: ${player.seeds ?? 0}
     `;
 
-    renderInventory(r);
+    renderInventory(inv);
     renderWorld(player);
     updatePlayer();
 }
@@ -212,29 +202,15 @@ function renderWorld(player) {
     document.getElementById("woodTrees").innerHTML = "";
     document.getElementById("minerStones").innerHTML = "";
 
-    if (player.type === "FARMER") {
-        renderPlants(player);
-    }
-
-    if (player.type === "WOODCUTTER") {
-        renderTrees(player);
-    }
-
-    if (player.type === "MINER") {
-        renderStones(player);
-    }
-}
-function clearWorld() {
-    document.getElementById("farmerPlants").innerHTML = "";
-    document.getElementById("woodTrees").innerHTML = "";
-    document.getElementById("minerStones").innerHTML = "";
+    if (player.type === "FARMER") renderPlants(player);
+    if (player.type === "WOODCUTTER") renderTrees(player);
+    if (player.type === "MINER") renderStones(player);
 }
 
 // 🌱 FARMER
 function renderPlants(player) {
 
     const c = document.getElementById("farmerPlants");
-    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
 
@@ -246,7 +222,6 @@ function renderPlants(player) {
         d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
 
         d.style.background = "#8B5A2B";
-        d.style.border = "2px solid #5c3b15";
 
         d.onclick = async () => {
 
@@ -268,7 +243,6 @@ function renderPlants(player) {
 function renderTrees() {
 
     const c = document.getElementById("woodTrees");
-    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
 
@@ -282,7 +256,7 @@ function renderTrees() {
         d.onclick = async () => {
 
             await fetch(BASE + "/game/wood?name=" + playerName, {
-                method:"POST"
+                method: "POST"
             });
 
             load();
@@ -292,12 +266,10 @@ function renderTrees() {
     }
 }
 
-
 // ⛏ MINER
 function renderStones() {
 
     const c = document.getElementById("minerStones");
-    c.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
 
@@ -311,7 +283,7 @@ function renderStones() {
         d.onclick = async () => {
 
             await fetch(BASE + "/game/mine?name=" + playerName, {
-                method:"POST"
+                method: "POST"
             });
 
             load();
@@ -319,6 +291,40 @@ function renderStones() {
 
         c.appendChild(d);
     }
+}
+
+// ================= INVENTORY =================
+
+function renderInventory(inv) {
+
+    const el = document.getElementById("inventory");
+
+    const items = [
+        {name:"FOOD", icon:"🍞"},
+        {name:"WOOD", icon:"🪵"},
+        {name:"ORE", icon:"⛏"},
+        {name:"GOLD", icon:"💰"},
+        {name:"SEEDS", icon:"🌾"}
+    ];
+
+    el.innerHTML = "";
+
+    items.forEach(i => {
+
+        const d = document.createElement("div");
+        d.className = "inv-item";
+
+        if (selectedItem === i.name) d.classList.add("selected");
+
+        d.innerHTML = `${i.icon} ${i.name}: ${inv[i.name] ?? 0}`;
+
+        d.onclick = () => {
+            selectedItem = i.name === selectedItem ? null : i.name;
+            load();
+        };
+
+        el.appendChild(d);
+    });
 }
 
 // ================= PLAYER =================
@@ -329,50 +335,7 @@ function updatePlayer() {
     p.style.top = "260px";
 }
 
-// ================= INVENTORY =================
-
-function renderInventory(r) {
-
-    const inv = document.getElementById("inventory");
-
-    const items = [
-        {name:"FOOD", icon:"🍞"},
-        {name:"WOOD", icon:"🪵"},
-        {name:"ORE", icon:"⛏"},
-        {name:"GOLD", icon:"💰"},
-        {name:"SEEDS", icon:"🌾"}
-    ];
-
-    inv.innerHTML = "";
-
-    items.forEach(i => {
-
-        const d = document.createElement("div");
-        d.className = "inv-item";
-
-        if (selectedItem === i.name) d.classList.add("selected");
-
-        d.innerHTML = `${i.icon} ${i.name}: ${r[i.name] ?? 0}`;
-
-        d.onclick = () => {
-            selectedItem = i.name === selectedItem ? null : i.name;
-            load();
-        };
-
-        inv.appendChild(d);
-    });
-}
-
-
-
-// ================= ACTIONS =================
-
-async function harvest() {
-    await fetch(BASE + "/game/harvest?name=" + playerName);
-    load();
-}
-
-// ===== SHOP =====
+// ================= SHOP =================
 
 async function openShop() {
 
@@ -385,30 +348,23 @@ async function openShop() {
     let shopItems = [];
 
     if (player.type === "FARMER") {
-        shopItems = [
-            { name: "SEEDS", action: "buySeeds()" }
-        ];
+        shopItems = [{ name: "SEEDS", action: "buySeeds()" }];
     }
 
     if (player.type === "WOODCUTTER") {
-        shopItems = [
-            { name: "SAPLING", action: "buySapling()" }
-        ];
+        shopItems = [{ name: "SAPLING", action: "buySapling()" }];
     }
 
     if (player.type === "MINER") {
-        shopItems = [
-            { name: "PICKAXE", action: "buyPickaxe()" }
-        ];
+        shopItems = [{ name: "ORE_BOX", action: "buyOreBox()" }];
     }
 
-    const content = document.getElementById("shopContent");
-
-    content.innerHTML = shopItems.map(i => `
-        <button onclick="${i.action}">
-            Buy ${i.name}
-        </button>
-    `).join("");
+    document.getElementById("shopContent").innerHTML =
+        shopItems.map(i => `
+            <button onclick="${i.action}">
+                Buy ${i.name}
+            </button>
+        `).join("");
 
     document.getElementById("shopModal").style.display = "block";
 }
@@ -417,22 +373,21 @@ function closeShop() {
     document.getElementById("shopModal").style.display = "none";
 }
 
-// ===== BUY FUNCTIONS (ОДИН ВАРИАНТ КАЖДОЙ) =====
+// ================= BUY =================
 
 async function buySeeds() {
-    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1", {
+    await fetch(BASE + "/game/buySeeds?name=" + playerName + "&amount=1", {
         method: "POST"
     });
-
     load();
 }
 
-function buySapling() {
+async function buySapling() {
     alert("Saplings coming soon");
 }
 
-function buyPickaxe() {
-    alert("Pickaxes coming soon");
+async function buyOreBox() {
+    alert("Ore box coming soon");
 }
 
 // ================= LOOP =================
