@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GameService {
@@ -14,17 +15,24 @@ public class GameService {
 
     // 🧑 создать игрока
     public Player createPlayer(String name, String type) {
-
         Player player = new Player(name, type);
-
         players.add(player);
-
         return player;
     }
 
     // 📋 все игроки
     public List<Player> getPlayers() {
         return players;
+    }
+
+    // 🔍 игрок
+    public Player getPlayer(String name) {
+        for (Player player : players) {
+            if (player.getName().equals(name)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     // ⏱ тик игры
@@ -48,23 +56,16 @@ public class GameService {
                 }
             }
 
-            player.getResources().put(
-                    "FOOD",
-                    player.getResources().getOrDefault("FOOD", 0)
-                            + (player.getType().equals("FARMER") ? 10 : 0)
-            );
+            Map<String, Integer> inv = player.getInventory();
 
-            player.getResources().put(
-                    "WOOD",
-                    player.getResources().getOrDefault("WOOD", 0)
-                            + (player.getType().equals("WOODCUTTER") ? 8 : 0)
-            );
+            inv.put("FOOD", inv.getOrDefault("FOOD", 0)
+                    + (player.getType().equals("FARMER") ? 10 : 0));
 
-            player.getResources().put(
-                    "ORE",
-                    player.getResources().getOrDefault("ORE", 0)
-                            + (player.getType().equals("MINER") ? 5 : 0)
-            );
+            inv.put("WOOD", inv.getOrDefault("WOOD", 0)
+                    + (player.getType().equals("WOODCUTTER") ? 8 : 0));
+
+            inv.put("ORE", inv.getOrDefault("ORE", 0)
+                    + (player.getType().equals("MINER") ? 5 : 0));
         }
     }
 
@@ -74,7 +75,10 @@ public class GameService {
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        if (player.getSeeds() <= 0) return player;
+        Map<String, Integer> inv = player.getInventory();
+
+        int seeds = inv.getOrDefault("SEEDS", 0);
+        if (seeds <= 0) return player;
 
         Field field = new Field();
         field.setPlanted(true);
@@ -83,7 +87,8 @@ public class GameService {
         field.setGrowTime(10000);
 
         player.getFields().add(field);
-        player.setSeeds(player.getSeeds() - 1);
+
+        inv.put("SEEDS", seeds - 1);
 
         return player;
     }
@@ -94,17 +99,15 @@ public class GameService {
         Player player = getPlayer(name);
         if (player == null) return null;
 
+        Map<String, Integer> inv = player.getInventory();
+
         if (player.getFields() == null) return player;
 
         for (Field field : player.getFields()) {
 
             if (field.isReady()) {
 
-                player.getResources().put(
-                        "FOOD",
-                        player.getResources().getOrDefault("FOOD", 0) + 5
-                );
-
+                inv.put("FOOD", inv.getOrDefault("FOOD", 0) + 5);
                 field.setReady(false);
             }
         }
@@ -112,154 +115,137 @@ public class GameService {
         return player;
     }
 
-    // 🔍 игрок
-    public Player getPlayer(String name) {
-
-        for (Player player : players) {
-            if (player.getName().equals(name)) {
-                return player;
-            }
-        }
-
-        return null;
-    }
-
-    // 🛒 семена
+    // 🛒 покупка семян
     public Player buySeeds(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
+        Map<String, Integer> inv = player.getInventory();
+
         int cost = amount * 5;
-        int food = player.getResources().getOrDefault("FOOD", 0);
+        int food = inv.getOrDefault("FOOD", 0);
 
         if (food < cost) return player;
 
-        player.getResources().put("FOOD", food - cost);
-        player.setSeeds(player.getSeeds() + amount);
+        inv.put("FOOD", food - cost);
+        inv.put("SEEDS", inv.getOrDefault("SEEDS", 0) + amount);
 
         return player;
     }
 
-    // 🌲 рубка дерева
+    // 🌲 дерево
     public Player chopWood(String name) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        player.getResources().put(
-                "WOOD",
-                player.getResources().getOrDefault("WOOD", 0) + 5
-        );
+        Map<String, Integer> inv = player.getInventory();
+
+        inv.put("WOOD", inv.getOrDefault("WOOD", 0) + 5);
 
         return player;
     }
 
-    // ⛏ добыча руды
+    // ⛏ руда
     public Player mineOre(String name) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        player.getResources().put(
-                "ORE",
-                player.getResources().getOrDefault("ORE", 0) + 3
-        );
+        Map<String, Integer> inv = player.getInventory();
+
+        inv.put("ORE", inv.getOrDefault("ORE", 0) + 3);
 
         return player;
     }
 
-    // 💰 дерево → GOLD
+    // 💰 sell wood
     public Player sellWood(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        int wood = player.getResources().getOrDefault("WOOD", 0);
+        Map<String, Integer> inv = player.getInventory();
+
+        int wood = inv.getOrDefault("WOOD", 0);
         if (wood < amount) return player;
 
-        player.getResources().put("WOOD", wood - amount);
-
-        player.getResources().put(
-                "GOLD",
-                player.getResources().getOrDefault("GOLD", 0) + amount * 2
-        );
+        inv.put("WOOD", wood - amount);
+        inv.put("GOLD", inv.getOrDefault("GOLD", 0) + amount * 2);
 
         return player;
     }
 
-    // 💰 руда → GOLD
+    // 💰 sell ore
     public Player sellOre(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        int ore = player.getResources().getOrDefault("ORE", 0);
+        Map<String, Integer> inv = player.getInventory();
+
+        int ore = inv.getOrDefault("ORE", 0);
         if (ore < amount) return player;
 
-        player.getResources().put("ORE", ore - amount);
-
-        player.getResources().put(
-                "GOLD",
-                player.getResources().getOrDefault("GOLD", 0) + amount * 5
-        );
+        inv.put("ORE", ore - amount);
+        inv.put("GOLD", inv.getOrDefault("GOLD", 0) + amount * 5);
 
         return player;
     }
 
-    // 💰 еда → GOLD
+    // 💰 sell food
     public Player sellFood(String name, int amount) {
 
         Player player = getPlayer(name);
         if (player == null) return null;
 
-        int food = player.getResources().getOrDefault("FOOD", 0);
+        Map<String, Integer> inv = player.getInventory();
+
+        int food = inv.getOrDefault("FOOD", 0);
         if (food < amount) return player;
 
-        player.getResources().put("FOOD", food - amount);
-
-        player.getResources().put(
-                "GOLD",
-                player.getResources().getOrDefault("GOLD", 0) + amount
-        );
+        inv.put("FOOD", food - amount);
+        inv.put("GOLD", inv.getOrDefault("GOLD", 0) + amount);
 
         return player;
     }
+
+    // 🌲 buy sapling
     public Player buySapling(String name, int amount) {
 
-    Player player = getPlayer(name);
-    if (player == null) return null;
+        Player player = getPlayer(name);
+        if (player == null) return null;
 
-    int cost = amount * 6;
+        Map<String, Integer> inv = player.getInventory();
 
-    int wood = player.getResources().getOrDefault("WOOD", 0);
+        int cost = amount * 6;
+        int wood = inv.getOrDefault("WOOD", 0);
 
-    if (wood < cost) return player;
+        if (wood < cost) return player;
 
-    player.getResources().put("WOOD", wood - cost);
+        inv.put("WOOD", wood - cost);
+        inv.put("SAPLING", inv.getOrDefault("SAPLING", 0) + amount);
 
-    player.setSeeds(player.getSeeds() + amount); // временно используем seeds как универсальный инвентарь
+        return player;
+    }
 
-    return player;
-}
-    public Player buyOre(String name, int amount) {
+    // ⛏ buy ore box
+    public Player buyOreBox(String name, int amount) {
 
-    Player player = getPlayer(name);
-    if (player == null) return null;
+        Player player = getPlayer(name);
+        if (player == null) return null;
 
-    int cost = amount * 10;
+        Map<String, Integer> inv = player.getInventory();
 
-    int gold = player.getResources().getOrDefault("GOLD", 0);
+        int cost = amount * 10;
+        int gold = inv.getOrDefault("GOLD", 0);
 
-    if (gold < cost) return player;
+        if (gold < cost) return player;
 
-    player.getResources().put("GOLD", gold - cost);
+        inv.put("GOLD", gold - cost);
+        inv.put("ORE_BOX", inv.getOrDefault("ORE_BOX", 0) + amount);
 
-    player.getResources().put(
-            "ORE",
-            player.getResources().getOrDefault("ORE", 0) + amount * 5
-    );
-
-    return player;
-}
+        return player;
+    }
 }
