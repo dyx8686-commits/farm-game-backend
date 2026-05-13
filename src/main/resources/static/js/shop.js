@@ -108,3 +108,6 @@ function closeShop() {
 
     modal.style.display = "none";
 }
+window.buyItem = buyItem;
+window.openShop = openShop;
+window.closeShop = closeShop;
