@@ -385,7 +385,12 @@ function closeShop() {
 
 async function buySeeds() {
 
-    await fetch(BASE + "/game/shop/seeds?name=" + playerName + "&amount=1");
+    await fetch(
+        BASE + "/game/shop/seeds?name=" + playerName + "&amount=1",
+        {
+            method: "POST"
+        }
+    );
 
     load();
 }
