@@ -76,7 +76,7 @@ async function openShop() {
             <div class="shop-price">💰 ${i.price}</div>
         `;
 
-        div.onclick="alert('click')"
+        div.onclick = () => alert("click");
 
         grid.appendChild(div);
     });
