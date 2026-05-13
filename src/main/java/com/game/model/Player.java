@@ -38,7 +38,7 @@ inventory.put("PINE_SAPLING", 4);
 inventory.put("COPPER_ORE", 13);
 inventory.put("IRON_ORE", 6);
 inventory.put("GOLD_ORE_BOX", 2);
-
+}
         
     // ===== BASIC INFO =====
 
