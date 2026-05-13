@@ -248,4 +248,22 @@ public class GameService {
 
         return player;
     }
+    // ⛏ покупка руды (в сундуке / магазине)
+public Player buyOre(String name, int amount) {
+
+    Player player = getPlayer(name);
+    if (player == null) return null;
+
+    Map<String, Integer> inv = player.getInventory();
+
+    int cost = amount * 10;
+    int gold = inv.getOrDefault("GOLD", 0);
+
+    if (gold < cost) return player;
+
+    inv.put("GOLD", gold - cost);
+    inv.put("ORE", inv.getOrDefault("ORE", 0) + amount * 5);
+
+    return player;
+}
 }
