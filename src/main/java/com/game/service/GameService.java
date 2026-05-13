@@ -266,4 +266,43 @@ public Player buyOre(String name, int amount) {
 
     return player;
 }
+    public Player buyItem(String name, String item, int amount) {
+
+    Player player = getPlayer(name);
+    if (player == null) return null;
+
+    Map<String, Integer> inv = player.getInventory();
+
+    switch (item) {
+
+        case "SEEDS" -> {
+            int cost = amount * 5;
+
+            if (inv.getOrDefault("FOOD", 0) < cost) return player;
+
+            inv.put("FOOD", inv.get("FOOD") - cost);
+            inv.put("SEEDS", inv.getOrDefault("SEEDS", 0) + amount);
+        }
+
+        case "SAPLING" -> {
+            int cost = amount * 6;
+
+            if (inv.getOrDefault("WOOD", 0) < cost) return player;
+
+            inv.put("WOOD", inv.get("WOOD") - cost);
+            inv.put("SAPLING", inv.getOrDefault("SAPLING", 0) + amount);
+        }
+
+        case "ORE_BOX" -> {
+            int cost = amount * 10;
+
+            if (inv.getOrDefault("GOLD", 0) < cost) return player;
+
+            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("ORE", inv.getOrDefault("ORE", 0) + amount * 5);
+        }
+    }
+
+    return player;
+}
 }
