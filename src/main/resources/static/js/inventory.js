@@ -5,8 +5,11 @@ function openInventory() {
     const inv = document.getElementById("inventory");
     if (!inv) return;
 
-    const isOpen = inv.style.display === "block";
-    inv.style.display = isOpen ? "none" : "block";
+    if (inv.style.display === "block") {
+        inv.style.display = "none";
+    } else {
+        inv.style.display = "block";
+    }
 }
 
 // рендер инвентаря
