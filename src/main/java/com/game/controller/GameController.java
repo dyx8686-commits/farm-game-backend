@@ -74,4 +74,19 @@ public class GameController {
                            @RequestParam int amount) {
         return service.sellFood(name, amount);
     }
+    @PostMapping("/shop/seeds")
+public Player buySeeds(@RequestParam String name,
+                        @RequestParam int amount) {
+    return service.buySeeds(name, amount);
+}
+    @PostMapping("/shop/sapling")
+public Player buySapling(@RequestParam String name,
+                         @RequestParam int amount) {
+    return service.buySapling(name, amount);
+}
+    @PostMapping("/shop/ore")
+public Player buyOre(@RequestParam String name,
+                     @RequestParam int amount) {
+    return service.buyOre(name, amount);
+}
 }
