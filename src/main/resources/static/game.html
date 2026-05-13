@@ -378,21 +378,7 @@ function renderPlants() {
 
         c.appendChild(d);
     }
-    function plantSeed(index) {
 
-    if (selectedItem !== "SEEDS") {
-        alert("Выбери семена");
-        return;
-    }
-
-    fieldState[index] = {
-        stage: "SEED",
-        timer: Date.now()
-    };
-
-    renderPlants();
-    load();
-}
 }
 
 // 🌲 WOODCUTTER
@@ -466,26 +452,6 @@ function renderTrees() {
     d.innerText = "+";
 
     d.onclick = () => plantTree(i);
-}
-    function plantTree(index) {
-
-    if (selectedItem !== "SAPLING") {
-        alert("Выбери саженец");
-        return;
-    }
-
-    if (treeState[index].stage !== "EMPTY") {
-        alert("Тут уже что-то есть");
-        return;
-    }
-
-    treeState[index] = {
-        stage: "SAPLING",
-        timer: Date.now()
-    };
-
-    load();
-    renderTrees();
 }
 }
 
@@ -771,6 +737,26 @@ function useItemOnWorld(target) {
             method: "POST"
         }).then(load);
     }
+   function plantTree(index) {
+
+    if (selectedItem !== "SAPLING") {
+        alert("Выбери саженец");
+        return;
+    }
+
+    if (treeState[index].stage !== "EMPTY") {
+        alert("Тут уже что-то есть");
+        return;
+    }
+
+    treeState[index] = {
+        stage: "SAPLING",
+        timer: Date.now()
+    };
+
+    load();
+    renderTrees();
+}
 }
 
 // ================= LOOP =================
