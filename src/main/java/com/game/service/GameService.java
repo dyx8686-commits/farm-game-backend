@@ -225,4 +225,41 @@ public class GameService {
 
         return player;
     }
+    public Player buySapling(String name, int amount) {
+
+    Player player = getPlayer(name);
+    if (player == null) return null;
+
+    int cost = amount * 6;
+
+    int wood = player.getResources().getOrDefault("WOOD", 0);
+
+    if (wood < cost) return player;
+
+    player.getResources().put("WOOD", wood - cost);
+
+    player.setSeeds(player.getSeeds() + amount); // временно используем seeds как универсальный инвентарь
+
+    return player;
+}
+    public Player buyOre(String name, int amount) {
+
+    Player player = getPlayer(name);
+    if (player == null) return null;
+
+    int cost = amount * 10;
+
+    int gold = player.getResources().getOrDefault("GOLD", 0);
+
+    if (gold < cost) return player;
+
+    player.getResources().put("GOLD", gold - cost);
+
+    player.getResources().put(
+            "ORE",
+            player.getResources().getOrDefault("ORE", 0) + amount * 5
+    );
+
+    return player;
+}
 }
