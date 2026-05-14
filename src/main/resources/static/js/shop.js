@@ -109,12 +109,36 @@ function getSellPrice(item) {
     }
 }
 
-// BUY request (заглушка под backend)
-function buyItem(item, amount) {
-    console.log("BUY:", item, amount);
+const BASE = "https://farm-game-backend-eo4y.onrender.com";
+
+// BUY
+async function buyItem(item, amount) {
+
+    const name = new URLSearchParams(window.location.search).get("name");
+
+    await fetch(BASE + "/game/buyItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: name,
+            item: item,
+            amount: amount
+        })
+    });
 }
 
-// SELL request (заглушка)
-function sellItem(item, amount) {
-    console.log("SELL:", item, amount);
+// SELL
+async function sellItem(item, amount) {
+
+    const name = new URLSearchParams(window.location.search).get("name");
+
+    await fetch(BASE + "/game/sell", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: name,
+            item: item,
+            amount: amount
+        })
+    });
 }
