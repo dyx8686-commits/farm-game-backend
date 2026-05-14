@@ -101,15 +101,14 @@ function renderPlants() {
 
 function plantSeed(index) {
 
-    console.log("PLANT CLICK", index, selectedItem);
+    console.log("PLANT CLICK", index, window.selectedItem);
 
-    // ✅ ВСТАВИТЬ ВОТ ЭТО СЮДА (самое начало функции)
     if (!window.selectedItem) {
         alert("Выбери семена");
         return;
     }
 
-    fetch(BASE + "/game/plant?name=" + playerName + "&item=" + selectedItem, {
+    fetch(BASE + "/game/plant?name=" + playerName + "&item=" + window.selectedItem, {
         method: "POST"
     }).then(() => {
         load();
