@@ -110,8 +110,16 @@ function plantSeed(index) {
 
     fetch(BASE + "/game/plant?name=" + playerName + "&item=" + window.selectedItem, {
         method: "POST"
-    }).then(() => {
+    })
+    .then(res => res.json())
+    .then(player => {
+        console.log("PLANT OK", player);
+
+        // обновляем всё после посадки
         load();
         renderPlants();
+    })
+    .catch(err => {
+        console.error("PLANT ERROR", err);
     });
 }
