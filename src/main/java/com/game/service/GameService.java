@@ -48,7 +48,7 @@ player.getInventory().put("GOLD", 1000);
 
         for (Field field : player.getFields()) {
 
-            if (field.isPlanted() && !field.isReady()) {
+            if (!"EMPTY".equals(field.getStage())) {
 
                 if (now - field.getPlantTime() >= field.getGrowTime()) {
                     field.setStage("READY");
@@ -58,6 +58,8 @@ player.getInventory().put("GOLD", 1000);
                 }
             }
         }
+    }
+}
 
         Map<String, Integer> inv = player.getInventory();
 
@@ -81,21 +83,17 @@ player.getInventory().put("GOLD", 1000);
 
     if (inv.getOrDefault(item, 0) <= 0) return player;
 
-    // списываем семена
     inv.put(item, inv.get(item) - 1);
 
-    // создаём поле
     Field field = new Field();
-    field.setPlanted(true);
-    field.setReady(false);
+
+    field.setItem(item);
+    field.setStage("SEED");
 
     field.setPlantTime(System.currentTimeMillis());
     field.setGrowTime(10000);
 
-    field.setItem(item);
-
-    // 🔥 ВАЖНО — новая система
-    field.setStage("SEED");
+    field.setReady(false);
 
     player.getFields().add(field);
 
@@ -109,21 +107,42 @@ player.getInventory().put("GOLD", 1000);
 
     Map<String, Integer> inv = player.getInventory();
 
-    if (player.getFields() != null && !player.getFields().isEmpty()) {
+    if (player.getFields() == null) return player;
 
-        for (Field field : player.getFields()) {
+    for (Field field : player.getFields()) {
 
-            if (field.isReady()) {
+        if (field.isReady()) {
 
-                inv.put("FOOD", inv.getOrDefault("FOOD", 0) + 5);
+            String item = field.getItem();
 
-                field.setReady(false);
-                field.setPlanted(false);
-                field.setStage("EMPTY");
-                field.setPlantTime(0);
-                field.setGrowTime(0);
-                field.setItem(null);
+            // универсальная награда
+            if (item != null) {
+
+                switch (item) {
+
+                    case "WHEAT_SEEDS":
+                    case "CORN_SEEDS":
+                    case "POTATO_SEEDS":
+                        inv.put("FOOD", inv.getOrDefault("FOOD", 0) + 5);
+                        break;
+
+                    case "OAK_SAPLING":
+                    case "PINE_SAPLING":
+                        inv.put("WOOD", inv.getOrDefault("WOOD", 0) + 5);
+                        break;
+
+                    case "COPPER_ORE":
+                    case "IRON_ORE":
+                        inv.put("ORE", inv.getOrDefault("ORE", 0) + 3);
+                        break;
+                }
             }
+
+            field.setReady(false);
+            field.setStage("EMPTY");
+            field.setItem(null);
+            field.setPlantTime(0);
+            field.setGrowTime(0);
         }
     }
 
