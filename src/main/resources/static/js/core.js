@@ -15,6 +15,8 @@ async function load() {
 
     const inv = player.inventory || {};
 
+console.log(inv);
+
     document.getElementById("info").innerHTML = `
         <b>${player.name}</b><br>
         CLASS: ${player.type}<br><br>
