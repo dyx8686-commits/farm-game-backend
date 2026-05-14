@@ -28,24 +28,42 @@ public void setIsland(String island) {
     this.name = name;
     this.type = type;
 
-    inventory.put("FOOD", 25);
-inventory.put("WOOD", 40);
-inventory.put("ORE", 15);
-inventory.put("GOLD", 120);
+    inventory.put("GOLD", 120);
 
-// 🌾 FARMER
-inventory.put("WHEAT_SEEDS", 12);
-inventory.put("CORN_SEEDS", 7);
-inventory.put("POTATO_SEEDS", 5);
+    // 🌴 FARMER
+    if(type.equals("FARMER")) {
 
-// 🌲 WOODCUTTER
-inventory.put("OAK_SAPLING", 8);
-inventory.put("PINE_SAPLING", 4);
+        inventory.put("FOOD", 50);
+        inventory.put("WOOD", 10);
+        inventory.put("ORE", 5);
 
-// ⛏ MINER
-inventory.put("COPPER_ORE", 13);
-inventory.put("IRON_ORE", 6);
-inventory.put("GOLD_ORE_BOX", 2);
+        inventory.put("WHEAT_SEEDS", 12);
+        inventory.put("CORN_SEEDS", 7);
+        inventory.put("POTATO_SEEDS", 5);
+    }
+
+    // 🌲 WOODCUTTER
+    if(type.equals("WOODCUTTER")) {
+
+        inventory.put("FOOD", 15);
+        inventory.put("WOOD", 60);
+        inventory.put("ORE", 5);
+
+        inventory.put("OAK_SAPLING", 8);
+        inventory.put("PINE_SAPLING", 4);
+    }
+
+    // ⛏ MINER
+    if(type.equals("MINER")) {
+
+        inventory.put("FOOD", 10);
+        inventory.put("WOOD", 15);
+        inventory.put("ORE", 40);
+
+        inventory.put("COPPER_ORE", 13);
+        inventory.put("IRON_ORE", 6);
+        inventory.put("GOLD_ORE_BOX", 2);
+    }
 }
         
     // ===== BASIC INFO =====
