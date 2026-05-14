@@ -22,12 +22,17 @@ public class GameController {
                          @RequestParam String type) {
         return service.createPlayer(name, type);
     }
+    
 
     // 📋 все игроки
     @GetMapping("/players")
     public List<Player> all() {
         return service.getPlayers();
     }
+    @GetMapping("/state")
+public Player state(@RequestParam String name) {
+    return service.getPlayer(name);
+}
 
     // ⏱ tick
     @GetMapping("/tick")
