@@ -240,30 +240,7 @@ body.mine {
 
 </div>
 
-<!-- SHOP -->
-<div id="shopModal" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-">
 
-    <div style="
-    width:400px;
-    background:white;
-    margin:100px auto;
-    padding:20px;
-    border-radius:12px;
-    ">
-
-        <div id="shopContent"></div>
-
-        <button onclick="closeShop()">Close</button>
-    </div>
-</div>
 
 <script src="/js/core.js"></script>
 
@@ -301,6 +278,43 @@ z-index:1000;
         <br>
 
         <button onclick="closeInventory()">Close</button>
+
+    </div>
+</div>
+    <!-- SHOP 2.0 MODAL -->
+<div id="shopModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+z-index:1000;
+">
+
+    <div style="
+    width:500px;
+    margin:80px auto;
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    ">
+
+        <!-- HEADER -->
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>🛒 Shop</h3>
+            <button onclick="closeShop()">✖</button>
+        </div>
+
+        <!-- TABS -->
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button onclick="showShopTab('buy')">Buy</button>
+            <button onclick="showShopTab('sell')">Sell</button>
+        </div>
+
+        <!-- CONTENT -->
+        <div id="shopContent" style="margin-top:15px;"></div>
 
     </div>
 </div>
