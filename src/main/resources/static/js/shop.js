@@ -1,120 +1,120 @@
+window.shopTab = "buy";
 
-// ================= SHOP STATE =================
-
-let shopOpen = false;
-
-// ================= OPEN SHOP =================
-
-async function openShop() {
-
-    const modal = document.getElementById("shopModal");
-    const content = document.getElementById("shopContent");
-
-    if (!modal || !content) return;
-
-    const res = await fetch(BASE + "/game/players");
-    const players = await res.json();
-
-    const player = players.find(p => p.name === playerName);
-    if (!player) return;
-
-    let shopItems = [];
-
-    // ================= FARMER =================
-    if (player.type === "FARMER") {
-
-        shopItems = [
-            { item: "WHEAT_SEEDS", icon: "🌾", price: 5 },
-{ item: "CORN_SEEDS", icon: "🌽", price: 7 },
-{ item: "POTATO_SEEDS", icon: "🥔", price: 6 }
-        ];
-    }
-
-    // ================= WOODCUTTER =================
-    if (player.type === "WOODCUTTER") {
-
-        shopItems = [
-            { item: "OAK_SAPLING", icon: "🌳", price: 4 },
-{ item: "PINE_SAPLING", icon: "🌲", price: 6 }
-        ];
-    }
-
-    // ================= MINER =================
-    if (player.type === "MINER") {
-
-        shopItems = [
-            { item: "COPPER_ORE", icon: "🟤", price: 3 },
-{ item: "IRON_ORE", icon: "⚙️", price: 6 },
-{ item: "GOLD_ORE_BOX", icon: "📦", price: 10 }
-        ];
-    }
-
-    content.innerHTML = `
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:10px;
-            font-weight:bold;
-        ">
-            🏪 Shop
-            <button onclick="closeShop()">✖</button>
-        </div>
-
-        <div class="shop-grid"></div>
-    `;
-
-    const grid = content.querySelector(".shop-grid");
-
-    shopItems.forEach(i => {
-
-        const div = document.createElement("div");
-        div.className = "shop-item";
-
-        div.innerHTML = `
-    <div class="shop-icon">${i.icon}</div>
-    <div>${i.item}</div>
-    <div class="shop-price">💰 ${i.price}</div>
-`;
-
-div.onclick = () => buyItem(i.item);
-
-grid.appendChild(div);
-    });
-
-    modal.style.display = "block";
-}
-
-// ================= BUY ITEM =================
-
-async function buyItem(item) {
-
-    console.log("BUY CLICK:", item);
-
-    const res = await fetch(
-        BASE + "/game/shop/buy?name=" + playerName +
-        "&item=" + item +
-        "&amount=1",
-        {
-            method: "POST"
-        }
-    );
-
-    console.log("STATUS:", res.status);
-
-    load();
-}
-
-// ================= CLOSE SHOP =================
-
-function closeShop() {
-
-    const modal = document.getElementById("shopModal");
-
-    if (!modal) return;
-
-    modal.style.display = "none";
-}
-window.buyItem = buyItem;
 window.openShop = openShop;
 window.closeShop = closeShop;
+window.showShopTab = showShopTab;
+
+// открыть
+function openShop() {
+    document.getElementById("shopModal").style.display = "block";
+    renderShop();
+}
+
+// закрыть
+function closeShop() {
+    document.getElementById("shopModal").style.display = "none";
+}
+
+// переключение вкладок
+function showShopTab(tab) {
+    window.shopTab = tab;
+    renderShop();
+}
+
+// рендер
+function renderShop() {
+
+    const container = document.getElementById("shopContent");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (window.shopTab === "buy") {
+        renderBuyShop(container);
+    }
+
+    if (window.shopTab === "sell") {
+        renderSellShop(container);
+    }
+}
+
+// BUY
+function renderBuyShop(container) {
+
+    const items = [
+        { name: "WHEAT_SEEDS", icon: "🌿", price: 5 },
+        { name: "CORN_SEEDS", icon: "🌽", price: 7 },
+        { name: "POTATO_SEEDS", icon: "🥔", price: 6 },
+
+        { name: "OAK_SAPLING", icon: "🌳", price: 4 },
+        { name: "PINE_SAPLING", icon: "🌲", price: 6 },
+
+        { name: "COPPER_ORE", icon: "🟫", price: 3 },
+        { name: "IRON_ORE", icon: "⚙️", price: 6 }
+    ];
+
+    items.forEach(item => {
+
+        const div = document.createElement("div");
+        div.style = "padding:8px;border:1px solid #ccc;margin:5px;cursor:pointer;";
+
+        div.innerHTML = `${item.icon} ${item.name} - ${item.price} GOLD`;
+
+        div.onclick = () => {
+            buyItem(item.name, 1);
+        };
+
+        container.appendChild(div);
+    });
+}
+
+// SELL
+function renderSellShop(container) {
+
+    const inv = window.currentInventory || {};
+
+    Object.keys(inv).forEach(key => {
+
+        const amount = inv[key];
+        if (amount <= 0) return;
+
+        const price = getSellPrice(key);
+
+        const div = document.createElement("div");
+        div.style = "padding:8px;border:1px solid #ccc;margin:5px;cursor:pointer;";
+
+        div.innerHTML = `${key} x${amount} → ${price} GOLD`;
+
+        div.onclick = () => {
+            sellItem(key, 1);
+        };
+
+        container.appendChild(div);
+    });
+}
+
+// цены продажи
+function getSellPrice(item) {
+
+    switch(item) {
+
+        case "WOOD": return 2;
+        case "ORE": return 5;
+        case "FOOD": return 1;
+
+        case "COPPER_ORE": return 3;
+        case "IRON_ORE": return 6;
+
+        default: return 1;
+    }
+}
+
+// BUY request (заглушка под backend)
+function buyItem(item, amount) {
+    console.log("BUY:", item, amount);
+}
+
+// SELL request (заглушка)
+function sellItem(item, amount) {
+    console.log("SELL:", item, amount);
+}
