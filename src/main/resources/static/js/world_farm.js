@@ -1,19 +1,18 @@
 console.log("WORLD FARM LOADED");
 
 // ================= FARM STATE =================
-let fields = Array.from({ length: 6 }, () => ({
-    stage: "EMPTY"
-}));
+
 
 
 // ================= RENDER PLANTS =================
-
-function renderPlants() {
+function renderPlants(player) {
 
     const c = document.getElementById("farmerPlants");
     if (!c) return;
 
     c.innerHTML = "";
+
+    const fields = player.fields || [];
 
     for (let i = 0; i < 6; i++) {
 
@@ -25,37 +24,22 @@ function renderPlants() {
         d.style.left = (240 + (i % 3) * 70) + "px";
         d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
 
-        // ================= EMPTY =================
+        // EMPTY
         if (state.stage === "EMPTY") {
-
-            d.style.background = "#8B5A2B";
             d.innerText = "+";
-
-            d.onclick = function () {
-                console.log("FIELD CLICK", i);
-                plantSeed(i);
-            };
+            d.onclick = () => plantSeed(i);
         }
 
-        // ================= SEED =================
-        
-        // ================= GROWING =================
-        
+        // SEED / GROWING
+        if (state.stage === "SEED" || state.stage === "GROWING") {
+            d.innerText = "🌱";
+        }
 
-        // ================= READY =================
+        // READY
         if (state.stage === "READY") {
-
-            d.style.background = "#FFD700";
             d.innerText = "🌾";
-
             d.onclick = async () => {
-
                 await fetch(BASE + "/game/harvest?name=" + playerName);
-
-                fields[i] = {
-    stage: "EMPTY"
-};
-            
                 load();
             };
         }
@@ -63,6 +47,8 @@ function renderPlants() {
         c.appendChild(d);
     }
 }
+
+
 
 // ================= ACTION =================
 
