@@ -41,4 +41,13 @@ public class Field {
     public void setGrowTime(long growTime) {
         this.growTime = growTime;
     }
+    private String item;
+
+public String getItem() {
+    return item;
+}
+
+public void setItem(String item) {
+    this.item = item;
+}
 }
