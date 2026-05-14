@@ -111,7 +111,6 @@ function getSellPrice(item) {
 
 const BASE = "https://farm-game-backend-eo4y.onrender.com";
 
-// BUY
 async function buyItem(item, amount) {
 
     const name = new URLSearchParams(window.location.search).get("name");
@@ -125,9 +124,10 @@ async function buyItem(item, amount) {
             amount: amount
         })
     });
+
+    await refreshState();
 }
 
-// SELL
 async function sellItem(item, amount) {
 
     const name = new URLSearchParams(window.location.search).get("name");
@@ -141,4 +141,23 @@ async function sellItem(item, amount) {
             amount: amount
         })
     });
+
+    await refreshState();
+}
+async function refreshState() {
+
+    const name = new URLSearchParams(window.location.search).get("name");
+
+    const res = await fetch(BASE + "/game/state?name=" + name);
+    const player = await res.json();
+
+    window.currentInventory = player.inventory;
+
+    if (window.renderInventory) {
+        window.renderInventory(player.inventory);
+    }
+
+    if (window.renderShop) {
+        window.renderShop();
+    }
 }
