@@ -31,8 +31,10 @@ function renderPlants() {
             d.style.background = "#8B5A2B";
             d.innerText = "+";
 
-            d.onclick = () => plantSeed(i);
-        }
+           d.onclick = function () {
+    console.log("FIELD CLICK", i);
+    plantSeed(i);
+};
 
         // ================= SEED =================
         if (state.stage === "SEED") {
@@ -92,6 +94,7 @@ function renderPlants() {
 
 function plantSeed(index) {
 
+    console.log("PLANT CLICK", index, selectedItem);
     if (!selectedItem || !selectedItem.includes("SEEDS")) {
         alert("Выбери семена");
         return;
