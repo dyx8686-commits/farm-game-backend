@@ -1,68 +1,41 @@
-// ================= WOOD STATE =================
-
-let treeState = Array.from({ length: 6 }, () => ({
-    stage: "EMPTY", // EMPTY | SAPLING | TREE
-    timer: 0,
-    growStarted: false
-}));
+console.log("WORLD WOODCUTTER LOADED");
 
 // ================= RENDER TREES =================
-
-function renderTrees() {
+function renderTrees(player) {
 
     const c = document.getElementById("woodTrees");
     if (!c) return;
 
     c.innerHTML = "";
 
+    const fields = player.fields || [];
+
     for (let i = 0; i < 6; i++) {
 
-        const state = treeState[i];
+        const state = fields[i] || { stage: "EMPTY" };
 
         const d = document.createElement("div");
-        d.className = "treeObj";
+        d.className = "field";
 
-        d.style.left = (180 + (i % 3) * 90) + "px";
-        d.style.top = (140 + Math.floor(i / 3) * 100) + "px";
+        d.style.left = (240 + (i % 3) * 70) + "px";
+        d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
 
-        // ================= EMPTY =================
-        
-        // ================= SAPLING =================
-        if (state.stage === "SAPLING") {
-
-            d.style.background = "#8B4513";
-            d.innerText = "🌱";
-
-            if (!state.growStarted) {
-                state.growStarted = true;
-
-                setTimeout(() => {
-                    treeState[i].stage = "TREE";
-                    treeState[i].growStarted = false;
-                    renderTrees();
-                }, 10000);
-            }
+        // EMPTY
+        if (state.stage === "EMPTY") {
+            d.innerText = "+";
+            d.onclick = () => plantTree(i);
         }
 
-        // ================= TREE =================
-        if (state.stage === "TREE") {
+        // SEED / GROWING
+        if (state.stage === "SEED" || state.stage === "GROWING") {
+            d.innerText = "🌱";
+        }
 
-            d.style.background = "#2e8b57";
+        // READY
+        if (state.stage === "READY") {
             d.innerText = "🌳";
-
             d.onclick = async () => {
-
-                await fetch(BASE + "/game/wood?name=" + playerName, {
-                    method: "POST"
-                });
-
-                treeState[i] = {
-                    stage: "EMPTY",
-                    timer: 0,
-                    growStarted: false
-                };
-
-                renderTrees();
+                await fetch(BASE + "/game/harvest?name=" + playerName);
                 load();
             };
         }
@@ -72,25 +45,20 @@ function renderTrees() {
 }
 
 // ================= ACTION =================
-
 function plantTree(index) {
 
-    if (selectedItem !== "SAPLING") {
+    if (!window.selectedItem) {
         alert("Выбери саженец");
         return;
     }
 
-    if (treeState[index].stage !== "EMPTY") {
-        alert("Тут уже есть объект");
-        return;
-    }
-
-    treeState[index] = {
-        stage: "SAPLING",
-        timer: Date.now(),
-        growStarted: false
-    };
-
-    renderTrees();
-    load();
+    fetch(BASE + "/game/plant?name=" + playerName + "&item=" + window.selectedItem, {
+        method: "POST"
+    })
+    .then(() => {
+        load();
+    })
+    .catch(err => {
+        console.error("TREE PLANT ERROR", err);
+    });
 }
