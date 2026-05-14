@@ -71,7 +71,7 @@ player.getInventory().put("GOLD", 1000);
     }
 }
     // 🌱 посадка
-   public Player plant(String name, String item) {
+  public Player plant(String name, String item) {
 
     Player player = getPlayer(name);
     if (player == null) return null;
@@ -80,22 +80,18 @@ player.getInventory().put("GOLD", 1000);
 
     if (inv.getOrDefault(item, 0) <= 0) return player;
 
-    // списываем семена
     inv.put(item, inv.get(item) - 1);
 
-    // создаём поле
     Field field = new Field();
     field.setPlanted(true);
     field.setReady(false);
     field.setPlantTime(System.currentTimeMillis());
     field.setGrowTime(10000);
-    field.setItem(item);
 
     player.getFields().add(field);
 
     return player;
 }
-
     // 🌾 сбор
     public Player harvest(String name) {
 
