@@ -1,4 +1,5 @@
 console.log("WORLD FARM LOADED");
+
 // ================= FARM STATE =================
 
 let fieldState = Array.from({ length: 6 }, () => ({
@@ -32,10 +33,11 @@ function renderPlants() {
             d.style.background = "#8B5A2B";
             d.innerText = "+";
 
-           d.onclick = function () {
-    console.log("FIELD CLICK", i);
-    plantSeed(i);
-};
+            d.onclick = function () {
+                console.log("FIELD CLICK", i);
+                plantSeed(i);
+            };
+        }
 
         // ================= SEED =================
         if (state.stage === "SEED") {
@@ -46,9 +48,11 @@ function renderPlants() {
             if (!state.growStarted) {
                 state.growStarted = true;
 
+                const index = i;
+
                 setTimeout(() => {
-                    fieldState[i].stage = "GROWING";
-                    fieldState[i].growStarted = false;
+                    fieldState[index].stage = "GROWING";
+                    fieldState[index].growStarted = false;
                     renderPlants();
                 }, 5000);
             }
@@ -60,8 +64,10 @@ function renderPlants() {
             d.style.background = "#7CFC00";
             d.innerText = "🌿";
 
+            const index = i;
+
             setTimeout(() => {
-                fieldState[i].stage = "READY";
+                fieldState[index].stage = "READY";
                 renderPlants();
             }, 10000);
         }
@@ -96,6 +102,7 @@ function renderPlants() {
 function plantSeed(index) {
 
     console.log("PLANT CLICK", index, selectedItem);
+
     if (!selectedItem || !selectedItem.includes("SEEDS")) {
         alert("Выбери семена");
         return;
