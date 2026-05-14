@@ -38,33 +38,27 @@ player.getInventory().put("GOLD", 1000);
     }
 
     // ⏱ тик игры
-    public void tick() {
+   public void tick() {
 
     long now = System.currentTimeMillis();
 
     for (Player player : players) {
 
-        if (player.getFields() != null) {
+        if (player.getFields() == null) continue;
 
-            for (Field field : player.getFields()) {
+        for (Field field : player.getFields()) {
 
-                if (field.isPlanted() && !field.isReady()) {
+            if (field.isPlanted() && !field.isReady()) {
 
-                    if (field.getGrowTime() > 0 &&
-                        now - field.getPlantTime() >= field.getGrowTime()) {
-
-                        field.setStage("READY");
-                        field.setReady(true);
-                    } else {
-                        field.setStage("GROWING");
-                    }
+                if (now - field.getPlantTime() >= field.getGrowTime()) {
+                    field.setStage("READY");
+                    field.setReady(true);
+                } else {
+                    field.setStage("GROWING");
                 }
             }
         }
 
-
-
-        // 💰 ДОХОД ПО ТИПУ ИГРОКА (ВНУТРИ ЦИКЛА!)
         Map<String, Integer> inv = player.getInventory();
 
         inv.put("FOOD", inv.getOrDefault("FOOD", 0)
