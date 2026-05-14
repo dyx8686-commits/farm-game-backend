@@ -16,6 +16,7 @@ public class GameService {
     // 🧑 создать игрока
     public Player createPlayer(String name, String type) {
         Player player = new Player(name, type);
+        player.setIsland(type + "_ISLAND");
 
 player.getInventory().put("GOLD", 1000);
         players.add(player);
