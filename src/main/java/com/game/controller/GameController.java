@@ -83,4 +83,9 @@ public Player buyItem(@RequestParam String name,
                        @RequestParam int amount) {
     return service.buyItem(name, item, amount);
 }
+    private final GameService gameService;
+
+public GameController(GameService gameService) {
+    this.gameService = gameService;
+}
 }
