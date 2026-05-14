@@ -104,30 +104,31 @@ player.getInventory().put("GOLD", 1000);
     // 🌾 сбор
     public Player harvest(String name) {
 
-        Player player = getPlayer(name);
-        if (player == null) return null;
+    Player player = getPlayer(name);
+    if (player == null) return null;
 
-        Map<String, Integer> inv = player.getInventory();
+    Map<String, Integer> inv = player.getInventory();
 
-        if (player.getFields() != null && !player.getFields().isEmpty())
+    if (player.getFields() != null && !player.getFields().isEmpty()) {
 
         for (Field field : player.getFields()) {
 
             if (field.isReady()) {
 
-    inv.put("FOOD", inv.getOrDefault("FOOD", 0) + 5);
+                inv.put("FOOD", inv.getOrDefault("FOOD", 0) + 5);
 
-    field.setReady(false);
-field.setPlanted(false);
-field.setStage("EMPTY");
-field.setPlantTime(0);
-field.setGrowTime(0);
-field.setItem(null);
-
+                field.setReady(false);
+                field.setPlanted(false);
+                field.setStage("EMPTY");
+                field.setPlantTime(0);
+                field.setGrowTime(0);
+                field.setItem(null);
+            }
         }
-
-        return player;
     }
+
+    return player;
+}
 
     // 🛒 покупка семян
     public Player buySeeds(String name, int amount) {
