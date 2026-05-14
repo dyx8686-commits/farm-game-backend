@@ -1,24 +1,28 @@
 window.selectedItem = null;
 
+window.openInventory = openInventory;
+window.closeInventory = closeInventory;
 window.renderInventory = renderInventory;
+window.getSelectedItem = getSelectedItem;
+window.clearSelectedItem = clearSelectedItem;
 
-// открыть / закрыть инвентарь
+// открыть
 function openInventory() {
-    const inv = document.getElementById("inventory");
-    if (!inv) return;
-
-    if (inv.style.display === "block") {
-        inv.style.display = "none";
-    } else {
-        inv.style.display = "block";
-    }
+    document.getElementById("inventoryModal").style.display = "block";
 }
 
-// рендер инвентаря
+// закрыть
+function closeInventory() {
+    document.getElementById("inventoryModal").style.display = "none";
+}
+
+// рендер
 function renderInventory(inv) {
 
-    const inventory = document.getElementById("inventory");
-    if (!inventory) return;
+    const container = document.getElementById("inventoryContent");
+    if (!container) return;
+
+    container.innerHTML = "";
 
     const items = [
         { name: "FOOD", icon: "🍞" },
@@ -37,28 +41,10 @@ function renderInventory(inv) {
         { name: "PINE_SAPLING", icon: "🌲" }
     ];
 
-    inventory.innerHTML = "";
-
-    const header = document.createElement("div");
-
-    header.style.display = "flex";
-    header.style.justifyContent = "space-between";
-    header.style.alignItems = "center";
-    header.style.marginBottom = "10px";
-    header.style.color = "#333";
-    header.style.fontWeight = "bold";
-
-    header.innerHTML = `
-        <span>🎒 Inventory</span>
-        <button onclick="openInventory()">✖</button>
-    `;
-
-    inventory.appendChild(header);
-
     const grid = document.createElement("div");
     grid.className = "inventory-grid";
 
-    inventory.appendChild(grid);
+    container.appendChild(grid);
 
     items.forEach(item => {
 
@@ -89,17 +75,11 @@ function renderInventory(inv) {
     });
 }
 
-// получить выбранный предмет
+// selected
 function getSelectedItem() {
     return window.selectedItem;
 }
 
-// очистка выбора
 function clearSelectedItem() {
     window.selectedItem = null;
 }
-
-// экспорт функций в глобальную область
-window.openInventory = openInventory;
-window.getSelectedItem = getSelectedItem;
-window.clearSelectedItem = clearSelectedItem;
