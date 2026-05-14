@@ -1,3 +1,4 @@
+console.log("WORLD FARM LOADED");
 // ================= FARM STATE =================
 
 let fieldState = Array.from({ length: 6 }, () => ({
