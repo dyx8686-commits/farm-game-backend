@@ -37,22 +37,30 @@ function renderInventory(inv) {
     ];
 
     // header + grid
-    inventory.innerHTML = `
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:10px;
-            font-weight:bold;
-        ">
-            🎒 Inventory
-            <button onclick="openInventory()">✖</button>
-        </div>
+    inventory.innerHTML = "";
 
-        <div class="inventory-grid"></div>
-    `;
+const header = document.createElement("div");
 
-    const grid = inventory.querySelector(".inventory-grid");
+header.style.display = "flex";
+header.style.justifyContent = "space-between";
+header.style.alignItems = "center";
+header.style.marginBottom = "10px";
+header.style.color = "#333";
+header.style.fontWeight = "bold";
+
+header.innerHTML = `
+    <span>🎒 Inventory</span>
+    <button onclick="openInventory()">✖</button>
+`;
+
+inventory.appendChild(header);
+
+const grid = document.createElement("div");
+grid.className = "inventory-grid";
+
+inventory.appendChild(grid);
+
+
 
     items.forEach(item => {
 
