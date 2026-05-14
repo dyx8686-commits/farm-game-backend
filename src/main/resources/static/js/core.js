@@ -2,6 +2,24 @@ const BASE = "https://farm-game-backend-eo4y.onrender.com";
 let playerName = new URLSearchParams(window.location.search).get("name");
 
 let selectedItem = null;
+function applyIslandTheme(player) {
+
+    const body = document.getElementById("gameBody");
+
+    body.classList.remove("farm", "wood", "mine");
+
+    if (player.type === "FARMER") {
+        body.classList.add("farm");
+    }
+
+    if (player.type === "WOODCUTTER") {
+        body.classList.add("wood");
+    }
+
+    if (player.type === "MINER") {
+        body.classList.add("mine");
+    }
+}
 
 // ================= LOAD =================
 
@@ -31,9 +49,10 @@ console.log(inv);
         SAPLING: ${inv.SAPLING ?? 0}<br>
     `;
 
-    renderInventory(inv);
-    renderWorld(player);
-    updatePlayer();
+    applyIslandTheme(player);
+renderInventory(inv);
+renderWorld(player);
+updatePlayer();
 }
 
 // ================= WORLD ROUTER =================
