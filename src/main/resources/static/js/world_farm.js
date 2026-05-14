@@ -92,10 +92,10 @@ function renderPlants() {
 
 function plantSeed(index) {
 
-    if (selectedItem !== "SEEDS") {
-        alert("Выбери семена");
-        return;
-    }
+    if (!selectedItem || !selectedItem.includes("SEEDS")) {
+    alert("Выбери семена");
+    return;
+}
 
     fieldState[index] = {
         stage: "SEED",
