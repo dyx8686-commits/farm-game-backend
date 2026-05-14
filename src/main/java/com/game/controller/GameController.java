@@ -42,11 +42,11 @@ public Player state(@RequestParam String name) {
     }
 
     // 🌱 посадка
-    @PostMapping("/plant")
-    public Player plant(@RequestParam String name,
-                        @RequestParam String item) {
-        return service.plant(name, item);
-    }
+   @PostMapping("/plant")
+public Player plant(@RequestParam String name,
+                    @RequestParam String item) {
+    return service.plant(name, item);
+}
 
     // 🌲 рубка дерева
     @PostMapping("/wood")
