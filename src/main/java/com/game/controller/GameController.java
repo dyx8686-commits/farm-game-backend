@@ -42,7 +42,7 @@ public Player plant(
         @RequestParam String name,
         @RequestParam String item
 ) {
-    return gameService.plant(name);
+    return gameService.plant(name, item);
 }
 
     // 🌲 рубка дерева
