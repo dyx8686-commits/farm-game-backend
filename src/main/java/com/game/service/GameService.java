@@ -40,23 +40,24 @@ player.getInventory().put("GOLD", 1000);
     // ⏱ тик игры
     public void tick() {
 
-        for (Player player : players) {
+    long now = System.currentTimeMillis();
 
-            if (player.getFields() != null) {
+    for (Player player : players) {
 
-                for (Field field : player.getFields()) {
+        if (player.getFields() != null) {
 
-                    if (field.isPlanted()) {
+            for (Field field : player.getFields()) {
 
-                        long now = System.currentTimeMillis();
+                if (field.isPlanted() && !field.isReady()) {
 
-                        if (now - field.getPlantTime() >= field.getGrowTime()) {
-                            field.setPlanted(false);
-                            field.setReady(true);
-                        }
+                    if (now - field.getPlantTime() >= field.getGrowTime()) {
+                        field.setReady(true);
                     }
                 }
             }
+        }
+    }
+}
 
             Map<String, Integer> inv = player.getInventory();
 
@@ -72,28 +73,30 @@ player.getInventory().put("GOLD", 1000);
     }
 
     // 🌱 посадка
-    public Player plant(String name) {
+   public Player plant(String name, String item) {
 
-        Player player = getPlayer(name);
-        if (player == null) return null;
+    Player player = getPlayer(name);
+    if (player == null) return null;
 
-        Map<String, Integer> inv = player.getInventory();
+    Map<String, Integer> inv = player.getInventory();
 
-        int seeds = inv.getOrDefault("SEEDS", 0);
-        if (seeds <= 0) return player;
+    if (inv.getOrDefault(item, 0) <= 0) return player;
 
-        Field field = new Field();
-        field.setPlanted(true);
-        field.setReady(false);
-        field.setPlantTime(System.currentTimeMillis());
-        field.setGrowTime(10000);
+    // списываем семена
+    inv.put(item, inv.get(item) - 1);
 
-        player.getFields().add(field);
+    // создаём поле
+    Field field = new Field();
+    field.setPlanted(true);
+    field.setReady(false);
+    field.setPlantTime(System.currentTimeMillis());
+    field.setGrowTime(10000);
+    field.setItem(item);
 
-        inv.put("SEEDS", seeds - 1);
+    player.getFields().add(field);
 
-        return player;
-    }
+    return player;
+}
 
     // 🌾 сбор
     public Player harvest(String name) {
