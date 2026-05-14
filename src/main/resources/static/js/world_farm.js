@@ -103,12 +103,13 @@ function plantSeed(index) {
 
     console.log("PLANT CLICK", index, selectedItem);
 
-    if (!selectedItem || !selectedItem.includes("SEEDS")) {
+    // ✅ ВСТАВИТЬ ВОТ ЭТО СЮДА (самое начало функции)
+    if (!selectedItem) {
         alert("Выбери семена");
         return;
     }
 
-    fetch(BASE + "/game/plant?name=" + playerName, {
+    fetch(BASE + "/game/plant?name=" + playerName + "&item=" + selectedItem, {
         method: "POST"
     }).then(() => {
         load();
