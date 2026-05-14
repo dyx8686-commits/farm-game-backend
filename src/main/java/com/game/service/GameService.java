@@ -38,39 +38,52 @@ player.getInventory().put("GOLD", 1000);
     }
 
     // ⏱ тик игры
-   public void tick() {
+public void tick() {
 
     long now = System.currentTimeMillis();
 
     for (Player player : players) {
 
-        if (player.getFields() == null) continue;
+        // 🌾 поля
+        if (player.getFields() != null) {
 
-        for (Field field : player.getFields()) {
+            for (Field field : player.getFields()) {
 
-            if (!"EMPTY".equals(field.getStage())) {
+                if (!"EMPTY".equals(field.getStage())) {
 
-                if (now - field.getPlantTime() >= field.getGrowTime()) {
-                    field.setStage("READY");
-                    field.setReady(true);
-                } else {
-                    field.setStage("GROWING");
+                    if (now - field.getPlantTime() >= field.getGrowTime()) {
+
+                        field.setStage("READY");
+                        field.setReady(true);
+
+                    } else {
+
+                        field.setStage("GROWING");
+                    }
                 }
             }
         }
-    }
-}
 
-                Map<String, Integer> inv = player.getInventory();
+        // 📦 ресурсы игрока
+        Map<String, Integer> inv = player.getInventory();
 
-        inv.put("FOOD", inv.getOrDefault("FOOD", 0)
-                + (player.getType().equals("FARMER") ? 10 : 0));
+        inv.put(
+                "FOOD",
+                inv.getOrDefault("FOOD", 0)
+                        + (player.getType().equals("FARMER") ? 10 : 0)
+        );
 
-        inv.put("WOOD", inv.getOrDefault("WOOD", 0)
-                + (player.getType().equals("WOODCUTTER") ? 8 : 0));
+        inv.put(
+                "WOOD",
+                inv.getOrDefault("WOOD", 0)
+                        + (player.getType().equals("WOODCUTTER") ? 8 : 0)
+        );
 
-        inv.put("ORE", inv.getOrDefault("ORE", 0)
-                + (player.getType().equals("MINER") ? 5 : 0));
+        inv.put(
+                "ORE",
+                inv.getOrDefault("ORE", 0)
+                        + (player.getType().equals("MINER") ? 5 : 0)
+        );
     }
 }
     // 🌱 посадка
