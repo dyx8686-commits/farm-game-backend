@@ -50,12 +50,19 @@ player.getInventory().put("GOLD", 1000);
 
                 if (field.isPlanted() && !field.isReady()) {
 
-                    if (now - field.getPlantTime() >= field.getGrowTime()) {
+                    if (field.getGrowTime() > 0 &&
+                        now - field.getPlantTime() >= field.getGrowTime()) {
+
+                        field.setStage("READY");
                         field.setReady(true);
+                    } else {
+                        field.setStage("GROWING");
                     }
                 }
             }
         }
+
+
 
         // 💰 ДОХОД ПО ТИПУ ИГРОКА (ВНУТРИ ЦИКЛА!)
         Map<String, Integer> inv = player.getInventory();
@@ -80,13 +87,21 @@ player.getInventory().put("GOLD", 1000);
 
     if (inv.getOrDefault(item, 0) <= 0) return player;
 
+    // списываем семена
     inv.put(item, inv.get(item) - 1);
 
+    // создаём поле
     Field field = new Field();
     field.setPlanted(true);
     field.setReady(false);
+
     field.setPlantTime(System.currentTimeMillis());
     field.setGrowTime(10000);
+
+    field.setItem(item);
+
+    // 🔥 ВАЖНО — новая система
+    field.setStage("SEED");
 
     player.getFields().add(field);
 
@@ -100,15 +115,21 @@ player.getInventory().put("GOLD", 1000);
 
         Map<String, Integer> inv = player.getInventory();
 
-        if (player.getFields() == null) return player;
+        if (player.getFields() != null && !player.getFields().isEmpty())
 
         for (Field field : player.getFields()) {
 
             if (field.isReady()) {
 
-                inv.put("FOOD", inv.getOrDefault("FOOD", 0) + 5);
-                field.setReady(false);
-            }
+    inv.put("FOOD", inv.getOrDefault("FOOD", 0) + 5);
+
+    field.setReady(false);
+field.setPlanted(false);
+field.setStage("EMPTY");
+field.setPlantTime(0);
+field.setGrowTime(0);
+field.setItem(null);
+
         }
 
         return player;
@@ -279,7 +300,7 @@ public Player buyOre(String name, int amount) {
             int cost = amount * 5;
             if (inv.getOrDefault("GOLD", 0) < cost) return player;
 
-            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("GOLD", inv.getOrDefault("GOLD", 0) - cost);
             inv.put("WHEAT_SEEDS", inv.getOrDefault("WHEAT_SEEDS", 0) + amount);
         }
 
@@ -287,7 +308,7 @@ public Player buyOre(String name, int amount) {
             int cost = amount * 7;
             if (inv.getOrDefault("GOLD", 0) < cost) return player;
 
-            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("GOLD", inv.getOrDefault("GOLD", 0) - cost);
             inv.put("CORN_SEEDS", inv.getOrDefault("CORN_SEEDS", 0) + amount);
         }
 
@@ -295,7 +316,7 @@ public Player buyOre(String name, int amount) {
             int cost = amount * 6;
             if (inv.getOrDefault("GOLD", 0) < cost) return player;
 
-            inv.put("GOLD", inv.get("GOLD") - cost);
+            inv.put("GOLD", inv.getOrDefault("GOLD", 0) - cost);
             inv.put("POTATO_SEEDS", inv.getOrDefault("POTATO_SEEDS", 0) + amount);
         }
 
