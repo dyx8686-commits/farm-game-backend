@@ -56,22 +56,20 @@ player.getInventory().put("GOLD", 1000);
                 }
             }
         }
+
+        // 💰 ДОХОД ПО ТИПУ ИГРОКА (ВНУТРИ ЦИКЛА!)
+        Map<String, Integer> inv = player.getInventory();
+
+        inv.put("FOOD", inv.getOrDefault("FOOD", 0)
+                + (player.getType().equals("FARMER") ? 10 : 0));
+
+        inv.put("WOOD", inv.getOrDefault("WOOD", 0)
+                + (player.getType().equals("WOODCUTTER") ? 8 : 0));
+
+        inv.put("ORE", inv.getOrDefault("ORE", 0)
+                + (player.getType().equals("MINER") ? 5 : 0));
     }
 }
-
-            Map<String, Integer> inv = player.getInventory();
-
-            inv.put("FOOD", inv.getOrDefault("FOOD", 0)
-                    + (player.getType().equals("FARMER") ? 10 : 0));
-
-            inv.put("WOOD", inv.getOrDefault("WOOD", 0)
-                    + (player.getType().equals("WOODCUTTER") ? 8 : 0));
-
-            inv.put("ORE", inv.getOrDefault("ORE", 0)
-                    + (player.getType().equals("MINER") ? 5 : 0));
-        }
-    }
-
     // 🌱 посадка
    public Player plant(String name, String item) {
 
