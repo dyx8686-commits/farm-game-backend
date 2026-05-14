@@ -37,10 +37,13 @@ public class GameController {
     }
 
     // 🌱 посадка
-    @PostMapping("/plant")
-    public Player plant(@RequestParam String name) {
-        return service.plant(name);
-    }
+    @PostMapping("/game/plant")
+public Player plant(
+        @RequestParam String name,
+        @RequestParam String item
+) {
+    return gameService.plant(name);
+}
 
     // 🌲 рубка дерева
     @PostMapping("/wood")
