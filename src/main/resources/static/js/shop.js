@@ -161,3 +161,8 @@ async function refreshState() {
         window.renderShop();
     }
 }
+window.openShop = openShop;
+window.closeShop = closeShop;
+window.showShopTab = showShopTab;
+window.buyItem = buyItem;
+window.sellItem = sellItem;
