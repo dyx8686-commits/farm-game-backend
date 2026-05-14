@@ -7,11 +7,13 @@ let selectedItem = null;
 
 async function load() {
 
-    const res = await fetch(BASE + "/game/players");
-    const players = await res.json();
+    const res = await fetch(
+    BASE + "/game/state?name=" + playerName
+);
 
-    const player = players.find(p => p.name === playerName);
-    if (!player) return;
+const player = await res.json();
+
+if (!player) return;
 
     const inv = player.inventory || {};
 
