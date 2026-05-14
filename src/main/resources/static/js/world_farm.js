@@ -111,11 +111,8 @@ function plantSeed(index) {
     fetch(BASE + "/game/plant?name=" + playerName + "&item=" + window.selectedItem, {
         method: "POST"
     })
-    .then(res => res.json())
-    .then(player => {
-        console.log("PLANT OK", player);
-
-        // обновляем всё после посадки
+    .then(() => {
+        // ❗ ВАЖНО: просто обновляем данные, НЕ json()
         load();
         renderPlants();
     })
