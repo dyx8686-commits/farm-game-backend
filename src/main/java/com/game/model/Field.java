@@ -2,11 +2,15 @@ package com.game.model;
 
 public class Field {
 
-    private boolean planted;   // посажено ли растение
-    private boolean ready;     // готово ли к сбору
+    private boolean planted;
+    private boolean ready;
 
-    private long plantTime;    // время посадки
-    private long growTime;     // сколько растёт (в мс)
+    private long plantTime;
+    private long growTime;
+
+    private String item;
+
+    private String stage; // EMPTY, SEED, GROWING, READY
 
     // ===== GETTERS / SETTERS =====
 
@@ -41,13 +45,20 @@ public class Field {
     public void setGrowTime(long growTime) {
         this.growTime = growTime;
     }
-    private String item;
 
-public String getItem() {
-    return item;
-}
+    public String getItem() {
+        return item;
+    }
 
-public void setItem(String item) {
-    this.item = item;
-}
+    public void setItem(String item) {
+        this.item = item;
+    }
+
+    public String getStage() {
+        return stage;
+    }
+
+    public void setStage(String stage) {
+        this.stage = stage;
+    }
 }
