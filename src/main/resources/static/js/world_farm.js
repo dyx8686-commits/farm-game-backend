@@ -104,7 +104,7 @@ function plantSeed(index) {
     console.log("PLANT CLICK", index, selectedItem);
 
     // ✅ ВСТАВИТЬ ВОТ ЭТО СЮДА (самое начало функции)
-    if (!selectedItem) {
+    if (!window.selectedItem) {
         alert("Выбери семена");
         return;
     }
