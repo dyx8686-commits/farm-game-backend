@@ -61,7 +61,7 @@ player.getInventory().put("GOLD", 1000);
     }
 }
 
-        Map<String, Integer> inv = player.getInventory();
+                Map<String, Integer> inv = player.getInventory();
 
         inv.put("FOOD", inv.getOrDefault("FOOD", 0)
                 + (player.getType().equals("FARMER") ? 10 : 0));
