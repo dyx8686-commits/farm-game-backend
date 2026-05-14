@@ -93,16 +93,14 @@ function renderPlants() {
 function plantSeed(index) {
 
     if (!selectedItem || !selectedItem.includes("SEEDS")) {
-    alert("Выбери семена");
-    return;
-}
+        alert("Выбери семена");
+        return;
+    }
 
-    fieldState[index] = {
-        stage: "SEED",
-        timer: Date.now(),
-        growStarted: false
-    };
-
-    renderPlants();
-    load();
+    fetch(BASE + "/game/plant?name=" + playerName, {
+        method: "POST"
+    }).then(() => {
+        load();
+        renderPlants();
+    });
 }
