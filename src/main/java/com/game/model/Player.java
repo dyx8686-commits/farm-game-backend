@@ -9,11 +9,19 @@ public class Player {
 
     private String name;
     private String type;
+    private String island;
 
     // 🎒 ЕДИНЫЙ ИНВЕНТАРЬ
     private Map<String, Integer> inventory = new HashMap<>();
 
     private List<Field> fields = new ArrayList<>();
+    public String getIsland() {
+    return island;
+}
+
+public void setIsland(String island) {
+    this.island = island;
+}
 
     public Player(String name, String type) {
 
