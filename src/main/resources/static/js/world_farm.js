@@ -1,12 +1,10 @@
 console.log("WORLD FARM LOADED");
 
 // ================= FARM STATE =================
-
-let fieldState = Array.from({ length: 6 }, () => ({
-    stage: "EMPTY", // EMPTY | SEED | GROWING | READY
-    timer: 0,
-    growStarted: false
+let fields = Array.from({ length: 6 }, () => ({
+    stage: "EMPTY"
 }));
+
 
 // ================= RENDER PLANTS =================
 
@@ -19,7 +17,7 @@ function renderPlants() {
 
     for (let i = 0; i < 6; i++) {
 
-        const state = fieldState[i];
+        const state = fields[i] || { stage: "EMPTY" };
 
         const d = document.createElement("div");
         d.className = "field";
@@ -40,37 +38,9 @@ function renderPlants() {
         }
 
         // ================= SEED =================
-        if (state.stage === "SEED") {
-
-            d.style.background = "#A0522D";
-            d.innerText = "🌱";
-
-            if (!state.growStarted) {
-                state.growStarted = true;
-
-                const index = i;
-
-                setTimeout(() => {
-                    fieldState[index].stage = "GROWING";
-                    fieldState[index].growStarted = false;
-                    renderPlants();
-                }, 5000);
-            }
-        }
-
+        
         // ================= GROWING =================
-        if (state.stage === "GROWING") {
-
-            d.style.background = "#7CFC00";
-            d.innerText = "🌿";
-
-            const index = i;
-
-            setTimeout(() => {
-                fieldState[index].stage = "READY";
-                renderPlants();
-            }, 10000);
-        }
+        
 
         // ================= READY =================
         if (state.stage === "READY") {
@@ -82,13 +52,10 @@ function renderPlants() {
 
                 await fetch(BASE + "/game/harvest?name=" + playerName);
 
-                fieldState[i] = {
-                    stage: "EMPTY",
-                    timer: 0,
-                    growStarted: false
-                };
-
-                renderPlants();
+                fields[i] = {
+    stage: "EMPTY"
+};
+            
                 load();
             };
         }
@@ -101,8 +68,6 @@ function renderPlants() {
 
 function plantSeed(index) {
 
-    console.log("PLANT CLICK", index, window.selectedItem);
-
     if (!window.selectedItem) {
         alert("Выбери семена");
         return;
@@ -112,9 +77,7 @@ function plantSeed(index) {
         method: "POST"
     })
     .then(() => {
-        // ❗ ВАЖНО: просто обновляем данные, НЕ json()
-        load();
-        renderPlants();
+        load();          // ← это единственный источник правды
     })
     .catch(err => {
         console.error("PLANT ERROR", err);
