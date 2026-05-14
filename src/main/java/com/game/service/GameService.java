@@ -17,6 +17,20 @@ public class GameService {
     public Player createPlayer(String name, String type) {
         Player player = new Player(name, type);
         player.setIsland(type + "_ISLAND");
+        List<Field> fields = new ArrayList<>();
+
+for (int i = 0; i < 9; i++) {
+
+    Field field = new Field();
+
+    field.setStage("EMPTY");
+    field.setItem(null);
+    field.setReady(false);
+
+    fields.add(field);
+}
+
+player.setFields(fields);
 
 player.getInventory().put("GOLD", 1000);
         players.add(player);
