@@ -24,9 +24,9 @@ async function openShop() {
     if (player.type === "FARMER") {
 
         shopItems = [
-            { item: "SEEDS", icon: "🌾", price: 5 },
-            { item: "CARROT", icon: "🥕", price: 8 },
-            { item: "WHEAT", icon: "🌽", price: 10 }
+            { item: "WHEAT_SEEDS", icon: "🌾", price: 5 },
+{ item: "CORN_SEEDS", icon: "🌽", price: 7 },
+{ item: "POTATO_SEEDS", icon: "🥔", price: 6 }
         ];
     }
 
@@ -34,8 +34,8 @@ async function openShop() {
     if (player.type === "WOODCUTTER") {
 
         shopItems = [
-            { item: "SAPLING", icon: "🌳", price: 12 },
-            { item: "OAK_LOG", icon: "🪵", price: 15 }
+            { item: "OAK_SAPLING", icon: "🌳", price: 4 },
+{ item: "PINE_SAPLING", icon: "🌲", price: 6 }
         ];
     }
 
@@ -43,8 +43,9 @@ async function openShop() {
     if (player.type === "MINER") {
 
         shopItems = [
-            { item: "ORE_BOX", icon: "📦", price: 20 },
-            { item: "IRON_ORE", icon: "⛏️", price: 25 }
+            { item: "COPPER_ORE", icon: "🟤", price: 3 },
+{ item: "IRON_ORE", icon: "⚙️", price: 6 },
+{ item: "GOLD_ORE_BOX", icon: "📦", price: 10 }
         ];
     }
 
