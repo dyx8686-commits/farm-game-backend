@@ -30,6 +30,7 @@ async function load() {
 );
 
 const player = await res.json();
+    window.currentInventory = player.inventory;
 
 if (!player) return;
 
