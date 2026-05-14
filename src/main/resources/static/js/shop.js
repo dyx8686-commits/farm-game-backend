@@ -72,16 +72,14 @@ async function openShop() {
         div.className = "shop-item";
 
         div.innerHTML = `
-            <div class="shop-icon">${i.icon}</div>
-            <div>${i.item}</div>
-            <div class="shop-price">💰 ${i.price}</div>
-        `;
+    <div class="shop-icon">${i.icon}</div>
+    <div>${i.item}</div>
+    <div class="shop-price">💰 ${i.price}</div>
+`;
 
-        div.onclick = () => {
-    buyItem(i.item);
-};
+div.onclick = () => buyItem(i.item);
 
-        grid.appendChild(div);
+grid.appendChild(div);
     });
 
     modal.style.display = "block";
@@ -93,7 +91,7 @@ async function buyItem(item) {
 
     console.log("BUY CLICK:", item);
 
-    const response = await fetch(
+    const res = await fetch(
         BASE + "/game/shop/buy?name=" + playerName +
         "&item=" + item +
         "&amount=1",
@@ -102,7 +100,7 @@ async function buyItem(item) {
         }
     );
 
-    console.log("STATUS:", response.status);
+    console.log("STATUS:", res.status);
 
     load();
 }
