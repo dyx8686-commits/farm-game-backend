@@ -37,13 +37,11 @@ public class GameController {
     }
 
     // 🌱 посадка
-    @PostMapping("/game/plant")
-public Player plant(
-        @RequestParam String name,
-        @RequestParam String item
-) {
-    return gameService.plant(name, item);
-}
+    @PostMapping("/plant")
+    public Player plant(@RequestParam String name,
+                        @RequestParam String item) {
+        return service.plant(name, item);
+    }
 
     // 🌲 рубка дерева
     @PostMapping("/wood")
@@ -77,15 +75,12 @@ public Player plant(
                            @RequestParam int amount) {
         return service.sellFood(name, amount);
     }
-    @PostMapping("/shop/buy")
-public Player buyItem(@RequestParam String name,
-                       @RequestParam String item,
-                       @RequestParam int amount) {
-    return service.buyItem(name, item, amount);
-}
-    private final GameService gameService;
 
-public GameController(GameService gameService) {
-    this.gameService = gameService;
-}
+    // 🛒 магазин (универсальная покупка)
+    @PostMapping("/shop/buy")
+    public Player buyItem(@RequestParam String name,
+                          @RequestParam String item,
+                          @RequestParam int amount) {
+        return service.buyItem(name, item, amount);
+    }
 }
