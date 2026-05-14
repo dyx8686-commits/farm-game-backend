@@ -1,5 +1,6 @@
-window.renderInventory = renderInventory;
+window.selectedItem = null;
 
+window.renderInventory = renderInventory;
 
 // открыть / закрыть инвентарь
 function openInventory() {
@@ -36,31 +37,28 @@ function renderInventory(inv) {
         { name: "PINE_SAPLING", icon: "🌲" }
     ];
 
-    // header + grid
     inventory.innerHTML = "";
 
-const header = document.createElement("div");
+    const header = document.createElement("div");
 
-header.style.display = "flex";
-header.style.justifyContent = "space-between";
-header.style.alignItems = "center";
-header.style.marginBottom = "10px";
-header.style.color = "#333";
-header.style.fontWeight = "bold";
+    header.style.display = "flex";
+    header.style.justifyContent = "space-between";
+    header.style.alignItems = "center";
+    header.style.marginBottom = "10px";
+    header.style.color = "#333";
+    header.style.fontWeight = "bold";
 
-header.innerHTML = `
-    <span>🎒 Inventory</span>
-    <button onclick="openInventory()">✖</button>
-`;
+    header.innerHTML = `
+        <span>🎒 Inventory</span>
+        <button onclick="openInventory()">✖</button>
+    `;
 
-inventory.appendChild(header);
+    inventory.appendChild(header);
 
-const grid = document.createElement("div");
-grid.className = "inventory-grid";
+    const grid = document.createElement("div");
+    grid.className = "inventory-grid";
 
-inventory.appendChild(grid);
-
-
+    inventory.appendChild(grid);
 
     items.forEach(item => {
 
@@ -70,7 +68,7 @@ inventory.appendChild(grid);
         const slot = document.createElement("div");
         slot.className = "inv-item";
 
-        if (selectedItem === item.name) {
+        if (window.selectedItem === item.name) {
             slot.classList.add("selected");
         }
 
@@ -81,8 +79,8 @@ inventory.appendChild(grid);
 
         slot.onclick = () => {
 
-            selectedItem =
-                selectedItem === item.name ? null : item.name;
+            window.selectedItem =
+                window.selectedItem === item.name ? null : item.name;
 
             renderInventory(inv);
         };
@@ -93,12 +91,15 @@ inventory.appendChild(grid);
 
 // получить выбранный предмет
 function getSelectedItem() {
-    return selectedItem;
+    return window.selectedItem;
 }
 
 // очистка выбора
 function clearSelectedItem() {
-    selectedItem = null;
+    window.selectedItem = null;
 }
-window.openInventory = openInventory;
 
+// экспорт функций в глобальную область
+window.openInventory = openInventory;
+window.getSelectedItem = getSelectedItem;
+window.clearSelectedItem = clearSelectedItem;
