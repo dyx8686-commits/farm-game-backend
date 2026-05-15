@@ -164,6 +164,50 @@ function getPlotPositions(type) {
         { x: 6, y: 4 }
     ];
 }
+function showShopTab(tab) {
+
+    const container = document.getElementById("shopContent");
+    container.innerHTML = "";
+
+    const items = [
+        { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
+        { name: "CORN_SEEDS", icon: "🌽", price: 15 },
+        { name: "POTATO_SEEDS", icon: "🥔", price: 12 },
+
+        { name: "OAK_SAPLING", icon: "🌳", price: 20 },
+        { name: "PINE_SAPLING", icon: "🌲", price: 25 }
+    ];
+
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+    grid.style.gap = "10px";
+
+    container.appendChild(grid);
+
+    items.forEach(item => {
+
+        const card = document.createElement("div");
+
+        card.style.background = "#444";
+        card.style.padding = "12px";
+        card.style.borderRadius = "10px";
+        card.style.textAlign = "center";
+        card.style.cursor = "pointer";
+
+        card.innerHTML = `
+            <div style="font-size:30px">${item.icon}</div>
+            <div>${item.name}</div>
+            <div style="color:gold">${item.price} 💰</div>
+        `;
+
+        card.onclick = () => {
+            console.log("BUY:", item.name);
+        };
+
+        grid.appendChild(card);
+    });
+}
 
 // ================= LOOP =================
 
