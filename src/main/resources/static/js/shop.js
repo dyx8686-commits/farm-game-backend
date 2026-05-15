@@ -110,7 +110,6 @@ function getSellPrice(item) {
     }
 }
 
-const BASE = "https://farm-game-backend-eo4y.onrender.com";
 
 async function buyItem(item, amount) {
 
