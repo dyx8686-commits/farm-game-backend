@@ -41,9 +41,14 @@ console.log(inv);
     console.log(player);
 
     applyIslandTheme(player);
-    if (!window.currentPlotType || window.currentPlotType !== player.type) {
-    createPlots(player.type);
+    if (window.currentPlotType !== player.type) {
+
     window.currentPlotType = player.type;
+
+    const container = document.getElementById("plots");
+    if (container) container.innerHTML = "";
+
+    createPlots(player.type);
 }
 renderInventory(inv);
 renderWorld(player);
