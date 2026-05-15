@@ -51,6 +51,7 @@ console.log(inv);
     `;
 
     applyIslandTheme(player);
+    createPlots(player.type);
 renderInventory(inv);
 renderWorld(player);
 updatePlayer();
@@ -122,6 +123,81 @@ function onCellClick(x, y, cell) {
 
     // пример визуального теста
     cell.style.background = "rgba(255, 255, 0, 0.3)";
+}
+window.plots = [];
+
+function createPlots(playerType) {
+
+    const container = document.getElementById("plots");
+    container.innerHTML = "";
+
+    window.plots = [];
+
+    let positions = getPlotPositions(playerType);
+
+    positions.forEach((pos, index) => {
+
+        const plot = document.createElement("div");
+        plot.className = "plot";
+
+        plot.style.left = pos.x + "px";
+        plot.style.top = pos.y + "px";
+
+        plot.innerText = index + 1;
+
+        plot.onclick = () => onPlotClick(index, playerType);
+
+        container.appendChild(plot);
+
+        window.plots.push({
+            id: index,
+            type: playerType,
+            x: pos.x,
+            y: pos.y,
+            state: null // растение/дерево/руда
+        });
+    });
+}
+function getPlotPositions(type) {
+
+    // базовая схема (6 точек)
+    if (type === "FARMER") {
+        return [
+            { x: 250, y: 180 },
+            { x: 320, y: 180 },
+            { x: 390, y: 180 },
+
+            { x: 250, y: 250 },
+            { x: 320, y: 250 },
+            { x: 390, y: 250 }
+        ];
+    }
+
+    if (type === "WOODCUTTER") {
+        return [
+            { x: 200, y: 160 },
+            { x: 280, y: 160 },
+            { x: 360, y: 160 },
+
+            { x: 200, y: 240 },
+            { x: 280, y: 240 },
+            { x: 360, y: 240 }
+        ];
+    }
+
+    if (type === "MINER") {
+        return [
+            { x: 260, y: 200 },
+            { x: 330, y: 200 },
+            { x: 400, y: 200 },
+
+            { x: 260, y: 270 },
+            { x: 330, y: 270 },
+            { x: 400, y: 270 }
+        ];
+    }
+
+    return [];
 }
 
 
