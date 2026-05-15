@@ -18,10 +18,54 @@ function closeShop() {
 
 // переключение вкладок
 function showShopTab(tab) {
-    window.shopTab = tab;
-    renderShop();
-}
 
+    const container = document.getElementById("shopContent");
+    container.innerHTML = "";
+
+    const items = [
+        { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
+        { name: "CORN_SEEDS", icon: "🌽", price: 15 },
+        { name: "POTATO_SEEDS", icon: "🥔", price: 12 },
+
+        { name: "OAK_SAPLING", icon: "🌳", price: 20 },
+        { name: "PINE_SAPLING", icon: "🌲", price: 25 }
+    ];
+
+    const grid = document.createElement("div");
+
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+    grid.style.gap = "12px";
+    grid.style.marginTop = "10px";
+
+    container.appendChild(grid);
+
+    items.forEach(item => {
+
+        const card = document.createElement("div");
+
+        card.style.background = "#3a3a3a";
+        card.style.border = "2px solid #555";
+        card.style.borderRadius = "12px";
+
+        card.style.padding = "12px";
+        card.style.cursor = "pointer";
+
+        card.style.textAlign = "center";
+
+        card.innerHTML = `
+            <div style="font-size:34px">${item.icon}</div>
+            <div style="margin-top:5px">${item.name}</div>
+            <div style="color:gold; font-size:12px">${item.price} 💰</div>
+        `;
+
+        card.onclick = () => {
+            console.log("BUY:", item.name);
+        };
+
+        grid.appendChild(card);
+    });
+}
 // рендер
 function renderShop() {
 
