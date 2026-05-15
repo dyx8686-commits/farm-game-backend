@@ -85,10 +85,12 @@ window.gridData = [];
 function createGrid() {
 
     const grid = document.getElementById("grid");
-    if (!grid) return;
+    if (!grid || grid.dataset.ready === "true") return;
 
     grid.innerHTML = "";
     window.gridData = [];
+
+    grid.dataset.ready = "true";
 
     for (let y = 0; y < GRID_HEIGHT; y++) {
 
@@ -125,5 +127,6 @@ function onCellClick(x, y, cell) {
 
 // ================= LOOP =================
 
-setInterval(load, 3000);
 load();
+createGrid();
+setInterval(load, 3000);
