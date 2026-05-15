@@ -219,7 +219,7 @@ function showShopTab(tab) {
                     return;
                 }
 
-                load();
+                await refreshPlayerState();
             } catch (err) {
                 console.error("BUY ERROR:", err);
             }
@@ -236,3 +236,11 @@ window.addEventListener("load", () => {
     load();
     setInterval(load, 3000);
 });
+async function refreshPlayerState() {
+    const res = await fetch(BASE + "/game/state?name=" + playerName);
+    const player = await res.json();
+
+    window.currentInventory = player.inventory || {};
+
+    renderInventory(window.currentInventory);
+}
