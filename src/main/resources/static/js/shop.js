@@ -59,12 +59,39 @@ function showShopTab(tab) {
             <div style="color:gold; font-size:12px">${item.price} 💰</div>
         `;
 
-        card.onclick = () => {
-            console.log("BUY:", item.name);
-        };
+        card.onclick = async () => {
 
-        grid.appendChild(card);
-    });
+    const gold = window.currentInventory?.GOLD ?? 0;
+
+    if (gold < item.price) {
+        alert("Not enough gold 💰");
+        return;
+    }
+
+    try {
+        const res = await fetch(BASE + "/game/buy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: playerName,
+                item: item.name,
+                price: item.price
+            })
+        });
+
+        if (!res.ok) {
+            alert("Buy failed");
+            return;
+        }
+
+        console.log("BOUGHT:", item.name);
+
+        load(); // обновляем состояние игры
+
+    } catch (e) {
+        console.error(e);
+    }
+};
 }
 // рендер
 function renderShop() {
