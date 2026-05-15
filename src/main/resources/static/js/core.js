@@ -77,23 +77,50 @@ function updatePlayer() {
     p.style.top = "260px";
 }
 //====== Клетки ====///
+const GRID_WIDTH = 15;
+const GRID_HEIGHT = 10;
+
+window.gridData = [];
+
 function createGrid() {
 
     const grid = document.getElementById("grid");
     if (!grid) return;
 
     grid.innerHTML = "";
+    window.gridData = [];
 
-    const total = 15 * 10;
+    for (let y = 0; y < GRID_HEIGHT; y++) {
 
-    for (let i = 0; i < total; i++) {
-        const cell = document.createElement("div");
-        cell.className = "grid-cell";
-        grid.appendChild(cell);
+        for (let x = 0; x < GRID_WIDTH; x++) {
+
+            const cell = document.createElement("div");
+            cell.className = "grid-cell";
+
+            cell.dataset.x = x;
+            cell.dataset.y = y;
+
+            cell.onclick = () => onCellClick(x, y, cell);
+
+            grid.appendChild(cell);
+
+            window.gridData.push({
+                x,
+                y,
+                element: cell,
+                occupied: false
+            });
+        }
     }
 }
 
-createGrid();
+function onCellClick(x, y, cell) {
+
+    console.log("CLICK CELL:", x, y);
+
+    // пример визуального теста
+    cell.style.background = "rgba(255, 255, 0, 0.3)";
+}
 
 
 // ================= LOOP =================
