@@ -1,3 +1,4 @@
+console.log("SHOP JS LOADED");
 window.shopTab = "buy";
 
 window.openShop = openShop;
