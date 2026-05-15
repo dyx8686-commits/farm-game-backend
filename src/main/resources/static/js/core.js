@@ -232,6 +232,7 @@ window.addEventListener("load", () => {
     updatePlayer();
 
     load();
+    window.showShopTab = showShopTab;
 
     setInterval(load, 3000);
 });
