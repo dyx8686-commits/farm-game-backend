@@ -2,89 +2,67 @@ const BASE = "https://farm-game-backend-eo4y.onrender.com";
 let playerName = new URLSearchParams(window.location.search).get("name");
 
 let selectedItem = null;
-function applyIslandTheme(player) {
 
+// ================= THEME =================
+
+function applyIslandTheme(player) {
     const body = document.getElementById("gameBody");
 
     body.classList.remove("farm", "wood", "mine");
 
-    if (player.type === "FARMER") {
-        body.classList.add("farm");
-    }
-
-    if (player.type === "WOODCUTTER") {
-        body.classList.add("wood");
-    }
-
-    if (player.type === "MINER") {
-        body.classList.add("mine");
-    }
+    if (player.type === "FARMER") body.classList.add("farm");
+    if (player.type === "WOODCUTTER") body.classList.add("wood");
+    if (player.type === "MINER") body.classList.add("mine");
 }
 
-// ================= LOAD =================
+// ================= LOAD (ТОЛЬКО ДАННЫЕ) =================
 
 async function load() {
+    const res = await fetch(BASE + "/game/state?name=" + playerName);
+    const player = await res.json();
 
-    const res = await fetch(
-    BASE + "/game/state?name=" + playerName
-);
-
-const player = await res.json();
-    window.currentInventory = player.inventory;
-
-if (!player) return;
+    if (!player) return;
 
     const inv = player.inventory || {};
+    window.currentInventory = inv;
 
-console.log(inv);
-
+    console.log(inv);
     console.log(player);
 
     applyIslandTheme(player);
+
+    // ⚠️ мир НЕ пересоздаём каждый load
     if (window.currentPlotType !== player.type) {
+        window.currentPlotType = player.type;
 
-    window.currentPlotType = player.type;
+        const container = document.getElementById("plots");
+        if (container) container.innerHTML = "";
 
-    const container = document.getElementById("plots");
-    if (container) container.innerHTML = "";
+        createPlots(player.type);
+    }
 
-    createPlots(player.type);
-}
-renderInventory(inv);
-renderWorld(player);
-    const playerEl = document.getElementById("player");
-if (!playerEl) return;
-updatePlayer();
-}
-
-// ================= WORLD ROUTER =================
-
-function renderWorld(player) {
-
-    document.getElementById("farmerPlants").innerHTML = "";
-    document.getElementById("woodTrees").innerHTML = "";
-    document.getElementById("minerStones").innerHTML = "";
-
-    if (player.type === "FARMER") renderPlants(player);
-    if (player.type === "WOODCUTTER") renderTrees(player);
-    if (player.type === "MINER") renderStones(player);
+    renderInventory(inv);
+    updatePlayer();
 }
 
 // ================= PLAYER =================
 
 function updatePlayer() {
     const p = document.getElementById("player");
+    if (!p) return;
+
     p.style.left = "420px";
     p.style.top = "260px";
 }
-//====== Клетки ====///
+
+// ================= GRID =================
+
 const GRID_WIDTH = 15;
 const GRID_HEIGHT = 10;
 
 window.gridData = [];
 
 function createGrid() {
-
     const grid = document.getElementById("grid");
     if (!grid || grid.dataset.ready === "true") return;
 
@@ -94,7 +72,6 @@ function createGrid() {
     grid.dataset.ready = "true";
 
     for (let y = 0; y < GRID_HEIGHT; y++) {
-
         for (let x = 0; x < GRID_WIDTH; x++) {
 
             const cell = document.createElement("div");
@@ -118,16 +95,16 @@ function createGrid() {
 }
 
 function onCellClick(x, y, cell) {
-
     console.log("CLICK CELL:", x, y);
 
-    // пример визуального теста
     cell.style.background = "rgba(255, 255, 0, 0.3)";
 }
+
+// ================= PLOTS (СТРОГО GRID) =================
+
 window.plots = [];
 
 function createPlots(playerType) {
-
     const container = document.getElementById("plots");
     if (!container) return;
 
@@ -137,11 +114,10 @@ function createPlots(playerType) {
     const positions = getPlotPositions(playerType);
 
     positions.forEach((pos, index) => {
-
         const cell = document.createElement("div");
         cell.className = "plot";
 
-        // 🔥 ВАЖНО: теперь используем CSS GRID
+        // ✅ чистый CSS GRID (без px вообще)
         cell.style.gridColumnStart = pos.x + 1;
         cell.style.gridRowStart = pos.y + 1;
 
@@ -158,8 +134,8 @@ function createPlots(playerType) {
         });
     });
 }
-function getPlotPositions(type) {
 
+function getPlotPositions(type) {
     return [
         { x: 4, y: 3 },
         { x: 5, y: 3 },
@@ -170,8 +146,26 @@ function getPlotPositions(type) {
         { x: 6, y: 4 }
     ];
 }
-function showShopTab(tab) {
 
+// ================= WORLD ROUTER =================
+
+function renderWorld(player) {
+    const a = document.getElementById("farmerPlants");
+    const b = document.getElementById("woodTrees");
+    const c = document.getElementById("minerStones");
+
+    if (a) a.innerHTML = "";
+    if (b) b.innerHTML = "";
+    if (c) c.innerHTML = "";
+
+    if (player.type === "FARMER") renderPlants(player);
+    if (player.type === "WOODCUTTER") renderTrees(player);
+    if (player.type === "MINER") renderStones(player);
+}
+
+// ================= SHOP =================
+
+function showShopTab(tab) {
     const container = document.getElementById("shopContent");
     container.innerHTML = "";
 
@@ -191,7 +185,6 @@ function showShopTab(tab) {
     container.appendChild(grid);
 
     items.forEach(item => {
-
         const card = document.createElement("div");
 
         card.style.background = "#444";
@@ -207,7 +200,6 @@ function showShopTab(tab) {
         `;
 
         card.onclick = async () => {
-
             const gold = window.currentInventory?.GOLD ?? 0;
 
             if (gold < item.price) {
@@ -231,8 +223,7 @@ function showShopTab(tab) {
                     return;
                 }
 
-                load(); // обновляем состояние
-
+                load(); // обновляем данные (но не мир)
             } catch (err) {
                 console.error("BUY ERROR:", err);
             }
@@ -242,11 +233,13 @@ function showShopTab(tab) {
     });
 }
 
-
 // ================= LOOP =================
 
 window.addEventListener("load", () => {
     createGrid();
+
+    // мир создаётся один раз через load → createPlots
     load();
+
     setInterval(load, 3000);
 });
