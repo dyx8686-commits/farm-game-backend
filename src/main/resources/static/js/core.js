@@ -207,6 +207,8 @@ function getPlotPositions(type) {
 
 // ================= LOOP =================
 
-load();
-createGrid();
-setInterval(load, 3000);
+window.addEventListener("load", () => {
+    createGrid();
+    load();
+    setInterval(load, 3000);
+});
