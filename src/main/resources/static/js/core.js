@@ -38,8 +38,9 @@ async function load() {
         createPlots(player.type);
     }
 
-    renderInventory(window.currentInventory);
-    updatePlayer();
+    updateInventoryUI(window.currentInventory);
+    updateGoldUI(window.currentInventory.GOLD);
+    
 }
 
 // ================= PLAYER =================
@@ -144,13 +145,6 @@ function getPlotPositions(type) {
 // ================= WORLD ROUTER =================
 
 function renderWorld(player) {
-    const a = document.getElementById("farmerPlants");
-    const b = document.getElementById("woodTrees");
-    const c = document.getElementById("minerStones");
-
-    if (a) a.innerHTML = "";
-    if (b) b.innerHTML = "";
-    if (c) c.innerHTML = "";
 
     if (player.type === "FARMER") renderPlants(player);
     if (player.type === "WOODCUTTER") renderTrees(player);
@@ -232,15 +226,39 @@ function showShopTab(tab) {
 // ================= START =================
 
 window.addEventListener("load", () => {
+
     createGrid();
+
+    updatePlayer();
+
     load();
+
     setInterval(load, 3000);
 });
+
+
 async function refreshPlayerState() {
     const res = await fetch(BASE + "/game/state?name=" + playerName);
     const player = await res.json();
 
     window.currentInventory = player.inventory || {};
 
-    renderInventory(window.currentInventory);
+    
 }
+function updateInventoryUI(inv) {
+    window.currentInventory = inv;
+
+    if (typeof renderInventory === "function") {
+        renderInventory(inv);
+    }
+}
+
+function updateGoldUI(amount) {
+
+    const goldEl = document.getElementById("goldAmount");
+
+    if (!goldEl) return;
+
+    goldEl.innerText = amount ?? 0;
+}
+
