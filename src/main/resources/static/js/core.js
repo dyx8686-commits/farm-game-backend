@@ -140,8 +140,10 @@ function createPlots(playerType) {
         const cell = document.createElement("div");
         cell.className = "plot";
 
-        const cellSizeX = document.querySelector(".grid-cell")?.offsetWidth || 0;
-        const cellSizeY = document.querySelector(".grid-cell")?.offsetHeight || 0;
+        const baseCell = document.querySelector(".grid-cell");
+
+const cellSizeX = baseCell ? baseCell.offsetWidth : 60;
+const cellSizeY = baseCell ? baseCell.offsetHeight : 60;
 
         cell.style.left = (pos.x * cellSizeX) + "px";
         cell.style.top = (pos.y * cellSizeY) + "px";
