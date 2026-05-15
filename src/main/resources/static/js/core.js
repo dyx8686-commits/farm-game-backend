@@ -243,12 +243,6 @@ function showShopTab(tab) {
     });
 }
 
-        load(); // обновляем игру (инвентарь + золото)
-
-    } catch (err) {
-        console.error("BUY ERROR:", err);
-    }
-};
 
 // ================= LOOP =================
 
