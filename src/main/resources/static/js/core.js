@@ -278,3 +278,9 @@ window.openShop = function () {
 document.querySelector(".shop")?.addEventListener("click", () => {
     console.log("SHOP DIV CLICKED");
 });
+document.addEventListener("click", (e) => {
+    if (e.target.closest(".shop")) {
+        console.log("SHOP CLICKED VIA DELEGATION");
+        window.openShop();
+    }
+});
