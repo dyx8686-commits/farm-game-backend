@@ -252,6 +252,35 @@ body.mine {
 .grid-cell:nth-child(even) {
     background: rgba(0,0,0,0.05);
 }
+    #plots {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 3;
+    pointer-events: none; /* пока выключаем взаимодействие */
+}
+
+.plot {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+
+    border-radius: 8px;
+
+    background: rgba(0,0,0,0.2);
+    border: 2px solid rgba(255,255,255,0.2);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 10px;
+    color: white;
+}
 
 </style>
 </head>
@@ -262,6 +291,7 @@ body.mine {
     <div class="game">
 
 <div id="island" class="island">
+    <div id="plots"></div>
    
     <!-- UI BUTTONS -->
      <div style="position: absolute; top: 70px; left: 10px; z-index: 10;">
