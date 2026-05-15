@@ -7,6 +7,7 @@ let selectedItem = null;
 
 function applyIslandTheme(player) {
     const body = document.getElementById("gameBody");
+    if (!body) return;
 
     body.classList.remove("farm", "wood", "mine");
 
@@ -23,15 +24,11 @@ async function load() {
 
     if (!player) return;
 
-    const inv = player.inventory || {};
-    window.currentInventory = inv;
-
-    console.log(inv);
-    console.log(player);
+    window.currentInventory = player.inventory || {};
 
     applyIslandTheme(player);
 
-    // ⚠️ мир НЕ пересоздаём каждый load
+    // мир создаём только при смене типа
     if (window.currentPlotType !== player.type) {
         window.currentPlotType = player.type;
 
@@ -41,7 +38,7 @@ async function load() {
         createPlots(player.type);
     }
 
-    renderInventory(inv);
+    renderInventory(window.currentInventory);
     updatePlayer();
 }
 
@@ -96,11 +93,10 @@ function createGrid() {
 
 function onCellClick(x, y, cell) {
     console.log("CLICK CELL:", x, y);
-
     cell.style.background = "rgba(255, 255, 0, 0.3)";
 }
 
-// ================= PLOTS (СТРОГО GRID) =================
+// ================= PLOTS (CSS GRID) =================
 
 window.plots = [];
 
@@ -117,7 +113,6 @@ function createPlots(playerType) {
         const cell = document.createElement("div");
         cell.className = "plot";
 
-        // ✅ чистый CSS GRID (без px вообще)
         cell.style.gridColumnStart = pos.x + 1;
         cell.style.gridRowStart = pos.y + 1;
 
@@ -140,7 +135,6 @@ function getPlotPositions(type) {
         { x: 4, y: 3 },
         { x: 5, y: 3 },
         { x: 6, y: 3 },
-
         { x: 4, y: 4 },
         { x: 5, y: 4 },
         { x: 6, y: 4 }
@@ -167,6 +161,8 @@ function renderWorld(player) {
 
 function showShopTab(tab) {
     const container = document.getElementById("shopContent");
+    if (!container) return;
+
     container.innerHTML = "";
 
     const items = [
@@ -223,7 +219,7 @@ function showShopTab(tab) {
                     return;
                 }
 
-                load(); // обновляем данные (но не мир)
+                load();
             } catch (err) {
                 console.error("BUY ERROR:", err);
             }
@@ -233,13 +229,10 @@ function showShopTab(tab) {
     });
 }
 
-// ================= LOOP =================
+// ================= START =================
 
 window.addEventListener("load", () => {
     createGrid();
-
-    // мир создаётся один раз через load → createPlots
     load();
-
     setInterval(load, 3000);
 });
