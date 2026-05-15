@@ -262,4 +262,16 @@ function updateGoldUI(amount) {
 
     goldEl.innerText = amount ?? 0;
 }
+window.openShop = function () {
+    const modal = document.getElementById("shopModal");
+    if (!modal) {
+        console.error("shopModal not found in HTML");
+        return;
+    }
 
+    modal.style.display = "block";
+
+    if (typeof showShopTab === "function") {
+        showShopTab("buy");
+    }
+};
