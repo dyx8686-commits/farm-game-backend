@@ -275,3 +275,6 @@ window.openShop = function () {
         showShopTab("buy");
     }
 };
+document.querySelector(".shop")?.addEventListener("click", () => {
+    console.log("SHOP DIV CLICKED");
+});
