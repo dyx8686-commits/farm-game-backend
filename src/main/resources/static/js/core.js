@@ -154,23 +154,15 @@ function createPlots(playerType) {
 }
 function getPlotPositions(type) {
 
-    const positions = [];
+    return [
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
 
-    const startX = 4;
-    const startY = 3;
-
-    for (let row = 0; row < 2; row++) {
-
-        for (let col = 0; col < 3; col++) {
-
-            positions.push({
-                x: (startX + col) * 60,
-                y: (startY + row) * 60
-            });
-        }
-    }
-
-    return positions;
+        { x: 4, y: 4 },
+        { x: 5, y: 4 },
+        { x: 6, y: 4 }
+    ];
 }
 
 // ================= LOOP =================
