@@ -4,18 +4,15 @@ window.openShop = openShop;
 window.closeShop = closeShop;
 window.showShopTab = showShopTab;
 
-// открыть
 function openShop() {
     document.getElementById("shopModal").style.display = "block";
     showShopTab("buy");
 }
 
-// закрыть
 function closeShop() {
     document.getElementById("shopModal").style.display = "none";
 }
 
-// магазин (сетка)
 function showShopTab(tab) {
 
     const container = document.getElementById("shopContent");
@@ -33,7 +30,6 @@ function showShopTab(tab) {
     grid.style.display = "grid";
     grid.style.gridTemplateColumns = "repeat(3, 1fr)";
     grid.style.gap = "12px";
-    grid.style.marginTop = "10px";
 
     container.appendChild(grid);
 
@@ -42,16 +38,15 @@ function showShopTab(tab) {
         const card = document.createElement("div");
 
         card.style.background = "#3a3a3a";
-        card.style.border = "2px solid #555";
-        card.style.borderRadius = "12px";
         card.style.padding = "12px";
-        card.style.cursor = "pointer";
+        card.style.borderRadius = "10px";
         card.style.textAlign = "center";
+        card.style.cursor = "pointer";
 
         card.innerHTML = `
             <div style="font-size:34px">${item.icon}</div>
-            <div style="margin-top:5px">${item.name}</div>
-            <div style="color:gold; font-size:12px">${item.price} 💰</div>
+            <div>${item.name}</div>
+            <div style="color:gold">${item.price} 💰</div>
         `;
 
         card.onclick = async () => {
