@@ -86,3 +86,4 @@ function showShopTab(tab) {
         grid.appendChild(card);
     });
 }
+console.log("OPEN SHOP FUNCTION CHECK:", typeof window.openShop);
