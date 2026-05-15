@@ -38,17 +38,7 @@ if (!player) return;
 
 console.log(inv);
 
-    document.getElementById("info").innerHTML = `
-        <b>${player.name}</b><br>
-        CLASS: ${player.type}<br><br>
-
-        FOOD: ${inv.FOOD ?? 0}<br>
-        WOOD: ${inv.WOOD ?? 0}<br>
-        ORE: ${inv.ORE ?? 0}<br>
-        GOLD: ${inv.GOLD ?? 0}<br>
-        SEEDS: ${inv.SEEDS ?? 0}<br>
-        SAPLING: ${inv.SAPLING ?? 0}<br>
-    `;
+    console.log(player);
 
     applyIslandTheme(player);
     if (!window.currentPlotType || window.currentPlotType !== player.type) {
