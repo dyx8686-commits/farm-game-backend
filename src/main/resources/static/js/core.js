@@ -235,6 +235,9 @@ function showShopTab(tab) {
             return;
         }
 
+            });
+}
+
         load(); // обновляем игру (инвентарь + золото)
 
     } catch (err) {
