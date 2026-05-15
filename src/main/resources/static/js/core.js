@@ -52,6 +52,13 @@ console.log(inv);
 }
 renderInventory(inv);
 renderWorld(player);
+    document.getElementById("farmerObjects").innerHTML = `
+    <div class="shop" onclick="openShop()"></div>
+    <div id="player"></div>
+    <div id="farmerPlants"></div>
+    <div id="woodTrees"></div>
+    <div id="minerStones"></div>
+`;
 updatePlayer();
 }
 
