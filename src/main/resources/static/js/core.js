@@ -154,46 +154,24 @@ function createPlots(playerType) {
 }
 function getPlotPositions(type) {
 
-    // базовая схема (6 точек)
-    if (type === "FARMER") {
-        return [
-            { x: 250, y: 180 },
-            { x: 320, y: 180 },
-            { x: 390, y: 180 },
+    const positions = [];
 
-            { x: 250, y: 250 },
-            { x: 320, y: 250 },
-            { x: 390, y: 250 }
-        ];
+    const startX = 4;
+    const startY = 3;
+
+    for (let row = 0; row < 2; row++) {
+
+        for (let col = 0; col < 3; col++) {
+
+            positions.push({
+                x: (startX + col) * 60,
+                y: (startY + row) * 60
+            });
+        }
     }
 
-    if (type === "WOODCUTTER") {
-        return [
-            { x: 200, y: 160 },
-            { x: 280, y: 160 },
-            { x: 360, y: 160 },
-
-            { x: 200, y: 240 },
-            { x: 280, y: 240 },
-            { x: 360, y: 240 }
-        ];
-    }
-
-    if (type === "MINER") {
-        return [
-            { x: 260, y: 200 },
-            { x: 330, y: 200 },
-            { x: 400, y: 200 },
-
-            { x: 260, y: 270 },
-            { x: 330, y: 270 },
-            { x: 400, y: 270 }
-        ];
-    }
-
-    return [];
+    return positions;
 }
-
 
 // ================= LOOP =================
 
