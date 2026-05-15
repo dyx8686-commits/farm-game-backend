@@ -51,7 +51,10 @@ console.log(inv);
     `;
 
     applyIslandTheme(player);
+    if (!window.currentPlotType || window.currentPlotType !== player.type) {
     createPlots(player.type);
+    window.currentPlotType = player.type;
+}
 renderInventory(inv);
 renderWorld(player);
 updatePlayer();
@@ -145,8 +148,9 @@ function createPlots(playerType) {
 
         plot.innerText = index + 1;
 
-        plot.onclick = () => onPlotClick(index, playerType);
-
+       function onPlotClick(index, type) {
+    console.log("PLOT CLICK:", index, type);
+}
         container.appendChild(plot);
 
         window.plots.push({
