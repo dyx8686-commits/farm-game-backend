@@ -129,8 +129,9 @@ window.plots = [];
 function createPlots(playerType) {
 
     const container = document.getElementById("plots");
-    container.innerHTML = "";
+    if (!container) return;
 
+    container.innerHTML = "";
     window.plots = [];
 
     const positions = getPlotPositions(playerType);
@@ -140,13 +141,9 @@ function createPlots(playerType) {
         const cell = document.createElement("div");
         cell.className = "plot";
 
-        const baseCell = document.querySelector(".grid-cell");
-
-const cellSizeX = baseCell ? baseCell.offsetWidth : 60;
-const cellSizeY = baseCell ? baseCell.offsetHeight : 60;
-
-        cell.style.left = (pos.x * cellSizeX) + "px";
-        cell.style.top = (pos.y * cellSizeY) + "px";
+        // 🔥 ВАЖНО: теперь используем CSS GRID
+        cell.style.gridColumnStart = pos.x + 1;
+        cell.style.gridRowStart = pos.y + 1;
 
         cell.innerText = index + 1;
 
