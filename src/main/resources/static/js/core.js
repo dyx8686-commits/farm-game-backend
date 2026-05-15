@@ -126,29 +126,29 @@ function createPlots(playerType) {
 
     window.plots = [];
 
-    let positions = getPlotPositions(playerType);
+    const positions = getPlotPositions(playerType);
 
     positions.forEach((pos, index) => {
 
-        const plot = document.createElement("div");
-        plot.className = "plot";
+        const cell = document.createElement("div");
+        cell.className = "plot";
 
-        plot.style.left = pos.x + "px";
-        plot.style.top = pos.y + "px";
+        const cellSizeX = document.querySelector(".grid-cell")?.offsetWidth || 0;
+        const cellSizeY = document.querySelector(".grid-cell")?.offsetHeight || 0;
 
-        plot.innerText = index + 1;
+        cell.style.left = (pos.x * cellSizeX) + "px";
+        cell.style.top = (pos.y * cellSizeY) + "px";
 
-       function onPlotClick(index, type) {
-    console.log("PLOT CLICK:", index, type);
-}
-        container.appendChild(plot);
+        cell.innerText = index + 1;
+
+        container.appendChild(cell);
 
         window.plots.push({
             id: index,
             type: playerType,
             x: pos.x,
             y: pos.y,
-            state: null // растение/дерево/руда
+            state: null
         });
     });
 }
