@@ -76,6 +76,25 @@ function updatePlayer() {
     p.style.left = "420px";
     p.style.top = "260px";
 }
+//====== Клетки ====///
+function createGrid() {
+
+    const grid = document.getElementById("grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    const total = 15 * 10;
+
+    for (let i = 0; i < total; i++) {
+        const cell = document.createElement("div");
+        cell.className = "grid-cell";
+        grid.appendChild(cell);
+    }
+}
+
+createGrid();
+
 
 // ================= LOOP =================
 
