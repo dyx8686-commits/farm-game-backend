@@ -180,7 +180,6 @@ function showShopTab(tab) {
         { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
         { name: "CORN_SEEDS", icon: "🌽", price: 15 },
         { name: "POTATO_SEEDS", icon: "🥔", price: 12 },
-
         { name: "OAK_SAPLING", icon: "🌳", price: 20 },
         { name: "PINE_SAPLING", icon: "🌲", price: 25 }
     ];
@@ -210,32 +209,38 @@ function showShopTab(tab) {
 
         card.onclick = async () => {
 
-    const gold = window.currentInventory?.GOLD ?? 0;
+            const gold = window.currentInventory?.GOLD ?? 0;
 
-    if (gold < item.price) {
-        alert("Not enough gold 💰");
-        return;
-    }
+            if (gold < item.price) {
+                alert("Not enough gold 💰");
+                return;
+            }
 
-    try {
-        const res = await fetch(BASE + "/game/buy", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                name: playerName,
-                item: item.name,
-                price: item.price
-            })
-        });
+            try {
+                const res = await fetch(BASE + "/game/buy", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: playerName,
+                        item: item.name,
+                        price: item.price
+                    })
+                });
 
-        if (!res.ok) {
-            alert("Buy failed");
-            return;
-        }
+                if (!res.ok) {
+                    alert("Buy failed");
+                    return;
+                }
 
-            });
+                load(); // обновляем состояние
+
+            } catch (err) {
+                console.error("BUY ERROR:", err);
+            }
+        };
+
+        grid.appendChild(card);
+    });
 }
 
         load(); // обновляем игру (инвентарь + золото)
