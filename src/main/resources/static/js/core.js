@@ -311,21 +311,3 @@ document.addEventListener("DOMContentLoaded", () => {
         window.openShop();
     });
 });
-setTimeout(() => {
-
-    const shopBtn = document.querySelector(".shop");
-
-    console.log("SHOP ELEMENT:", shopBtn);
-
-    if (shopBtn) {
-        console.log("SHOP SIZE:", shopBtn.offsetWidth, shopBtn.offsetHeight);
-
-        shopBtn.style.border = "5px solid red";
-
-        shopBtn.addEventListener("click", () => {
-            console.log("REAL SHOP CLICK");
-            window.openShop();
-        });
-    }
-
-}, 2000);
