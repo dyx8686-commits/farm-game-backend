@@ -182,6 +182,18 @@ function showShopTab(tab) {
         card.style.borderRadius = "10px";
         card.style.textAlign = "center";
         card.style.cursor = "pointer";
+        card.style.transition = "0.2s";
+card.style.border = "2px solid transparent";
+
+card.onmouseenter = () => {
+    card.style.transform = "scale(1.05)";
+    card.style.border = "2px solid gold";
+};
+
+card.onmouseleave = () => {
+    card.style.transform = "scale(1)";
+    card.style.border = "2px solid transparent";
+};
 
         card.innerHTML = `
             <div style="font-size:30px">${item.icon}</div>
