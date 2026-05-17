@@ -284,3 +284,18 @@ document.addEventListener("click", (e) => {
         window.openShop();
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const shopBtn = document.querySelector(".shop");
+
+    if (!shopBtn) {
+        console.error("SHOP BUTTON NOT FOUND");
+        return;
+    }
+
+    shopBtn.addEventListener("click", () => {
+        console.log("SHOP CLICKED (EVENT)");
+        window.openShop();
+    });
+});
