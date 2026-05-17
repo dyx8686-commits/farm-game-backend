@@ -1,4 +1,4 @@
-const BASE = "https://farm-game-backend-eo4y.onrender.com";
+const BASE = "https://farm-game-backend-production.up.railway.app";
 let playerName = new URLSearchParams(window.location.search).get("name");
 
 let selectedItem = null;
