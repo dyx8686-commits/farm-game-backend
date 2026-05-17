@@ -177,22 +177,23 @@ function showShopTab(tab) {
     items.forEach(item => {
         const card = document.createElement("div");
 
-        card.style.background = "#444";
-        card.style.padding = "12px";
-        card.style.borderRadius = "10px";
-        card.style.textAlign = "center";
-        card.style.cursor = "pointer";
-        card.style.transition = "0.2s";
+        card.style.background = "linear-gradient(180deg, #4f4f4f, #2f2f2f)";
+card.style.padding = "14px";
+card.style.borderRadius = "14px";
+card.style.textAlign = "center";
+card.style.cursor = "pointer";
+
+card.style.display = "flex";
+card.style.flexDirection = "column";
+card.style.alignItems = "center";
+card.style.justifyContent = "center";
+
+card.style.minHeight = "120px";
+
+card.style.boxShadow = "0 4px 10px rgba(0,0,0,0.4)";
 card.style.border = "2px solid transparent";
 
-card.onmouseenter = () => {
-    card.style.transform = "scale(1.05)";
-    card.style.border = "2px solid gold";
-};
-
-card.onmouseleave = () => {
-    card.style.transform = "scale(1)";
-    card.style.border = "2px solid transparent";
+card.style.transition = "0.2s";
 };
 
         card.innerHTML = `
