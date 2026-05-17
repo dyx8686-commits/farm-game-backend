@@ -154,6 +154,7 @@ function renderWorld(player) {
 // ================= SHOP =================
 
 function showShopTab(tab) {
+    console.log("SHOP TAB CLICKED:", tab);
     const container = document.getElementById("shopContent");
     if (!container) return;
 
