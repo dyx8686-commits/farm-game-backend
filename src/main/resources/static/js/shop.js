@@ -72,7 +72,7 @@ function showShopTab(tab) {
             }
 
             try {
-                const res = await fetch("https://farm-game-backend-eo4y.onrender.com/game/buy", {
+                const res = await fetch("https://farm-game-backend-production.up.railway.app/game/buy", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
