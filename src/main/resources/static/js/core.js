@@ -19,28 +19,50 @@ function applyIslandTheme(player) {
 // ================= LOAD (ТОЛЬКО ДАННЫЕ) =================
 
 async function load() {
-    const res = await fetch(BASE + "/game/state?name=" + playerName);
-    const player = await res.json();
+    try {
+        const res = await fetch(BASE + "/game/state?name=" + playerName);
 
-    if (!player) return;
+        const text = await res.text();
+        console.log("RAW RESPONSE:", text);
 
-    window.currentInventory = player.inventory || {};
+        if (!text || text.trim() === "") return;
 
-    applyIslandTheme(player);
+        let player;
+        try {
+            player = JSON.parse(text);
+        } catch (e) {
+            console.error("INVALID JSON:", text);
+            return;
+        }
 
-    // мир создаём только при смене типа
-    if (window.currentPlotType !== player.type) {
-        window.currentPlotType = player.type;
+        if (!player) return;
 
-        const container = document.getElementById("plots");
-        if (container) container.innerHTML = "";
+        window.currentInventory = player.inventory || {};
 
-        createPlots(player.type);
+        applyIslandTheme(player);
+
+        if (window.currentPlotType !== player.type) {
+            window.currentPlotType = player.type;
+
+            const container = document.getElementById("plots");
+            if (container) container.innerHTML = "";
+
+            createPlots(player.type);
+        }
+
+        if (typeof updateInventoryUI === "function") {
+            updateInventoryUI(window.currentInventory);
+        }
+
+        if (typeof updateGoldUI === "function") {
+            updateGoldUI(window.currentInventory.GOLD);
+        }
+
+        updatePlayer();
+
+    } catch (err) {
+        console.error("LOAD ERROR:", err);
     }
-
-    updateInventoryUI(window.currentInventory);
-    updateGoldUI(window.currentInventory.GOLD);
-    
 }
 
 // ================= PLAYER =================
