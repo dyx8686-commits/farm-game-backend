@@ -279,6 +279,25 @@ body.mine {
 
     z-index: 6;
 }
+    .shop-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+}
+
+.shop-window {
+    width: 520px;
+    margin: 80px auto;
+    background: #2c2c2c;
+    padding: 15px;
+    border-radius: 14px;
+    color: white;
+}
 
 </style>
 </head>
@@ -361,7 +380,7 @@ z-index:1000;
     </div>
 </div>
     <!-- SHOP 2.0 MODAL -->
-<div id="shopModal" style="
+<div id="shopModal" class="shop-modal">
 display:none;
 position:fixed;
 top:0;
@@ -372,14 +391,7 @@ background:rgba(0,0,0,0.6);
 z-index:1000;
 ">
 
-    <div style="
-    width:520px;
-    margin:80px auto;
-    background:#2c2c2c;
-    padding:15px;
-    border-radius:14px;
-    color:white;
-    ">
+    <div class="shop-window">
 
         <!-- HEADER -->
         <div style="display:flex; justify-content:space-between; align-items:center;">
