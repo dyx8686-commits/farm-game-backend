@@ -160,13 +160,30 @@ function showShopTab(tab) {
 
     container.innerHTML = "";
 
-    const items = [
+   let items = [];
+
+if (tab === "buy") {
+    items = [
         { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
         { name: "CORN_SEEDS", icon: "🌽", price: 15 },
         { name: "POTATO_SEEDS", icon: "🥔", price: 12 },
+
         { name: "OAK_SAPLING", icon: "🌳", price: 20 },
         { name: "PINE_SAPLING", icon: "🌲", price: 25 }
     ];
+}
+
+if (tab === "sell") {
+    items = [
+        { name: "WHEAT", icon: "🌾", price: 5 },
+        { name: "CORN", icon: "🌽", price: 8 },
+        { name: "POTATO", icon: "🥔", price: 6 },
+
+        { name: "WOOD", icon: "🪵", price: 12 },
+        { name: "STONE", icon: "🪨", price: 15 }
+    ];
+
+}
 
     const grid = document.createElement("div");
     grid.style.display = "grid";
