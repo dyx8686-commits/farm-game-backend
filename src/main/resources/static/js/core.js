@@ -198,10 +198,30 @@ card.style.border = "2px solid transparent";
 card.style.transition = "0.2s";
 
         card.innerHTML = `
-            <div style="font-size:30px">${item.icon}</div>
-            <div>${item.name}</div>
-            <div style="color:gold">${item.price} 💰</div>
-        `;
+    <div style="
+        font-size:42px;
+        margin-bottom:10px;
+    ">
+        ${item.icon}
+    </div>
+
+    <div style="
+        font-size:14px;
+        font-weight:bold;
+        margin-bottom:8px;
+        color:white;
+    ">
+        ${item.name}
+    </div>
+
+    <div style="
+        color:gold;
+        font-size:16px;
+        font-weight:bold;
+    ">
+        ${item.price} 💰
+    </div>
+`;
 
         card.onclick = async () => {
             const gold = window.currentInventory?.GOLD ?? 0;
