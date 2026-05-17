@@ -1,30 +1,42 @@
 console.log("SHOP JS LOADED");
 
-window.openShop = openShop;
-window.closeShop = closeShop;
-window.showShopTab = showShopTab;
-
 function openShop() {
-    document.getElementById("shopModal").style.display = "block";
+    const modal = document.getElementById("shopModal");
+    if (!modal) return;
+
+    modal.style.display = "block";
     showShopTab("buy");
 }
 
 function closeShop() {
-    document.getElementById("shopModal").style.display = "none";
+    const modal = document.getElementById("shopModal");
+    if (!modal) return;
+
+    modal.style.display = "none";
 }
 
 function showShopTab(tab) {
 
     const container = document.getElementById("shopContent");
+    if (!container) return;
+
     container.innerHTML = "";
 
-    const items = [
-        { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
-        { name: "CORN_SEEDS", icon: "🌽", price: 15 },
-        { name: "POTATO_SEEDS", icon: "🥔", price: 12 },
-        { name: "OAK_SAPLING", icon: "🌳", price: 20 },
-        { name: "PINE_SAPLING", icon: "🌲", price: 25 }
-    ];
+    const items = tab === "buy"
+        ? [
+            { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
+            { name: "CORN_SEEDS", icon: "🌽", price: 15 },
+            { name: "POTATO_SEEDS", icon: "🥔", price: 12 },
+            { name: "OAK_SAPLING", icon: "🌳", price: 20 },
+            { name: "PINE_SAPLING", icon: "🌲", price: 25 }
+        ]
+        : [
+            { name: "WHEAT", icon: "🌾", price: 5 },
+            { name: "CORN", icon: "🌽", price: 8 },
+            { name: "POTATO", icon: "🥔", price: 6 },
+            { name: "WOOD", icon: "🪵", price: 12 },
+            { name: "STONE", icon: "🪨", price: 15 }
+        ];
 
     const grid = document.createElement("div");
     grid.style.display = "grid";
@@ -37,11 +49,12 @@ function showShopTab(tab) {
 
         const card = document.createElement("div");
 
-        card.style.background = "#3a3a3a";
-        card.style.padding = "12px";
-        card.style.borderRadius = "10px";
+        card.style.background = "linear-gradient(180deg, #4f4f4f, #2f2f2f)";
+        card.style.padding = "14px";
+        card.style.borderRadius = "14px";
         card.style.textAlign = "center";
         card.style.cursor = "pointer";
+        card.style.color = "white";
 
         card.innerHTML = `
             <div style="font-size:34px">${item.icon}</div>
@@ -59,13 +72,11 @@ function showShopTab(tab) {
             }
 
             try {
-                const res = await fetch(BASE + "/game/buy", {
+                const res = await fetch("https://farm-game-backend-eo4y.onrender.com/game/buy", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        name: playerName,
+                        name: new URLSearchParams(window.location.search).get("name"),
                         item: item.name,
                         price: item.price
                     })
@@ -76,14 +87,21 @@ function showShopTab(tab) {
                     return;
                 }
 
-                load();
+                if (typeof load === "function") {
+                    load();
+                }
 
             } catch (e) {
-                console.error(e);
+                console.error("BUY ERROR:", e);
             }
         };
 
         grid.appendChild(card);
     });
 }
-console.log("OPEN SHOP FUNCTION CHECK:", typeof window.openShop);
+
+window.openShop = openShop;
+window.closeShop = closeShop;
+window.showShopTab = showShopTab;
+
+console.log("OPEN SHOP:", typeof window.openShop);
