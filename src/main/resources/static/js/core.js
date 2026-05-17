@@ -171,6 +171,8 @@ function showShopTab(tab) {
     grid.style.display = "grid";
     grid.style.gridTemplateColumns = "repeat(3, 1fr)";
     grid.style.gap = "10px";
+    grid.style.padding = "10px";
+    grid.style.alignItems = "stretch";
 
     container.appendChild(grid);
 
