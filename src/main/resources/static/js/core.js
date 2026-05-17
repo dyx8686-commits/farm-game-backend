@@ -194,7 +194,6 @@ card.style.boxShadow = "0 4px 10px rgba(0,0,0,0.4)";
 card.style.border = "2px solid transparent";
 
 card.style.transition = "0.2s";
-};
 
         card.innerHTML = `
             <div style="font-size:30px">${item.icon}</div>
@@ -288,9 +287,7 @@ window.openShop = function () {
         showShopTab("buy");
     }
 };
-document.querySelector(".shop")?.addEventListener("click", () => {
-    console.log("SHOP DIV CLICKED");
-});
+
 document.addEventListener("click", (e) => {
     if (e.target.closest(".shop")) {
         console.log("SHOP CLICKED VIA DELEGATION");
@@ -298,17 +295,3 @@ document.addEventListener("click", (e) => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    const shopBtn = document.querySelector(".shop");
-
-    if (!shopBtn) {
-        console.error("SHOP BUTTON NOT FOUND");
-        return;
-    }
-
-    shopBtn.addEventListener("click", () => {
-        console.log("SHOP CLICKED (EVENT)");
-        window.openShop();
-    });
-});
