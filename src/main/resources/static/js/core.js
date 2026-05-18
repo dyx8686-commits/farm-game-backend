@@ -126,7 +126,10 @@ function onCellClick(x, y, cell) {
 console.log("CREATE PLOTS CALLED", playerType);
 window.plots = [];
 
-function createPlots(playerType) {
+function createPlots(type) {
+
+    console.log("CREATE PLOTS CALLED", type);
+
     const container = document.getElementById("plots");
     if (!container) return;
 
