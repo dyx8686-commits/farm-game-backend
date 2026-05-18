@@ -41,33 +41,47 @@ async function load() {
 
         if (!player) return;
 
-        window.currentInventory = player.inventory || {};
+        // ================= WORLD STATE =================
+        worldState.player = player;
+        worldState.inventory = player.inventory || {};
 
+        // временная совместимость со старым UI
+        window.currentInventory = worldState.inventory;
+
+        // ================= THEME =================
         applyIslandTheme(player);
 
+        // ================= PLOTS =================
         const container = document.getElementById("plots");
 
-if (container) {
-    container.innerHTML = "";
-    createPlots(player.type);
-} else {
-    console.warn("PLOTS CONTAINER NOT FOUND");
-}
+        if (container) {
+            container.innerHTML = "";
+            createPlots(player.type);
+        } else {
+            console.warn("PLOTS CONTAINER NOT FOUND");
+        }
+
+        // ================= INVENTORY UI =================
         if (typeof updateInventoryUI === "function") {
-            updateInventoryUI(window.currentInventory);
+            updateInventoryUI(worldState.inventory);
         }
 
         if (typeof updateGoldUI === "function") {
-            updateGoldUI(window.currentInventory.GOLD);
+            updateGoldUI(worldState.inventory.GOLD);
         }
 
+        // ================= PLAYER =================
         updatePlayer();
+
+        // ================= HOTBAR (если уже добавлен) =================
+        if (typeof renderHotbar === "function") {
+            renderHotbar();
+        }
 
     } catch (err) {
         console.error("LOAD ERROR:", err);
     }
 }
-
 // ================= PLAYER =================
 
 function updatePlayer() {
@@ -355,4 +369,31 @@ document.addEventListener("click", (e) => {
         window.openShop();
     }
 });
+function renderHotbar() {
 
+    const bar = document.getElementById("hotbar");
+    if (!bar) return;
+
+    bar.innerHTML = "";
+
+    for (let i = 0; i < 9; i++) {
+
+        const slot = document.createElement("div");
+        slot.className = "hotbar-slot";
+
+        const item = worldState.hotbar[i];
+
+        if (i === worldState.selectedHotbarSlot) {
+            slot.classList.add("active");
+        }
+
+        slot.innerText = item ? item : "";
+
+        slot.onclick = () => {
+            worldState.selectedHotbarSlot = i;
+            renderHotbar();
+        };
+
+        bar.appendChild(slot);
+    }
+}
