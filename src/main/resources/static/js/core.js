@@ -179,22 +179,22 @@ function renderWorld(player) {
 // ================= SHOP =================
 
 function showShopTab(tab) {
-    console.log("SHOP TAB CLICKED:", tab);
+
     const container = document.getElementById("shopContent");
-    if (!container) return;
+
+    if (!container) {
+        console.error("shopContent NOT FOUND");
+        return;
+    }
 
     container.innerHTML = "";
-
    let items = [];
 
 if (tab === "buy") {
     items = [
         { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
         { name: "CORN_SEEDS", icon: "🌽", price: 15 },
-        { name: "POTATO_SEEDS", icon: "🥔", price: 12 },
-
-        { name: "OAK_SAPLING", icon: "🌳", price: 20 },
-        { name: "PINE_SAPLING", icon: "🌲", price: 25 }
+        { name: "POTATO_SEEDS", icon: "🥔", price: 12 }
     ];
 }
 
@@ -203,7 +203,6 @@ if (tab === "sell") {
         { name: "WHEAT", icon: "🌾", price: 5 },
         { name: "CORN", icon: "🌽", price: 8 },
         { name: "POTATO", icon: "🥔", price: 6 },
-
         { name: "WOOD", icon: "🪵", price: 12 },
         { name: "STONE", icon: "🪨", price: 15 }
     ];
@@ -267,38 +266,39 @@ card.style.transition = "0.2s";
 `;
 
         card.onclick = async () => {
-            const gold = window.currentInventory?.GOLD ?? 0;
 
-            if (gold < item.price) {
-                alert("Not enough gold 💰");
-                return;
-            }
+    const gold = window.currentInventory?.GOLD ?? 0;
 
-            try {
-                const res = await fetch(BASE + "/game/buy", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        name: playerName,
-                        item: item.name,
-                        price: item.price
-                    })
-                });
+    if (gold < item.price) {
+        alert("Not enough gold 💰");
+        return;
+    }
 
-                if (!res.ok) {
-                    alert("Buy failed");
-                    return;
-                }
+    try {
+        const res = await fetch(BASE + "/game/buy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: playerName,
+                item: item.name,
+                price: item.price
+            })
+        });
 
-                await refreshPlayerState();
-            } catch (err) {
-                console.error("BUY ERROR:", err);
-            }
-        };
+        if (!res.ok) {
+            alert("Buy failed");
+            return;
+        }
 
-        grid.appendChild(card);
-    });
-}
+        await refreshPlayerState();
+
+        // 🔥 ВАЖНО: перерисовать магазин
+        showShopTab(tab);
+
+    } catch (err) {
+        console.error("BUY ERROR:", err);
+    }
+};
 
 // ================= START =================
 
