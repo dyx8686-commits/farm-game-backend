@@ -17,7 +17,10 @@ function closeInventory() {
 }
 
 // рендер
+
 function renderInventory(inv) {
+
+    if (!inv) return;
 
     const container = document.getElementById("inventoryContent");
     if (!container) return;
