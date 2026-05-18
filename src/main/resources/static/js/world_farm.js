@@ -108,13 +108,9 @@ function renderPlants() {
 function createPlots() {
 
     const container = document.getElementById("plots");
+    if (!container) return;
 
-    if (!container) {
-        console.warn("plots container not found");
-        return;
-    }
-
-    // создаём только 1 раз
+    // ❗ ВАЖНО: защита от повторного рендера
     if (worldState.plotsReady) return;
 
     container.innerHTML = "";
@@ -129,7 +125,6 @@ function createPlots() {
             cell.className = "plot";
 
             cell.style.position = "absolute";
-
             cell.style.left = (x * 60) + "px";
             cell.style.top = (y * 60) + "px";
 
@@ -139,7 +134,6 @@ function createPlots() {
 
     worldState.plotsReady = true;
 }
-
 
 // ================= ACTION =================
 function plantSeed(index) {
