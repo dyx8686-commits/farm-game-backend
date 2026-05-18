@@ -112,22 +112,29 @@ body {
     border: 2px solid red;
 }
 .plot {
-    position: absolute;
+    position: absolute !important;
 
     width: 60px;
     height: 60px;
 
-    background: rgba(80,40,0,0.45);
-    border: 2px solid rgba(255,255,255,0.4);
+    left: 0;
+    top: 0;
+
+    background: rgba(120, 70, 20, 0.85);
+
+    border: 3px solid white;
+
+    box-sizing: border-box;
+
+    z-index: 999;
+
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    color: white;
-    font-size: 12px;
-
-    z-index: 6;
 }
 
 /* ================= PLAYER ================= */
