@@ -1,23 +1,28 @@
-window.selectedItem = null;
-
+// ================= REGISTER GLOBAL FUNCTIONS =================
 window.openInventory = openInventory;
 window.closeInventory = closeInventory;
 window.renderInventory = renderInventory;
 window.getSelectedItem = getSelectedItem;
 window.clearSelectedItem = clearSelectedItem;
 
-// открыть
+
+// ================= OPEN / CLOSE =================
 function openInventory() {
-    document.getElementById("inventoryModal").style.display = "block";
+    const modal = document.getElementById("inventoryModal");
+    if (!modal) return;
+
+    modal.style.display = "block";
 }
 
-// закрыть
 function closeInventory() {
-    document.getElementById("inventoryModal").style.display = "none";
+    const modal = document.getElementById("inventoryModal");
+    if (!modal) return;
+
+    modal.style.display = "none";
 }
 
-// рендер
 
+// ================= RENDER INVENTORY =================
 function renderInventory(inv) {
 
     if (!inv) return;
@@ -57,7 +62,7 @@ function renderInventory(inv) {
         const slot = document.createElement("div");
         slot.className = "inv-item";
 
-        if (window.selectedItem === item.name) {
+        if (worldState.selectedItem === item.name) {
             slot.classList.add("selected");
         }
 
@@ -68,8 +73,8 @@ function renderInventory(inv) {
 
         slot.onclick = () => {
 
-            window.selectedItem =
-                window.selectedItem === item.name ? null : item.name;
+            worldState.selectedItem =
+                worldState.selectedItem === item.name ? null : item.name;
 
             renderInventory(inv);
         };
@@ -78,11 +83,14 @@ function renderInventory(inv) {
     });
 }
 
-// selected
+
+// ================= GET SELECTED ITEM =================
 function getSelectedItem() {
-    return window.selectedItem;
+    return worldState.selectedItem;
 }
 
+
+// ================= CLEAR SELECTION =================
 function clearSelectedItem() {
-    window.selectedItem = null;
+    worldState.selectedItem = null;
 }
