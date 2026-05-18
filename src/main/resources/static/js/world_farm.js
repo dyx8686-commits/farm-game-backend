@@ -1,5 +1,9 @@
 // ================= FARM STATE =================
-
+let worldState = {
+    player: null,
+    plants: [],
+    plotsReady: false
+};
 // ================= GLOBALS =================
 let BASE = "";
 let playerName = "";
@@ -11,10 +15,11 @@ async function load() {
         const res = await fetch(BASE + "/game/state?name=" + playerName);
         const data = await res.json();
 
-        renderPlants(data);
+        // сохраняем состояние
+        worldState.player = data;
 
-        // ⚠️ КРИТИЧНО: пересоздаём грядки после каждого обновления состояния
-        createPlots();
+        // рендерим только то, что нужно
+        renderWorld();
 
     } catch (err) {
         console.error("LOAD ERROR", err);
@@ -79,6 +84,9 @@ function createPlots() {
         return;
     }
 
+    // защита от повторного создания
+    if (worldState && worldState.plotsReady) return;
+
     container.innerHTML = "";
 
     const cols = 15;
@@ -90,11 +98,20 @@ function createPlots() {
             const cell = document.createElement("div");
             cell.className = "plot";
 
+            cell.style.position = "absolute";
+
             cell.style.left = (x * 60) + "px";
             cell.style.top = (y * 60) + "px";
 
             container.appendChild(cell);
         }
+    }
+
+    // фиксируем что грядки уже созданы
+    if (!worldState) {
+        worldState = { plotsReady: true };
+    } else {
+        worldState.plotsReady = true;
     }
 }
 
@@ -116,4 +133,13 @@ function plantSeed(index) {
     .catch(err => {
         console.error("PLANT ERROR", err);
     });
+}
+function renderWorld() {
+
+    renderPlants(worldState.player);
+
+    if (!worldState.plotsReady) {
+        createPlots();
+        worldState.plotsReady = true;
+    }
 }
