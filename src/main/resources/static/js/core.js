@@ -340,17 +340,21 @@ function updateGoldUI(amount) {
     goldEl.innerText = amount ?? 0;
 }
 window.openShop = function () {
+
     const modal = document.getElementById("shopModal");
-    if (!modal) {
-        console.error("shopModal not found in HTML");
-        return;
-    }
+    if (!modal) return;
 
     modal.style.display = "block";
 
-    if (typeof showShopTab === "function") {
-        showShopTab("buy");
-    }
+    showShopTab("buy");
+};
+
+window.closeShop = function () {
+
+    const modal = document.getElementById("shopModal");
+    if (!modal) return;
+
+    modal.style.display = "none";
 };
 
 document.addEventListener("click", (e) => {
