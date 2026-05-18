@@ -10,7 +10,7 @@ let worldState = {
 };
 
 // ================= GLOBALS =================
-let playerName = "";
+
 
 
 // ================= LOAD GAME DATA =================
