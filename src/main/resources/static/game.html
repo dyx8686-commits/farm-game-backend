@@ -314,40 +314,65 @@ body.mine {
 
         <div id="island" class="island">
 
+    <!-- UI BUTTONS -->
+    <div style="position:absolute; top:70px; left:10px; z-index:100;">
+        <button onclick="openInventory()">🎒 Inventory</button>
+    </div>
+
+    <!-- ================= GRID LAYER ================= -->
+    <div class="grid-overlay" id="grid"></div>
+
+    <!-- ================= PLOTS LAYER ================= -->
+    <div id="plots"></div>
+
+    <!-- ================= WORLD ENTITIES ================= -->
+    <div id="entity-layer">
+
+        <div id="player"></div>
+
+        <div id="farmerPlants"></div>
+        <div id="woodTrees"></div>
+        <div id="minerStones"></div>
+
+    <div class="world">
+
+    <div class="game">
+
+        <div id="island" class="island">
+
             <!-- UI BUTTONS -->
-            <div style="position:absolute; top:70px; left:10px; z-index:10;">
+            <div style="position:absolute; top:70px; left:10px; z-index:100;">
                 <button onclick="openInventory()">🎒 Inventory</button>
             </div>
 
-            <!-- GRID (слой 1) -->
+            <!-- GRID LAYER -->
             <div class="grid-overlay" id="grid"></div>
 
-            <!-- PLOTS (слой 2) -->
+            <!-- PLOTS LAYER -->
             <div id="plots"></div>
 
-            <!-- WORLD OBJECTS -->
-            <div id="farmerObjects">
+            <!-- WORLD ENTITIES -->
+            <div id="entity-layer">
 
                 <div id="player"></div>
-
                 <div id="farmerPlants"></div>
                 <div id="woodTrees"></div>
                 <div id="minerStones"></div>
 
-                <!-- SHOP (слой 3 — теперь правильно) -->
-                <div class="shop" onclick="openShop()" style="
-                    position:absolute;
-                    top:220px;
-                    left:200px;
-                    width:90px;
-                    height:90px;
-                    background:gold;
-                    border-radius:12px;
-                    cursor:pointer;
-                    z-index:20;
-                "></div>
-
             </div>
+
+            <!-- SHOP -->
+            <div class="shop" onclick="openShop()" style="
+                position:absolute;
+                top:220px;
+                left:200px;
+                width:90px;
+                height:90px;
+                background:gold;
+                border-radius:12px;
+                cursor:pointer;
+                z-index:100;
+            "></div>
 
         </div>
 
