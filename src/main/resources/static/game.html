@@ -308,57 +308,53 @@ body.mine {
 <body id="gameBody">
 
 <div class="world">
-    
+
     <div class="game">
-   
-    <!-- UI BUTTONS -->
-     <div style="position: absolute; top: 70px; left: 10px; z-index: 10;">
-    <button onclick="openInventory()">🎒 Inventory</button>
-</div>
 
-    <div class="grid-overlay" id="grid"></div>
-    <div id="plots"></div>
+        <div id="island" class="island">
 
-    
+            <!-- UI BUTTONS -->
+            <div style="position:absolute; top:70px; left:10px; z-index:10;">
+                <button onclick="openInventory()">🎒 Inventory</button>
+            </div>
 
+            <!-- GRID (слой 1) -->
+            <div class="grid-overlay" id="grid"></div>
 
-    <div id="farmerObjects">
+            <!-- PLOTS (слой 2) -->
+            <div id="plots"></div>
 
-        <div id="player"></div>
+            <!-- WORLD OBJECTS -->
+            <div id="farmerObjects">
 
-        <div id="farmerPlants"></div>
-        <div id="woodTrees"></div>
-        <div id="minerStones"></div>
-        <div class="shop" onclick="openShop()" style="
-    position:absolute;
-    top:220px;
-    left:200px;
-    width:90px;
-    height:90px;
-    background:gold;
-    border-radius:12px;
-    cursor:pointer;
-    z-index:999;
-"></div>
+                <div id="player"></div>
+
+                <div id="farmerPlants"></div>
+                <div id="woodTrees"></div>
+                <div id="minerStones"></div>
+
+                <!-- SHOP (слой 3 — теперь правильно) -->
+                <div class="shop" onclick="openShop()" style="
+                    position:absolute;
+                    top:220px;
+                    left:200px;
+                    width:90px;
+                    height:90px;
+                    background:gold;
+                    border-radius:12px;
+                    cursor:pointer;
+                    z-index:20;
+                "></div>
+
+            </div>
+
+        </div>
 
     </div>
-  </div>
-</div> <!-- island -->
-</div> <!-- game -->
 
+</div>
 
-
-
-<script src="/js/core.js"></script>
-
-<script src="/js/world_farm.js"></script>
-<script src="/js/world_wood.js"></script>
-<script src="/js/world_mine.js"></script>
-
-<script src="/js/inventory.js"></script>
-
-
-    <!-- INVENTORY MODAL -->
+<!-- INVENTORY MODAL -->
 <div id="inventoryModal" style="
 display:none;
 position:fixed;
@@ -389,28 +385,32 @@ z-index:1000;
     </div>
 </div>
 
-<!-- SHOP 2.0 MODAL -->
+<!-- SHOP MODAL -->
 <div id="shopModal" class="shop-modal">
 
     <div class="shop-window">
 
-        <!-- HEADER -->
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <h3>🛒 SHOP</h3>
             <button onclick="closeShop()">✖</button>
         </div>
 
-        <!-- TABS -->
         <div style="display:flex; gap:10px; margin-top:10px;">
             <button onclick="showShopTab('buy')">BUY</button>
             <button onclick="showShopTab('sell')">SELL</button>
         </div>
 
-        <!-- CONTENT -->
         <div id="shopContent" style="margin-top:15px;"></div>
 
     </div>
+
 </div>
-    
+
+<script src="/js/core.js"></script>
+<script src="/js/world_farm.js"></script>
+<script src="/js/world_wood.js"></script>
+<script src="/js/world_mine.js"></script>
+<script src="/js/inventory.js"></script>
+
 </body>
 </html>
