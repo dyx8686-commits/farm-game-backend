@@ -82,13 +82,29 @@ async function register() {
 
     const response = await fetch(url);
 
-    const player = await response.json();
+const text = await response.text();
 
-    console.log("SERVER RESPONSE =", player);
+console.log("RAW RESPONSE =", text);
 
-    // 👉 ПЕРЕХОД НА ИГРУ
-    window.location.href = "game.html?name=" + encodeURIComponent(player.name);
+if (!text || text.trim() === "") {
+    alert("Empty server response");
+    return;
 }
+
+let player;
+
+try {
+    player = JSON.parse(text);
+} catch (e) {
+    console.error("JSON ERROR", e);
+    alert("Invalid JSON from server");
+    return;
+}
+
+console.log("SERVER RESPONSE =", player);
+
+window.location.href =
+    "/game.html?name=" + encodeURIComponent(player.name);
 
 </script>
 
