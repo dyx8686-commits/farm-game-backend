@@ -73,11 +73,14 @@ function renderInventory(inv) {
 
         slot.onclick = () => {
 
-            worldState.selectedItem =
-                worldState.selectedItem === item.name ? null : item.name;
+    worldState.selectedItem =
+        worldState.selectedItem === item.name ? null : item.name;
 
-            renderInventory(inv);
-        };
+    worldState.hotbar[worldState.selectedHotbarSlot] = item.name;
+
+    renderHotbar();
+    renderInventory(inv);
+};
 
         grid.appendChild(slot);
     });
