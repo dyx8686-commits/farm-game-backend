@@ -94,3 +94,31 @@ function getSelectedItem() {
 function clearSelectedItem() {
     worldState.selectedItem = null;
 }
+function renderHotbar() {
+
+    const bar = document.getElementById("hotbar");
+    if (!bar) return;
+
+    bar.innerHTML = "";
+
+    for (let i = 0; i < 9; i++) {
+
+        const slot = document.createElement("div");
+        slot.className = "hotbar-slot";
+
+        const item = worldState.hotbar[i];
+
+        if (i === worldState.selectedHotbarSlot) {
+            slot.classList.add("active");
+        }
+
+        slot.innerText = item ? item : "";
+
+        slot.onclick = () => {
+            worldState.selectedHotbarSlot = i;
+            renderHotbar();
+        };
+
+        bar.appendChild(slot);
+    }
+}
