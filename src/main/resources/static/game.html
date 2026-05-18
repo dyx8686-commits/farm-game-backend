@@ -319,33 +319,6 @@ body.mine {
 <body id="gameBody">
 
 <div class="world">
-
-    <div class="game">
-
-        <div id="island" class="island">
-
-    <!-- UI BUTTONS -->
-    <div style="position:absolute; top:70px; left:10px; z-index:100;">
-        <button onclick="openInventory()">🎒 Inventory</button>
-    </div>
-
-    <!-- ================= GRID LAYER ================= -->
-    
-
-    <!-- ================= PLOTS LAYER ================= -->
-    <div id="plots"></div>
-
-    <!-- ================= WORLD ENTITIES ================= -->
-    <div id="entity-layer">
-
-        <div id="player"></div>
-
-        <div id="farmerPlants"></div>
-        <div id="woodTrees"></div>
-        <div id="minerStones"></div>
-
-    <div class="world">
-
     <div class="game">
 
         <div id="island" class="island">
@@ -355,20 +328,18 @@ body.mine {
                 <button onclick="openInventory()">🎒 Inventory</button>
             </div>
 
-            <!-- GRID LAYER -->
+            <!-- GRID -->
             <div class="grid-overlay" id="grid"></div>
 
-            <!-- PLOTS LAYER -->
+            <!-- PLOTS -->
             <div id="plots"></div>
 
-            <!-- WORLD ENTITIES -->
+            <!-- ENTITIES -->
             <div id="entity-layer">
-
                 <div id="player"></div>
                 <div id="farmerPlants"></div>
                 <div id="woodTrees"></div>
                 <div id="minerStones"></div>
-
             </div>
 
             <!-- SHOP -->
@@ -387,9 +358,11 @@ body.mine {
         </div>
 
     </div>
-<div id="hotbar"></div>
-        
 </div>
+
+<div id="hotbar"></div>
+    </div>
+
 
 <!-- INVENTORY MODAL -->
 <div id="inventoryModal" style="
