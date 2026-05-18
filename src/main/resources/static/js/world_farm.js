@@ -52,8 +52,14 @@ async function load() {
 
 // ================= WORLD RENDER =================
 function renderWorld() {
+
     renderPlants();
-    createPlots();
+
+    // ❗ ЖЁСТКАЯ ЗАЩИТА ОТ ДУБЛЯ
+    if (!worldState.plotsReady) {
+        createPlots();
+        worldState.plotsReady = true;
+    }
 }
 
 
