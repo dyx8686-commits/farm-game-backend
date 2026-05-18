@@ -44,7 +44,7 @@ async function load() {
 
         applyIslandTheme(player);
 
-        if (window.currentPlotType !== player.type) {
+        if (!window.plots || window.plots.length === 0) {
             window.currentPlotType = player.type;
 
             const container = document.getElementById("plots");
