@@ -44,9 +44,8 @@ async function load() {
         // ================= WORLD STATE =================
         worldState.player = player;
         worldState.inventory = player.inventory || {};
-
-        // временная совместимость со старым UI
-        window.currentInventory = worldState.inventory;
+        renderInventory(worldState.inventory);
+renderHotbar();
 
         // ================= THEME =================
         applyIslandTheme(player);
@@ -62,13 +61,7 @@ async function load() {
         }
 
         // ================= INVENTORY UI =================
-        if (typeof updateInventoryUI === "function") {
-            updateInventoryUI(worldState.inventory);
-        }
-
-        if (typeof updateGoldUI === "function") {
-            updateGoldUI(worldState.inventory.GOLD);
-        }
+        
 
         // ================= PLAYER =================
         updatePlayer();
