@@ -1,5 +1,8 @@
 const BASE = "https://farm-game-backend-production.up.railway.app";
 let playerName = new URLSearchParams(window.location.search).get("name");
+if (!playerName) {
+    alert("Player name missing");
+}
 
 let selectedItem = null;
 
