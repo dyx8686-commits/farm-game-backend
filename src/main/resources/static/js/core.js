@@ -45,15 +45,14 @@ async function load() {
 
         applyIslandTheme(player);
 
-        if (!window.plots || window.plots.length === 0) {
-            window.currentPlotType = player.type;
+        const container = document.getElementById("plots");
 
-            const container = document.getElementById("plots");
-            if (container) container.innerHTML = "";
-
-            createPlots(player.type);
-        }
-
+if (container) {
+    container.innerHTML = "";
+    createPlots(player.type);
+} else {
+    console.warn("PLOTS CONTAINER NOT FOUND");
+}
         if (typeof updateInventoryUI === "function") {
             updateInventoryUI(window.currentInventory);
         }
