@@ -177,7 +177,6 @@ function renderWorld(player) {
 }
 
 // ================= SHOP =================
-
 function showShopTab(tab) {
 
     const container = document.getElementById("shopContent");
@@ -188,26 +187,26 @@ function showShopTab(tab) {
     }
 
     container.innerHTML = "";
-   let items = [];
 
-if (tab === "buy") {
-    items = [
-        { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
-        { name: "CORN_SEEDS", icon: "🌽", price: 15 },
-        { name: "POTATO_SEEDS", icon: "🥔", price: 12 }
-    ];
-}
+    let items = [];
 
-if (tab === "sell") {
-    items = [
-        { name: "WHEAT", icon: "🌾", price: 5 },
-        { name: "CORN", icon: "🌽", price: 8 },
-        { name: "POTATO", icon: "🥔", price: 6 },
-        { name: "WOOD", icon: "🪵", price: 12 },
-        { name: "STONE", icon: "🪨", price: 15 }
-    ];
+    if (tab === "buy") {
+        items = [
+            { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
+            { name: "CORN_SEEDS", icon: "🌽", price: 15 },
+            { name: "POTATO_SEEDS", icon: "🥔", price: 12 }
+        ];
+    }
 
-}
+    if (tab === "sell") {
+        items = [
+            { name: "WHEAT", icon: "🌾", price: 5 },
+            { name: "CORN", icon: "🌽", price: 8 },
+            { name: "POTATO", icon: "🥔", price: 6 },
+            { name: "WOOD", icon: "🪵", price: 12 },
+            { name: "STONE", icon: "🪨", price: 15 }
+        ];
+    }
 
     const grid = document.createElement("div");
     grid.style.display = "grid";
@@ -219,86 +218,76 @@ if (tab === "sell") {
     container.appendChild(grid);
 
     items.forEach(item => {
+
         const card = document.createElement("div");
 
         card.style.background = "linear-gradient(180deg, #4f4f4f, #2f2f2f)";
-card.style.padding = "14px";
-card.style.borderRadius = "14px";
-card.style.textAlign = "center";
-card.style.cursor = "pointer";
+        card.style.padding = "14px";
+        card.style.borderRadius = "14px";
+        card.style.textAlign = "center";
+        card.style.cursor = "pointer";
 
-card.style.display = "flex";
-card.style.flexDirection = "column";
-card.style.alignItems = "center";
-card.style.justifyContent = "center";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.alignItems = "center";
+        card.style.justifyContent = "center";
 
-card.style.minHeight = "120px";
-
-card.style.boxShadow = "0 4px 10px rgba(0,0,0,0.4)";
-card.style.border = "2px solid transparent";
-
-card.style.transition = "0.2s";
+        card.style.minHeight = "120px";
+        card.style.boxShadow = "0 4px 10px rgba(0,0,0,0.4)";
+        card.style.border = "2px solid transparent";
+        card.style.transition = "0.2s";
 
         card.innerHTML = `
-    <div style="
-        font-size:42px;
-        margin-bottom:10px;
-    ">
-        ${item.icon}
-    </div>
+            <div style="font-size:42px; margin-bottom:10px;">
+                ${item.icon}
+            </div>
 
-    <div style="
-        font-size:14px;
-        font-weight:bold;
-        margin-bottom:8px;
-        color:white;
-    ">
-        ${item.name}
-    </div>
+            <div style="font-size:14px; font-weight:bold; margin-bottom:8px; color:white;">
+                ${item.name}
+            </div>
 
-    <div style="
-        color:gold;
-        font-size:16px;
-        font-weight:bold;
-    ">
-        ${item.price} 💰
-    </div>
-`;
+            <div style="color:gold; font-size:16px; font-weight:bold;">
+                ${item.price} 💰
+            </div>
+        `;
 
         card.onclick = async () => {
 
-    const gold = window.currentInventory?.GOLD ?? 0;
+            const gold = window.currentInventory?.GOLD ?? 0;
 
-    if (gold < item.price) {
-        alert("Not enough gold 💰");
-        return;
-    }
+            if (gold < item.price) {
+                alert("Not enough gold 💰");
+                return;
+            }
 
-    try {
-        const res = await fetch(BASE + "/game/buy", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name: playerName,
-                item: item.name,
-                price: item.price
-            })
-        });
+            try {
+                const res = await fetch(BASE + "/game/buy", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: playerName,
+                        item: item.name,
+                        price: item.price
+                    })
+                });
 
-        if (!res.ok) {
-            alert("Buy failed");
-            return;
-        }
+                if (!res.ok) {
+                    alert("Buy failed");
+                    return;
+                }
 
-        await refreshPlayerState();
+                await refreshPlayerState();
 
-        // 🔥 ВАЖНО: перерисовать магазин
-        showShopTab(tab);
+                showShopTab(tab);
+            } catch (err) {
+                console.error("BUY ERROR:", err);
+            }
+        };
 
-    } catch (err) {
-        console.error("BUY ERROR:", err);
-    }
-};
+        grid.appendChild(card);
+    });
+}
+
 
 // ================= START =================
 
