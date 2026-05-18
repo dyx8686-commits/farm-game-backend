@@ -14,6 +14,7 @@ let worldState = {
 
 
 // ================= LOAD GAME DATA =================
+console.log("LOAD CALLED");
 async function load() {
     try {
     const res = await fetch(BASE + "/game/state?name=" + playerName);
@@ -51,6 +52,7 @@ async function load() {
 
 
 // ================= WORLD RENDER =================
+console.log("RENDER WORLD CALLED");
 function renderWorld() {
 
     renderPlants();
@@ -111,6 +113,7 @@ function renderPlants() {
 
 
 // ================= CREATE PLOTS =================
+console.log("CREATE PLOTS CALLED");
 function createPlots() {
 
     const container = document.getElementById("plots");
