@@ -123,7 +123,7 @@ function onCellClick(x, y, cell) {
 }
 
 // ================= PLOTS (CSS GRID) =================
-console.log("CREATE PLOTS CALLED", playerType);
+console.log("CREATE PLOTS CALLED", type);
 window.plots = [];
 
 function createPlots(type) {
@@ -136,7 +136,7 @@ function createPlots(type) {
     container.innerHTML = "";
     window.plots = [];
 
-    const positions = getPlotPositions(playerType);
+    const positions = getPlotPositions(type);
 
     positions.forEach((pos, index) => {
         const cell = document.createElement("div");
