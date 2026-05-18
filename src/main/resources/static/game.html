@@ -76,15 +76,14 @@ body {
     height: 500px;
 
     display: grid;
-
     grid-template-columns: repeat(15, 60px);
     grid-template-rows: repeat(10, 60px);
 
-    z-index: 2;
+    z-index: 1;
 
     pointer-events: none;
 
-    opacity: 0.15;
+    background: rgba(255,255,255,0.03); /* только лёгкая подложка */
 }
 .grid-cell {
     width: 60px;
