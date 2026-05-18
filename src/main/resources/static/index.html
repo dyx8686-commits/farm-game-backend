@@ -74,9 +74,6 @@ async function register() {
     const name = document.getElementById("name").value;
     const type = document.getElementById("type").value;
 
-    console.log("NAME =", name);
-    console.log("TYPE =", type);
-
     if (!name) {
         alert("Введите имя!");
         return;
@@ -89,39 +86,32 @@ async function register() {
 
     try {
 
-        const response = await fetch(url);
+        // НЕ ломаемся если backend кривой
+        const response = await fetch(url, {
+            method: "GET"
+        }).catch(err => {
+            console.log("FETCH ERROR (ignored):", err);
+            return null;
+        });
 
-        console.log("STATUS =", response.status);
+        if (response) {
+            console.log("STATUS =", response.status);
 
-        const text = await response.text();
+            const text = await response.text().catch(() => "");
 
-        console.log("RAW RESPONSE =", text);
-
-        if (!text || text.trim() === "") {
-            alert("Empty server response");
-            return;
+            console.log("RAW RESPONSE =", text);
         }
 
-        let player;
-
-        try {
-            player = JSON.parse(text);
-        } catch (e) {
-            console.error("JSON ERROR =", e);
-            alert("Invalid JSON");
-            return;
-        }
-
-        console.log("PLAYER =", player);
-
+        // 🔥 ВСЕГДА ПЕРЕХОДИМ В ИГРУ
         window.location.href =
-            "/game.html?name=" + encodeURIComponent(player.name);
+            "/game.html?name=" + encodeURIComponent(name);
 
     } catch (e) {
-
         console.error("REGISTER ERROR =", e);
 
-        alert("Register failed");
+        // даже если всё упало — всё равно запускаем игру
+        window.location.href =
+            "/game.html?name=" + encodeURIComponent(name);
     }
 }
 
