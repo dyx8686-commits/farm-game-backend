@@ -6,220 +6,64 @@
 
 <style>
 
-body {
+/* ================= BASE ================= */
+
+html, body {
     margin: 0;
-    font-family: Arial;
-
-    background: #4fc3f7;
-
+    padding: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    font-family: Arial;
 }
 
-h1 {
-    text-align: center;
-    color: white;
-    padding-top: 10px;
+body {
+    background: #4fc3f7;
 }
 
-.game {
+/* ================= WORLD ================= */
+
+.world {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* ================= GAME WRAPPER ================= */
+
+.game {
     width: 100%;
     height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+/* ================= ISLAND (MAIN SCENE) ================= */
 
 .island {
     width: 900px;
     height: 500px;
 
-    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
 
     border-radius: 40px;
-    position: relative;
-
     border: 8px solid #4e8f35;
+
     background: #6dbf4b;
 
     z-index: 2;
 }
 
-/* OBJECTS */
-.farm, .shop {
-    position: absolute;
-    border-radius: 10px;
-    cursor: pointer;
-}
+/* ================= GRID (BACKGROUND LAYER) ================= */
 
-.shop {
-    position: absolute;
-    top: 220px;
-    left: 200px;
-    width: 90px;
-    height: 90px;
-
-    background: #ffcc00;
-    border-radius: 12px;
-
-    cursor: pointer;
-
-    z-index: 100;
-}
-    
-/* PLAYER */
-#player {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background: red;
-    border-radius: 6px;
-    left: 420px;
-    top: 260px;
-}
-
-/* FIELD */
-.field {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    border-radius: 6px;
-}
-
-/* INVENTORY */
-
-
-/* GRID */
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
-
-/* SLOT */
-.inv-item {
-    width: 65px;
-    height: 65px;
-    background: #8b8b8b;
-    border: 3px solid #555;
-    border-radius: 6px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    cursor: pointer;
-    font-size: 14px;
-    color: white;
-
-    position: relative;
-}
-
-/* HOVER */
-.inv-item:hover {
-    background: #999;
-}
-
-/* SELECTED */
-.selected {
-    border: 3px solid yellow !important;
-}
-/* ===== SHOP GRID ===== */
-
-.shop-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.shop-item {
-
-    background: #8b8b8b;
-    border: 3px solid #555;
-    border-radius: 8px;
-
-    padding: 10px;
-
-    text-align: center;
-
-    cursor: pointer;
-
-    color: white;
-
-    transition: 0.2s;
-}
-
-.shop-item:hover {
-    background: #999;
-    transform: scale(1.03);
-}
-
-.shop-icon {
-    font-size: 32px;
-}
-
-.shop-price {
-    margin-top: 5px;
-    font-size: 13px;
-    color: gold;
-}
-
-/* ITEM COUNT */
-.inv-count {
-    position: absolute;
-    bottom: 4px;
-    right: 6px;
-    font-size: 12px;
-    color: white;
-    font-weight: bold;
-}
-
-.inv-item {
-    padding: 5px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-}
-
-.selected {
-    background: #c8f7c5 !important;
-}
-
-/* WORLD OBJECTS */
-.plantObj, .treeObj, .stoneObj {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    border-radius: 6px;
-}
-
-.plantObj { background: #3CB371; }
-.treeObj { background: #2e8b57; }
-.stoneObj { background: #666; }
-    body.farm {
-    background: linear-gradient(#87CEEB, #4CAF50);
-}
-
-body.wood {
-    background: linear-gradient(#1f3d1f, #0f1f0f);
-}
-
-body.mine {
-    background: linear-gradient(#666, #222);
-}
-    .world {
-    width: 100vw;
-    height: 100vh;
-
-    overflow: hidden;
-
-    background: #4fc3f7;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-    .grid-overlay {
+.grid-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -247,7 +91,10 @@ body.mine {
 .grid-cell:nth-child(even) {
     background: rgba(0,0,0,0.05);
 }
-    #plots {
+
+/* ================= PLOTS ================= */
+
+#plots {
     position: absolute;
     top: 0;
     left: 0;
@@ -255,11 +102,7 @@ body.mine {
     width: 100%;
     height: 100%;
 
-    display: grid;
-    grid-template-columns: repeat(15, 1fr);
-    grid-template-rows: repeat(15, 1fr);
-
-    z-index: 5;
+    z-index: 2;
 }
 
 .plot {
@@ -271,8 +114,6 @@ body.mine {
     background: rgba(80,40,0,0.45);
     border: 2px solid rgba(255,255,255,0.4);
 
-    box-sizing: border-box;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -280,15 +121,166 @@ body.mine {
     color: white;
     font-size: 12px;
 
-    z-index: 6;
+    z-index: 3;
 }
-    .shop-modal {
+
+/* ================= PLAYER ================= */
+
+#player {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+
+    background: red;
+    border-radius: 6px;
+
+    left: 420px;
+    top: 260px;
+
+    z-index: 10;
+}
+
+/* ================= OBJECTS ================= */
+
+.farm, .shop {
+    position: absolute;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* SHOP (IMPORTANT FIXED LAYER) */
+
+.shop {
+    position: absolute;
+    top: 220px;
+    left: 200px;
+
+    width: 90px;
+    height: 90px;
+
+    background: gold;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    z-index: 15;
+}
+
+/* ================= WORLD OBJECTS ================= */
+
+.plantObj, .treeObj, .stoneObj {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+}
+
+.plantObj { background: #3CB371; }
+.treeObj { background: #2e8b57; }
+.stoneObj { background: #666; }
+
+/* ================= THEME BACKGROUNDS ================= */
+
+body.farm {
+    background: linear-gradient(#87CEEB, #4CAF50);
+}
+
+body.wood {
+    background: linear-gradient(#1f3d1f, #0f1f0f);
+}
+
+body.mine {
+    background: linear-gradient(#666, #222);
+}
+
+/* ================= INVENTORY ================= */
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.inv-item {
+    width: 65px;
+    height: 65px;
+
+    background: #8b8b8b;
+    border: 3px solid #555;
+    border-radius: 6px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+}
+
+.inv-item:hover {
+    background: #999;
+}
+
+.inv-count {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+
+    font-size: 12px;
+    color: white;
+}
+
+/* ================= SHOP GRID ================= */
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.shop-item {
+    background: #8b8b8b;
+    border: 3px solid #555;
+    border-radius: 8px;
+
+    padding: 10px;
+    text-align: center;
+
+    cursor: pointer;
+    color: white;
+
+    transition: 0.2s;
+}
+
+.shop-item:hover {
+    transform: scale(1.03);
+    background: #999;
+}
+
+.shop-icon {
+    font-size: 32px;
+}
+
+.shop-price {
+    margin-top: 5px;
+    font-size: 13px;
+    color: gold;
+}
+
+/* ================= MODALS ================= */
+
+.shop-modal {
     display: none;
     position: fixed;
+
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
+
     background: rgba(0,0,0,0.6);
     z-index: 1000;
 }
@@ -296,10 +288,18 @@ body.mine {
 .shop-window {
     width: 520px;
     margin: 80px auto;
+
     background: #2c2c2c;
     padding: 15px;
     border-radius: 14px;
+
     color: white;
+}
+
+/* ================= SELECTED ================= */
+
+.selected {
+    border: 3px solid yellow !important;
 }
 
 </style>
