@@ -2,7 +2,8 @@
 let worldState = {
     player: null,
     plants: [],
-    plotsReady: false
+    plotsReady: false,
+    selectedItem: null
 };
 
 // ================= GLOBALS =================
