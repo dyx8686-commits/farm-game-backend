@@ -156,6 +156,18 @@ cell.style.top = (pos.y * 60) + "px";
         });
     });
 }
+function getPlotPositions(type) {
+
+    return [
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+
+        { x: 4, y: 4 },
+        { x: 5, y: 4 },
+        { x: 6, y: 4 }
+    ];
+}
 // ================= WORLD ROUTER =================
 
 function renderWorld(player) {
