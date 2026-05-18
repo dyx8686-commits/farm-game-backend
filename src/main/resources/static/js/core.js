@@ -140,8 +140,8 @@ function createPlots(playerType) {
         const cell = document.createElement("div");
         cell.className = "plot";
 
-        cell.style.gridColumnStart = pos.x + 1;
-        cell.style.gridRowStart = pos.y + 1;
+        cell.style.left = (pos.x * 60) + "px";
+cell.style.top = (pos.y * 60) + "px";
 
         cell.innerText = index + 1;
 
