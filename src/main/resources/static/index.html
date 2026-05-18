@@ -5,13 +5,16 @@
 <title>Farm Game - Login</title>
 
 <style>
+
 body {
     margin:0;
     font-family: Arial;
     background: linear-gradient(#87CEEB, #4CAF50);
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     height:100vh;
 }
 
@@ -37,76 +40,90 @@ button {
     color:white;
     cursor:pointer;
 }
-</style>
 
+</style>
 </head>
 
 <body>
 
 <div class="box">
 
-<h2>🌴 Farm Game</h2>
+    <h2>🌴 Farm Game</h2>
 
-<input id="name" placeholder="Введите имя">
+    <input id="name" placeholder="Введите имя">
 
-<select id="type">
-    <option value="FARMER">FARMER</option>
-    <option value="WOODCUTTER">WOODCUTTER</option>
-    <option value="MINER">MINER</option>
-</select>
+    <select id="type">
+        <option value="FARMER">FARMER</option>
+        <option value="WOODCUTTER">WOODCUTTER</option>
+        <option value="MINER">MINER</option>
+    </select>
 
-<button onclick="register()">Играть</button>
+    <button onclick="register()">Играть</button>
 
 </div>
 
 <script>
 
-const BASE_URL = "https://farm-game-backend-eo4y.onrender.com";
+const BASE_URL =
+    "https://farm-game-backend-production.up.railway.app";
 
 async function register() {
+
+    console.log("REGISTER START");
 
     const name = document.getElementById("name").value;
     const type = document.getElementById("type").value;
 
-    // 🧪 ДИАГНОСТИКА (ОЧЕНЬ ВАЖНО)
-    console.log("SELECTED TYPE =", type);
+    console.log("NAME =", name);
+    console.log("TYPE =", type);
 
     if (!name) {
         alert("Введите имя!");
         return;
     }
 
-    const url = `${BASE_URL}/game/player?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`;
+    const url =
+        `${BASE_URL}/game/player?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`;
 
     console.log("REQUEST URL =", url);
 
-    const response = await fetch(url, {
-    method: "POST"
-});
+    try {
 
-const text = await response.text();
+        const response = await fetch(url);
 
-console.log("RAW RESPONSE =", text);
+        console.log("STATUS =", response.status);
 
-if (!text || text.trim() === "") {
-    alert("Empty server response");
-    return;
+        const text = await response.text();
+
+        console.log("RAW RESPONSE =", text);
+
+        if (!text || text.trim() === "") {
+            alert("Empty server response");
+            return;
+        }
+
+        let player;
+
+        try {
+            player = JSON.parse(text);
+        } catch (e) {
+            console.error("JSON ERROR =", e);
+            alert("Invalid JSON");
+            return;
+        }
+
+        console.log("PLAYER =", player);
+
+        window.location.href =
+            "/game.html?name=" + encodeURIComponent(player.name);
+
+    } catch (e) {
+
+        console.error("REGISTER ERROR =", e);
+
+        alert("Register failed");
+    }
 }
-
-let player;
-
-try {
-    player = JSON.parse(text);
-} catch (e) {
-    console.error("JSON ERROR", e);
-    alert("Invalid JSON from server");
-    return;
-}
-
-console.log("SERVER RESPONSE =", player);
-
-window.location.href =
-    "/game.html?name=" + encodeURIComponent(player.name);
 
 </script>
 
