@@ -4,6 +4,7 @@ let worldState = {
     plants: [],
     plotsReady: false
 };
+
 // ================= GLOBALS =================
 let BASE = "";
 let playerName = "";
@@ -15,10 +16,10 @@ async function load() {
         const res = await fetch(BASE + "/game/state?name=" + playerName);
         const data = await res.json();
 
-        // сохраняем состояние
+        // сохраняем состояние мира
         worldState.player = data;
+        worldState.plants = data.fields || [];
 
-        // рендерим только то, что нужно
         renderWorld();
 
     } catch (err) {
@@ -27,15 +28,22 @@ async function load() {
 }
 
 
+// ================= WORLD RENDER =================
+function renderWorld() {
+    renderPlants();
+    createPlots();
+}
+
+
 // ================= RENDER PLANTS =================
-function renderPlants(player) {
+function renderPlants() {
 
     const c = document.getElementById("farmerPlants");
     if (!c) return;
 
     c.innerHTML = "";
 
-    const fields = player.fields || [];
+    const fields = worldState.plants || [];
 
     for (let i = 0; i < 6; i++) {
 
@@ -84,8 +92,8 @@ function createPlots() {
         return;
     }
 
-    // защита от повторного создания
-    if (worldState && worldState.plotsReady) return;
+    // создаём только 1 раз
+    if (worldState.plotsReady) return;
 
     container.innerHTML = "";
 
@@ -107,12 +115,7 @@ function createPlots() {
         }
     }
 
-    // фиксируем что грядки уже созданы
-    if (!worldState) {
-        worldState = { plotsReady: true };
-    } else {
-        worldState.plotsReady = true;
-    }
+    worldState.plotsReady = true;
 }
 
 
@@ -128,18 +131,9 @@ function plantSeed(index) {
         method: "POST"
     })
     .then(() => {
-        load(); // единственный источник правды
+        load(); // источник истины
     })
     .catch(err => {
         console.error("PLANT ERROR", err);
     });
-}
-function renderWorld() {
-
-    renderPlants(worldState.player);
-
-    if (!worldState.plotsReady) {
-        createPlots();
-        worldState.plotsReady = true;
-    }
 }
