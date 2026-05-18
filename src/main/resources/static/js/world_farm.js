@@ -3,7 +3,9 @@ let worldState = {
     player: null,
     plants: [],
     plotsReady: false,
-    selectedItem: null
+    selectedItem: null,
+    hotbar: Array(9).fill(null),
+    selectedHotbarSlot: 0
 };
 
 // ================= GLOBALS =================
