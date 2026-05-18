@@ -397,3 +397,13 @@ function renderHotbar() {
         bar.appendChild(slot);
     }
 }
+document.addEventListener("keydown", (e) => {
+
+    const num = parseInt(e.key);
+
+    if (num >= 1 && num <= 9) {
+
+        worldState.selectedHotbarSlot = num - 1;
+        renderHotbar();
+    }
+});
