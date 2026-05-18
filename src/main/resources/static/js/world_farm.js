@@ -1,23 +1,42 @@
 // ================= FARM STATE =================
 let worldState = {
     player: null,
+    inventory: {},
     plants: [],
-    plotsReady: false,
-    selectedItem: null,
     hotbar: Array(9).fill(null),
-    selectedHotbarSlot: 0
+    selectedHotbarSlot: 0,
+    plotsReady: false,
+    selectedItem: null
 };
 
 // ================= GLOBALS =================
-let BASE = "";
 let playerName = "";
 
 
 // ================= LOAD GAME DATA =================
 async function load() {
     try {
-        const res = await fetch(BASE + "/game/state?name=" + playerName);
-        const data = await res.json();
+    const res = await fetch(BASE + "/game/state?name=" + playerName);
+
+    if (!res.ok) {
+        console.error("SERVER ERROR:", res.status);
+        return;
+    }
+
+    const text = await res.text();
+
+    if (!text || text.trim() === "") {
+        console.warn("EMPTY RESPONSE");
+        return;
+    }
+
+    let data;
+    try {
+        data = JSON.parse(text);
+    } catch (e) {
+        console.error("INVALID JSON:", text);
+        return;
+    }
 
         // сохраняем состояние мира
         worldState.player = data;
