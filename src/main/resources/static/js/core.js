@@ -1,3 +1,4 @@
+console.log("CREATE PLOTS CALLED", playerType);
 const BASE = "https://farm-game-backend-production.up.railway.app";
 let playerName = new URLSearchParams(window.location.search).get("name");
 if (!playerName) {
