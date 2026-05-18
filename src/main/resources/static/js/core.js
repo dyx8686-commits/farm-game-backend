@@ -1,4 +1,3 @@
-console.log("CREATE PLOTS CALLED", playerType);
 const BASE = "https://farm-game-backend-production.up.railway.app";
 let playerName = new URLSearchParams(window.location.search).get("name");
 if (!playerName) {
@@ -124,7 +123,7 @@ function onCellClick(x, y, cell) {
 }
 
 // ================= PLOTS (CSS GRID) =================
-
+console.log("CREATE PLOTS CALLED", playerType);
 window.plots = [];
 
 function createPlots(playerType) {
