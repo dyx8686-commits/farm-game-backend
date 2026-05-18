@@ -330,11 +330,18 @@ function updateGoldUI(amount) {
 }
 window.openShop = function () {
 
+    console.log("OPEN SHOP CLICKED");
+
     const modal = document.getElementById("shopModal");
-    if (!modal) return;
+
+    console.log("MODAL =", modal);
+
+    if (!modal) {
+        console.error("shopModal NOT FOUND");
+        return;
+    }
 
     modal.style.display = "block";
-
     showShopTab("buy");
 };
 
