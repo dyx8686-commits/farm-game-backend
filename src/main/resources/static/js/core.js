@@ -123,12 +123,9 @@ function onCellClick(x, y, cell) {
 }
 
 // ================= PLOTS (CSS GRID) =================
-console.log("CREATE PLOTS CALLED", type);
-window.plots = [];
+function createPlots(playerType) {
 
-function createPlots(type) {
-
-    console.log("CREATE PLOTS CALLED", type);
+    console.log("CREATE PLOTS CALLED", playerType);
 
     const container = document.getElementById("plots");
     if (!container) return;
@@ -136,7 +133,7 @@ function createPlots(type) {
     container.innerHTML = "";
     window.plots = [];
 
-    const positions = getPlotPositions(type);
+    const positions = getPlotPositions(playerType);
 
     positions.forEach((pos, index) => {
         const cell = document.createElement("div");
@@ -158,18 +155,6 @@ function createPlots(type) {
         });
     });
 }
-
-function getPlotPositions(type) {
-    return [
-        { x: 4, y: 3 },
-        { x: 5, y: 3 },
-        { x: 6, y: 3 },
-        { x: 4, y: 4 },
-        { x: 5, y: 4 },
-        { x: 6, y: 4 }
-    ];
-}
-
 // ================= WORLD ROUTER =================
 
 function renderWorld(player) {
