@@ -329,20 +329,15 @@ function updateGoldUI(amount) {
     goldEl.innerText = amount ?? 0;
 }
 window.openShop = function () {
-
-    console.log("OPEN SHOP CLICKED");
+    console.log("OPEN SHOP MANUAL");
 
     const modal = document.getElementById("shopModal");
 
-    console.log("MODAL =", modal);
-
-    if (!modal) {
-        console.error("shopModal NOT FOUND");
-        return;
-    }
-
     modal.style.display = "block";
+
     showShopTab("buy");
+
+    console.log("SHOP OPENED");
 };
 
 window.closeShop = function () {
