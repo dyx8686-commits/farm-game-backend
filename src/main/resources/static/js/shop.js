@@ -100,8 +100,5 @@ function showShopTab(tab) {
     });
 }
 
-window.openShop = openShop;
-window.closeShop = closeShop;
-window.showShopTab = showShopTab;
 
 console.log("OPEN SHOP:", typeof window.openShop);
