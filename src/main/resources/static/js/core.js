@@ -1,4 +1,4 @@
-console.log("CORE JS LOADED");
+
 const BASE = "https://farm-game-backend-production.up.railway.app";
 let playerName = new URLSearchParams(window.location.search).get("name");
 if (!playerName) {
@@ -22,24 +22,25 @@ function applyIslandTheme(player) {
 
 // ================= LOAD (ТОЛЬКО ДАННЫЕ) =================
 
+let BASE = "";
+let playerName = "";
+
 async function load() {
-    try {
-        const res = await fetch(BASE + "/game/state?name=" + playerName);
 
-        const text = await res.text();
-        console.log("RAW RESPONSE:", text);
+    const res = await fetch(BASE + "/game/state?name=" + playerName);
 
-        if (!text || text.trim() === "") return;
+    if (!res.ok) return;
 
-        let player;
-        try {
-            player = JSON.parse(text);
-        } catch (e) {
-            console.error("INVALID JSON:", text);
-            return;
-        }
+    const data = await res.json();
 
-        if (!player) return;
+    window.gameState.player = data;
+
+    render();
+}
+
+function render() {
+    createPlots();
+}
 
         // ================= WORLD STATE =================
         worldState.player = player;
