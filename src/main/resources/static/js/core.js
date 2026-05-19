@@ -184,6 +184,7 @@ window.openInventory = function () {
 window.closeInventory = function () {
     const modal = document.getElementById("inventoryModal");
     if (!modal) return;
+
     modal.style.display = "none";
 };
 
