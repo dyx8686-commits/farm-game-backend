@@ -134,6 +134,12 @@ const inventory = {
 
 let selectedSlot = "WHEAT_SEED";
 
+const hotbarSlots = [
+    "WHEAT_SEED",
+    "WHEAT",
+    "GOLD"
+];
+
 const island = document.getElementById("island");
 const GRID_SIZE = 60;
 const plots = new Map();
@@ -332,22 +338,22 @@ function renderInventory() {
 
     el.innerHTML = `
         <div class="slot ${selectedSlot === 'WHEAT_SEED' ? 'selected' : ''}">
-            🌱
-            <div>Seeds</div>
-            <div class="slot-count">${inventory.WHEAT_SEED}</div>
-        </div>
+    🌱
+    <div>Seeds</div>
+    <div class="slot-count">${inventory.WHEAT_SEED}</div>
+</div>
 
-        <div class="slot">
-            🌾
-            <div>Wheat</div>
-            <div class="slot-count">${inventory.WHEAT}</div>
-        </div>
+<div class="slot ${selectedSlot === 'WHEAT' ? 'selected' : ''}">
+    🌾
+    <div>Wheat</div>
+    <div class="slot-count">${inventory.WHEAT}</div>
+</div>
 
-        <div class="slot">
-            💰
-            <div>Gold</div>
-            <div class="slot-count">${inventory.GOLD}</div>
-        </div>
+<div class="slot ${selectedSlot === 'GOLD' ? 'selected' : ''}">
+    💰
+    <div>Gold</div>
+    <div class="slot-count">${inventory.GOLD}</div>
+</div>
     `;
 }
 // ================= SHOP UI =================
@@ -401,10 +407,11 @@ function initShop() {
 
 document.addEventListener("keydown", (e) => {
 
-    if (e.key === "1") {
-        selectedSlot = "WHEAT_SEED";
-        renderInventory();
-    }
+    if (e.key === "1") selectedSlot = "WHEAT_SEED";
+    if (e.key === "2") selectedSlot = "WHEAT";
+    if (e.key === "3") selectedSlot = "GOLD";
+
+    renderInventory();
 });
 
 // ================= START =================
