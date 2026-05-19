@@ -22,7 +22,6 @@ window.worldState = {
 async function load() {
     try {
         const res = await fetch(BASE + "/game/state?name=" + playerName);
-
         if (!res.ok) return;
 
         const data = await res.json();
@@ -56,7 +55,6 @@ function render() {
 // ================= THEME =================
 
 function applyIslandTheme(player) {
-
     const body = document.body;
 
     body.classList.remove("farm", "wood", "mine");
@@ -69,7 +67,6 @@ function applyIslandTheme(player) {
 // ================= PLAYER =================
 
 function updatePlayer() {
-
     const p = document.getElementById("player");
     if (!p) return;
 
@@ -80,29 +77,19 @@ function updatePlayer() {
 // ================= WORLD ROUTER =================
 
 function renderWorld(player) {
-
     const container = document.getElementById("plots");
     if (!container) return;
 
     container.innerHTML = "";
 
-    if (player.type === "FARMER") {
-        renderFarm(container);
-    }
-
-    if (player.type === "WOODCUTTER") {
-        renderWood(container);
-    }
-
-    if (player.type === "MINER") {
-        renderMine(container);
-    }
+    if (player.type === "FARMER") renderFarm(container);
+    if (player.type === "WOODCUTTER") renderWood(container);
+    if (player.type === "MINER") renderMine(container);
 }
 
 // ================= FARM =================
 
 function renderFarm(container) {
-
     const plots = [
         { x: 4, y: 3 },
         { x: 5, y: 3 },
@@ -124,7 +111,6 @@ function renderFarm(container) {
 // ================= WOOD =================
 
 function renderWood(container) {
-
     const trees = [
         { x: 3, y: 3 },
         { x: 7, y: 4 }
@@ -143,7 +129,6 @@ function renderWood(container) {
 // ================= MINE =================
 
 function renderMine(container) {
-
     const stones = [
         { x: 4, y: 2 },
         { x: 6, y: 5 }
@@ -162,14 +147,12 @@ function renderMine(container) {
 // ================= HOTBAR =================
 
 function renderHotbar() {
-
     const bar = document.getElementById("hotbar");
     if (!bar) return;
 
     bar.innerHTML = "";
 
     for (let i = 0; i < 9; i++) {
-
         const slot = document.createElement("div");
         slot.className = "hotbar-slot";
 
@@ -190,11 +173,58 @@ function renderHotbar() {
     }
 }
 
-// ================= INVENTORY (stub, если у тебя уже есть UI — оставляем) =================
+// ================= INVENTORY =================
+
+window.openInventory = function () {
+    const modal = document.getElementById("inventoryModal");
+    if (!modal) return;
+    modal.style.display = "block";
+};
+
+window.closeInventory = function () {
+    const modal = document.getElementById("inventoryModal");
+    if (!modal) return;
+    modal.style.display = "none";
+};
+
+window.getSelectedItem = function () {
+    return worldState.selectedItem;
+};
 
 function renderInventory(inv) {
-    // если inventory.js есть — он перезапишет это
-    console.log("inventory render", inv);
+    const container = document.getElementById("inventoryContent");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const grid = document.createElement("div");
+    grid.className = "inventory-grid";
+    container.appendChild(grid);
+
+    Object.entries(inv || {}).forEach(([name, amount]) => {
+        if (amount <= 0) return;
+
+        const slot = document.createElement("div");
+        slot.className = "inv-item";
+
+        if (worldState.selectedItem === name) {
+            slot.classList.add("selected");
+        }
+
+        slot.innerHTML = `
+            <div>${name}</div>
+            <div class="inv-count">${amount}</div>
+        `;
+
+        slot.onclick = () => {
+            worldState.selectedItem =
+                worldState.selectedItem === name ? null : name;
+
+            renderInventory(inv);
+        };
+
+        grid.appendChild(slot);
+    });
 }
 
 // ================= START =================
