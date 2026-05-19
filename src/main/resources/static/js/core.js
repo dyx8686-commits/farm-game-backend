@@ -22,9 +22,13 @@ window.worldState = {
 async function load() {
     try {
         const res = await fetch(BASE + "/game/state?name=" + playerName);
+
         if (!res.ok) return;
 
-        const data = await res.json();
+        const text = await res.text();
+        if (!text) return;
+
+        const data = JSON.parse(text);
 
         worldState.player = data;
         worldState.inventory = data.inventory || {};
@@ -35,20 +39,14 @@ async function load() {
         console.error("LOAD ERROR:", err);
     }
 }
-
 // ================= MAIN RENDER =================
 
 function render() {
     if (!worldState.player) return;
 
-    applyIslandTheme(worldState.player);
-
     renderWorld(worldState.player);
-
     renderInventory(worldState.inventory);
-
     renderHotbar();
-
     updatePlayer();
 }
 
@@ -187,7 +185,6 @@ window.closeInventory = function () {
 
     modal.style.display = "none";
 };
-
 window.getSelectedItem = function () {
     return worldState.selectedItem;
 };
