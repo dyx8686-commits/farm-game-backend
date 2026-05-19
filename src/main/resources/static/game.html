@@ -105,9 +105,30 @@ html, body {
 </head>
 
 <body>
+<div id="shopWindow" style="
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:300px;
+    background:rgba(0,0,0,0.85);
+    color:white;
+    padding:15px;
+    border-radius:10px;
+    display:none;
+    z-index:999;
+">
+    <h3>🏪 Shop</h3>
 
+    <button onclick="buySeed()">Buy Seed (3💰)</button>
+    <button onclick="sellWheat()">Sell Wheat (5💰)</button>
+
+    <br><br>
+    <button onclick="closeShop()">Close</button>
+</div>
 <div id="island"></div>
 <div id="inventory"></div>
+    
 
     <div>🛒 SHOP</div>
 
@@ -162,11 +183,35 @@ function createShopBuilding(x, y) {
     let shopOpen = false;
 
 function toggleShop() {
-    shopOpen = !shopOpen;
+    const el = document.getElementById("shopWindow");
+    if (!el) return;
 
-    if (shopOpen) {
-        alert("SHOP OPEN");
-    }
+    el.style.display = "block";
+}
+    function closeShop() {
+    const el = document.getElementById("shopWindow");
+    if (!el) return;
+
+    el.style.display = "none";
+}
+    function buySeed() {
+
+    if (inventory.GOLD < 3) return;
+
+    inventory.GOLD -= 3;
+    inventory.WHEAT_SEED++;
+
+    renderInventory();
+}
+
+function sellWheat() {
+
+    if (inventory.WHEAT <= 0) return;
+
+    inventory.WHEAT--;
+    inventory.GOLD += 5;
+
+    renderInventory();
 }
 
 // ================= WORLD =================
