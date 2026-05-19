@@ -398,21 +398,38 @@ island.addEventListener("click", (e) => {
 
     if (!target) return;
 
-    /* PLANT */
+    const seed = selectedSlot;
+
+    const isFarm =
+        seed.includes("WHEAT") ||
+        seed.includes("CARROT") ||
+        seed.includes("POTATO");
+
+    const isWood =
+        seed.includes("BIRCH") ||
+        seed.includes("PINE") ||
+        seed.includes("OAK");
+
+    const isMine =
+        seed.includes("STONE") ||
+        seed.includes("IRON") ||
+        seed.includes("COPPER");
+
+    /* ================= PLANT ================= */
+
     if (target.stage === -1) {
 
-        const seed = selectedSlot;
+        if (currentBiome === BIOMES.FARM && !isFarm) return;
+        if (currentBiome === BIOMES.WOOD && !isWood) return;
+        if (currentBiome === BIOMES.MINE && !isMine) return;
 
-        const isFarm = seed.includes("WHEAT") || seed.includes("CARROT") || seed.includes("POTATO");
-const isWood = seed.includes("BIRCH") || seed.includes("PINE") || seed.includes("OAK");
-
-if (currentBiome === BIOMES.FARM && !isFarm) return;
-if (currentBiome === BIOMES.WOOD && !isWood) return;
-        if (inventory[seed] <= 0) return;
+        if (!inventory[seed] || inventory[seed] <= 0) return;
 
         inventory[seed]--;
 
-        const type = seed.replace("_SEED", "");
+        const type = seed
+            .replace("_SEED", "")
+            .replace("PICK_", "");
 
         const plant = createPlantVisual(x, y, 0, type);
 
@@ -422,21 +439,29 @@ if (currentBiome === BIOMES.WOOD && !isWood) return;
         target.stage = 0;
         target.type = type;
 
-        startGrowth(`${x}:${y}`);
+        startGrowth(`${x}:${y}`, type);
 
         renderInventory();
         return;
     }
 
-    /* HARVEST */
+    /* ================= HARVEST ================= */
+
     if (target.stage === 2) {
 
         const type = target.type;
 
         if (type === "WHEAT") inventory.WHEAT++;
+        if (type === "CARROT") inventory.CARROT++;
+        if (type === "POTATO") inventory.POTATO++;
+
         if (type === "BIRCH") inventory.BIRCH_WOOD++;
-if (type === "PINE") inventory.PINE_WOOD++;
-if (type === "OAK") inventory.OAK_WOOD++;
+        if (type === "PINE") inventory.PINE_WOOD++;
+        if (type === "OAK") inventory.OAK_WOOD++;
+
+        if (type === "STONE") inventory.STONE++;
+        if (type === "IRON") inventory.IRON++;
+        if (type === "COPPER") inventory.COPPER++;
 
         target.plantEl.remove();
 
@@ -447,7 +472,6 @@ if (type === "OAK") inventory.OAK_WOOD++;
         renderInventory();
     }
 });
-
 /* ================= GROWTH ================= */
 
 function startGrowth(key) {
