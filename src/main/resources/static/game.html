@@ -17,11 +17,29 @@ html, body {
 #island {
     width: 900px;
     height: 500px;
+
     margin: 60px auto;
-    background: #6dbf4b;
+
+    position: relative;
+
     border: 6px solid #3e7d2f;
     border-radius: 20px;
-    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.04) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            rgba(255,255,255,0.04) 1px,
+            transparent 1px
+        ),
+        #6dbf4b;
+
+    background-size: 60px 60px;
 }
 
 /* ГРЯДКА */
@@ -332,7 +350,15 @@ function initShop() {
 }
 
 // ================= START =================
+    
+document.addEventListener("keydown", (e) => {
 
+    if (e.key === "1") {
+        selectedSlot = "WHEAT_SEED";
+        renderInventory();
+    }
+
+});
 window.addEventListener("load", () => {
     renderInventory();
     renderShop();
