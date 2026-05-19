@@ -415,16 +415,72 @@ function renderInventory() {
     if (!el) return;
 
     el.innerHTML = `
+        <!-- FARM -->
         <div class="slot ${selectedSlot === 'WHEAT_SEED' ? 'selected' : ''}">
-            🌱 ${inventory.WHEAT_SEED}
+            🌾 Wheat Seed (${inventory.WHEAT_SEED})
         </div>
 
-        <div class="slot ${selectedSlot === 'WHEAT' ? 'selected' : ''}">
+        <div class="slot ${selectedSlot === 'CARROT_SEED' ? 'selected' : ''}">
+            🥕 Carrot Seed (${inventory.CARROT_SEED})
+        </div>
+
+        <div class="slot ${selectedSlot === 'POTATO_SEED' ? 'selected' : ''}">
+            🥔 Potato Seed (${inventory.POTATO_SEED})
+        </div>
+
+        <!-- WOOD -->
+        <div class="slot ${selectedSlot === 'BIRCH_SEED' ? 'selected' : ''}">
+            🌳 Birch Seed (${inventory.BIRCH_SEED})
+        </div>
+
+        <div class="slot ${selectedSlot === 'PINE_SEED' ? 'selected' : ''}">
+            🌲 Pine Seed (${inventory.PINE_SEED})
+        </div>
+
+        <div class="slot ${selectedSlot === 'OAK_SEED' ? 'selected' : ''}">
+            🌳 Oak Seed (${inventory.OAK_SEED})
+        </div>
+
+        <!-- MINE -->
+        <div class="slot ${selectedSlot === 'PICK_STONE' ? 'selected' : ''}">
+            🪨 Stone Pick
+        </div>
+
+        <div class="slot ${selectedSlot === 'PICK_IRON' ? 'selected' : ''}">
+            ⛏ Iron Pick
+        </div>
+
+        <div class="slot ${selectedSlot === 'PICK_COPPER' ? 'selected' : ''}">
+            🟠 Copper Pick
+        </div>
+
+        <!-- RESOURCES -->
+        <div class="slot">
             🌾 ${inventory.WHEAT}
         </div>
 
-        <div class="slot ${selectedSlot === 'WOOD' ? 'selected' : ''}">
-            🪵 ${inventory.WOOD}
+        <div class="slot">
+            🥕 ${inventory.CARROT}
+        </div>
+
+        <div class="slot">
+            🥔 ${inventory.POTATO}
+        </div>
+
+        <div class="slot">
+            🪵 Wood
+        </div>
+
+        <div class="slot">
+            🪨 Stone
+        </div>
+
+        <div class="slot">
+            ⛓ Iron
+        </div>
+
+        <div class="slot">
+            🟠 Copper
         </div>
 
         <div class="slot">
@@ -435,14 +491,26 @@ function renderInventory() {
 
 
 
+
 /* ================= INPUT ================= */
 
 document.addEventListener("keydown", (e) => {
 
-    /* HOTBAR */
+
+    // FARM
     if (e.key === "1") selectedSlot = "WHEAT_SEED";
-    if (e.key === "2") selectedSlot = "WHEAT";
-    if (e.key === "3") selectedSlot = "WOOD";
+    if (e.key === "2") selectedSlot = "CARROT_SEED";
+    if (e.key === "3") selectedSlot = "POTATO_SEED";
+
+    // WOOD
+    if (e.key === "4") selectedSlot = "BIRCH_SEED";
+    if (e.key === "5") selectedSlot = "PINE_SEED";
+    if (e.key === "6") selectedSlot = "OAK_SEED";
+
+    // MINE
+    if (e.key === "7") selectedSlot = "PICK_STONE";
+    if (e.key === "8") selectedSlot = "PICK_IRON";
+    if (e.key === "9") selectedSlot = "PICK_COPPER";
 
     /* BIOMES */
     if (e.key === "f") currentBiome = BIOMES.FARM;
