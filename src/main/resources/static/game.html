@@ -105,39 +105,17 @@ html, body {
     display:none;
     z-index:999;
 ">
+
     <h3>🏪 Shop</h3>
 
-    <button onclick="buySeed()">Buy Seed (3💰)</button>
-    <button onclick="sellWheat()">Sell Wheat (5💰)</button>
+    <button id="buySeedBtn">Buy Seed (3💰)</button>
+    <button id="sellBtn">Sell Wheat (5💰)</button>
 
     <br><br>
-    <button onclick="closeShop()">Close</button>
-</div>
-<div id="island"></div>
-<div id="inventory"></div>
-
-<div id="shopWindow" style="
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    width:300px;
-    background:rgba(0,0,0,0.9);
-    color:white;
-    padding:10px;
-    display:none;
-    z-index:999;
-">
-    <button onclick="toggleShop()">CLOSE</button>
-</div>
-    
-
-    <div>🛒 SHOP</div>
-
-    <button id="buySeedBtn">Buy Wheat Seed (1 = 3 gold)</button>
-    <button id="sellBtn">Sell Wheat (1 = 5 gold)</button>
+    <button onclick="toggleShop()">Close</button>
 
     <div id="shopInfo"></div>
+
 </div>
 
 <script>
