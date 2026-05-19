@@ -325,14 +325,25 @@ function createPlantVisual(x, y, stage, type) {
         if (stage === 2) el.style.background = "#145a32";
     }
 
+  
     /* WOOD PLANTS */
-    if (type === "WOOD") {
-        if (stage === 0) el.style.background = "#8d6e63";
-        if (stage === 1) el.style.background = "#6d4c41";
-        if (stage === 2) el.style.background = "#4e342e";
-    }
 
-    return el;
+if (type === "BIRCH") {
+    if (stage === 0) el.style.background = "#d7ccc8";
+    if (stage === 1) el.style.background = "#a1887f";
+    if (stage === 2) el.style.background = "#6d4c41";
+}
+
+if (type === "PINE") {
+    if (stage === 0) el.style.background = "#81c784";
+    if (stage === 1) el.style.background = "#388e3c";
+    if (stage === 2) el.style.background = "#1b5e20";
+}
+
+if (type === "OAK") {
+    if (stage === 0) el.style.background = "#a1887f";
+    if (stage === 1) el.style.background = "#6d4c41";
+    if (stage === 2) el.style.background = "#3e2723";
 }
 
 /* ================= CLICK SYSTEM ================= */
@@ -360,7 +371,11 @@ island.addEventListener("click", (e) => {
 
         const seed = selectedSlot;
 
-        if (!seed.includes("_SEED")) return;
+        const isFarm = seed.includes("WHEAT") || seed.includes("CARROT") || seed.includes("POTATO");
+const isWood = seed.includes("BIRCH") || seed.includes("PINE") || seed.includes("OAK");
+
+if (currentBiome === BIOMES.FARM && !isFarm) return;
+if (currentBiome === BIOMES.WOOD && !isWood) return;
         if (inventory[seed] <= 0) return;
 
         inventory[seed]--;
@@ -387,6 +402,9 @@ island.addEventListener("click", (e) => {
         const type = target.type;
 
         if (type === "WHEAT") inventory.WHEAT++;
+        if (type === "BIRCH") inventory.BIRCH_WOOD++;
+if (type === "PINE") inventory.PINE_WOOD++;
+if (type === "OAK") inventory.OAK_WOOD++;
 
         target.plantEl.remove();
 
