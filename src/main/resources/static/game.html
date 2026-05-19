@@ -319,11 +319,24 @@ function createPlantVisual(x, y, stage, type) {
     el.style.zIndex = "10";
 
     /* FARM PLANTS */
-    if (type === "WHEAT") {
-        if (stage === 0) el.style.background = "#2ecc71";
-        if (stage === 1) el.style.background = "#27ae60";
-        if (stage === 2) el.style.background = "#145a32";
-    }
+
+if (type === "WHEAT") {
+    if (stage === 0) el.style.background = "#2ecc71";
+    if (stage === 1) el.style.background = "#27ae60";
+    if (stage === 2) el.style.background = "#145a32";
+}
+
+if (type === "CARROT") {
+    if (stage === 0) el.style.background = "#ffb74d";
+    if (stage === 1) el.style.background = "#fb8c00";
+    if (stage === 2) el.style.background = "#e65100";
+}
+
+if (type === "POTATO") {
+    if (stage === 0) el.style.background = "#d7ccc8";
+    if (stage === 1) el.style.background = "#a1887f";
+    if (stage === 2) el.style.background = "#6d4c41";
+}
 
   
     /* WOOD PLANTS */
