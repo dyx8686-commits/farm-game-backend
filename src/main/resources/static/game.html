@@ -137,33 +137,8 @@ const island = document.getElementById("island");
 const GRID_SIZE = 60;
 
 const plots = new Map();
-    function createShopBuilding(x, y) {
-
-    const shop = document.createElement("div");
-
-    shop.style.position = "absolute";
-    shop.style.left = x + "px";
-    shop.style.top = y + "px";
-
-    shop.style.width = "60px";
-    shop.style.height = "60px";
-
-    shop.style.display = "flex";
-    shop.style.alignItems = "center";
-    shop.style.justifyContent = "center";
-
-    shop.style.fontSize = "42px";
-    shop.style.cursor = "pointer";
-
-    shop.innerHTML = "🏪";
-
-    shop.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleShop();
-    });
-
-    island.appendChild(shop);
-}
+    
+   
     let selectedSlot = "WHEAT_SEED";
 
 /*
@@ -378,6 +353,46 @@ function initShop() {
 
 // ================= START =================
     
+// ================= BUILDINGS =================
+
+function createShopBuilding(x, y) {
+
+    const shop = document.createElement("div");
+
+    shop.style.position = "absolute";
+    shop.style.left = x + "px";
+    shop.style.top = y + "px";
+
+    shop.style.width = "60px";
+    shop.style.height = "60px";
+
+    shop.style.display = "flex";
+    shop.style.alignItems = "center";
+    shop.style.justifyContent = "center";
+
+    shop.style.fontSize = "42px";
+    shop.style.cursor = "pointer";
+
+    shop.innerHTML = "🏪";
+
+    shop.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleShop();
+    });
+
+    island.appendChild(shop);
+}
+
+
+// ================= WORLD =================
+
+function generateWorld() {
+    createShopBuilding(400, 220);
+}
+
+
+// ================= INPUT =================
+
 document.addEventListener("keydown", (e) => {
 
     if (e.key === "1") {
@@ -386,12 +401,13 @@ document.addEventListener("keydown", (e) => {
     }
 
 });
-    function generateWorld() {
-    createShopBuilding(400, 220);
-}
+
+
+// ================= START =================
+
 window.addEventListener("load", () => {
 
-    generateWorld(); // 🏪 создаём объект магазина на острове
+    generateWorld();
 
     renderInventory();
     renderShop();
