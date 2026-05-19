@@ -53,30 +53,24 @@ html, body {
 }
     #inventory {
     position: absolute;
-
-    bottom: 20px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
 
     display: flex;
     gap: 10px;
 
-    background: rgba(0,0,0,0.4);
-
-    padding: 12px;
-    border-radius: 16px;
-
-    z-index: 500;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .slot {
     width: 70px;
     height: 70px;
 
-    background: rgba(255,255,255,0.15);
-
-    border: 3px solid rgba(255,255,255,0.2);
-    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid transparent;
 
     display: flex;
     flex-direction: column;
@@ -85,21 +79,14 @@ html, body {
 
     color: white;
     font-family: Arial;
-
-    position: relative;
 }
 
 .slot.selected {
-    border: 3px solid gold;
-    transform: scale(1.05);
+    border: 2px solid yellow;
 }
 
 .slot-count {
-    position: absolute;
-    bottom: 4px;
-    right: 6px;
-
-    font-size: 14px;
+    font-size: 12px;
 }
 </style>
 </head>
@@ -344,12 +331,25 @@ function renderInventory() {
     if (!el) return;
 
     el.innerHTML = `
-        🌱 Seeds: ${inventory.WHEAT_SEED}<br>
-        🌾 Wheat: ${inventory.WHEAT}<br>
-        💰 Gold: ${inventory.GOLD}
+        <div class="slot ${selectedSlot === 'WHEAT_SEED' ? 'selected' : ''}">
+            🌱
+            <div>Seeds</div>
+            <div class="slot-count">${inventory.WHEAT_SEED}</div>
+        </div>
+
+        <div class="slot">
+            🌾
+            <div>Wheat</div>
+            <div class="slot-count">${inventory.WHEAT}</div>
+        </div>
+
+        <div class="slot">
+            💰
+            <div>Gold</div>
+            <div class="slot-count">${inventory.GOLD}</div>
+        </div>
     `;
 }
-
 // ================= SHOP UI =================
 
 function renderShop() {
