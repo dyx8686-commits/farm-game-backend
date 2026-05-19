@@ -45,52 +45,68 @@ const island = document.getElementById("island");
 
 const GRID_SIZE = 60;
 
-const plots = new Map(); // key -> {el, plant}
+// грядки + растения
+const plots = new Map();
 
-// создание грядок
+/*
+key = "x:y"
+value = {
+    plotEl,
+    plantEl
+}
+*/
+
 island.addEventListener("click", (e) => {
 
     const rect = island.getBoundingClientRect();
 
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
+    const x = Math.floor((e.clientX - rect.left) / GRID_SIZE) * GRID_SIZE;
+    const y = Math.floor((e.clientY - rect.top) / GRID_SIZE) * GRID_SIZE;
 
-    const gx = Math.floor(x / GRID_SIZE) * GRID_SIZE;
-    const gy = Math.floor(y / GRID_SIZE) * GRID_SIZE;
+    const key = x + ":" + y;
 
-    const key = gx + ":" + gy;
-
-    // если грядки нет → создаём
+    // ================= CREATE PLOT =================
     if (!plots.has(key)) {
 
-        const plot = document.createElement("div");
-        plot.className = "plot";
-        plot.style.left = gx + "px";
-        plot.style.top = gy + "px";
+        const plotEl = document.createElement("div");
+        plotEl.className = "plot";
+        plotEl.style.left = x + "px";
+        plotEl.style.top = y + "px";
 
-        island.appendChild(plot);
+        island.appendChild(plotEl);
 
-        plots.set(key, { el: plot, plant: null });
+        plots.set(key, {
+            plotEl: plotEl,
+            plantEl: null
+        });
+
         return;
     }
 
-    // если грядка есть → сажаем растение
+    // ================= PLANT =================
     const cell = plots.get(key);
 
-    if (cell.plant) return; // уже занято
+    if (cell.plantEl) return;
 
-    const plant = document.createElement("div");
-    plant.style.position = "absolute";
-    plant.style.width = "30px";
-    plant.style.height = "30px";
-    plant.style.background = "green";
-    plant.style.borderRadius = "50%";
-    plant.style.left = gx + 15 + "px";
-    plant.style.top = gy + 15 + "px";
+    const plantEl = document.createElement("div");
 
-    island.appendChild(plant);
+    plantEl.style.position = "absolute";
+    plantEl.style.width = "28px";
+    plantEl.style.height = "28px";
+    plantEl.style.background = "#2ecc71";
+    plantEl.style.border = "2px solid #145a32";
+    plantEl.style.borderRadius = "50%";
 
-    cell.plant = plant;
+    plantEl.style.left = (x + 16) + "px";
+    plantEl.style.top = (y + 16) + "px";
+
+    plantEl.style.zIndex = "10";
+
+    island.appendChild(plantEl);
+
+    cell.plantEl = plantEl;
+
+    console.log("PLANT CREATED AT", key);
 });
 </script>
 
