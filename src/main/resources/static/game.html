@@ -115,6 +115,21 @@ html, body {
 </div>
 <div id="island"></div>
 <div id="inventory"></div>
+
+<div id="shopWindow" style="
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:300px;
+    background:rgba(0,0,0,0.9);
+    color:white;
+    padding:10px;
+    display:none;
+    z-index:999;
+">
+    <button onclick="toggleShop()">CLOSE</button>
+</div>
     
 
     <div>🛒 SHOP</div>
@@ -408,6 +423,13 @@ window.addEventListener("load", () => {
     generateWorld();
     renderInventory();
 });
+    
+/* ================= SAFETY FIX ================= */
+
+function safeGet(id) {
+    return document.getElementById(id);
+}
+
 
 </script>
 </body>
