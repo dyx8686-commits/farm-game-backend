@@ -45,32 +45,52 @@ const island = document.getElementById("island");
 
 const GRID_SIZE = 60;
 
-// хранение занятых клеток
-const plots = new Set();
+const plots = new Map(); // key -> {el, plant}
 
+// создание грядок
 island.addEventListener("click", (e) => {
+
     const rect = island.getBoundingClientRect();
 
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;
 
-    // привязка к сетке
-    x = Math.floor(x / GRID_SIZE) * GRID_SIZE;
-    y = Math.floor(y / GRID_SIZE) * GRID_SIZE;
+    const gx = Math.floor(x / GRID_SIZE) * GRID_SIZE;
+    const gy = Math.floor(y / GRID_SIZE) * GRID_SIZE;
 
-    const key = x + ":" + y;
+    const key = gx + ":" + gy;
 
-    // если уже есть — не ставим
-    if (plots.has(key)) return;
+    // если грядки нет → создаём
+    if (!plots.has(key)) {
 
-    plots.add(key);
+        const plot = document.createElement("div");
+        plot.className = "plot";
+        plot.style.left = gx + "px";
+        plot.style.top = gy + "px";
 
-    const plot = document.createElement("div");
-    plot.className = "plot";
-    plot.style.left = x + "px";
-    plot.style.top = y + "px";
+        island.appendChild(plot);
 
-    island.appendChild(plot);
+        plots.set(key, { el: plot, plant: null });
+        return;
+    }
+
+    // если грядка есть → сажаем растение
+    const cell = plots.get(key);
+
+    if (cell.plant) return; // уже занято
+
+    const plant = document.createElement("div");
+    plant.style.position = "absolute";
+    plant.style.width = "30px";
+    plant.style.height = "30px";
+    plant.style.background = "green";
+    plant.style.borderRadius = "50%";
+    plant.style.left = gx + 15 + "px";
+    plant.style.top = gy + 15 + "px";
+
+    island.appendChild(plant);
+
+    cell.plant = plant;
 });
 </script>
 
