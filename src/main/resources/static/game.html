@@ -231,9 +231,10 @@ function generateWorld() {
 
     createShopBuilding(400, 220);
 
-    if (currentBiome === BIOMES.FARM) {
-        console.log("FARM BIOME");
-    }
+    if (
+    currentBiome !== BIOMES.FARM &&
+    currentBiome !== BIOMES.WOOD
+) return;
 
     if (currentBiome === BIOMES.WOOD) {
         console.log("WOOD BIOME");
