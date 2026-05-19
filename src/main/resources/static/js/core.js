@@ -10,21 +10,31 @@ if (!playerName) {
 
 window.worldState = {
     player: null,
+
     inventory: {
         WHEAT_SEED: 0,
+        CORN_SEED: 0,
+        POTATO_SEED: 0,
+
         WHEAT: 0,
+        CORN: 0,
+        POTATO: 0,
+
         GOLD: 0
     },
 
     plants: [],
 
-    selectedItem: null
+    selectedItem: null,
+    selectedSeed: "WHEAT"
 };
 
 // ================= LOAD =================
 
 async function load() {
+
     try {
+
         const res = await fetch(BASE + "/game/state?name=" + playerName);
 
         if (!res.ok) return;
@@ -32,11 +42,16 @@ async function load() {
         const data = await res.json();
 
         worldState.player = data;
-        worldState.inventory = data.inventory || worldState.inventory;
+
+        worldState.inventory = {
+            ...worldState.inventory,
+            ...(data.inventory || {})
+        };
 
         render();
 
     } catch (err) {
+
         console.error("LOAD ERROR:", err);
     }
 }
@@ -44,9 +59,9 @@ async function load() {
 // ================= RENDER =================
 
 function render() {
-    if (!worldState.player) return;
 
     renderInventory(worldState.inventory);
+
     renderShop();
 }
 
@@ -58,9 +73,37 @@ function renderInventory(inv) {
     if (!el) return;
 
     el.innerHTML = `
-        🌱 Seeds: ${inv.WHEAT_SEED || 0}<br>
-        🌾 Wheat: ${inv.WHEAT || 0}<br>
-        💰 Gold: ${inv.GOLD || 0}
+        <div>🌱 Wheat Seeds: ${inv.WHEAT_SEED || 0}</div>
+        <div>🌽 Corn Seeds: ${inv.CORN_SEED || 0}</div>
+        <div>🥔 Potato Seeds: ${inv.POTATO_SEED || 0}</div>
+
+        <hr>
+
+        <div>🌾 Wheat: ${inv.WHEAT || 0}</div>
+        <div>🌽 Corn: ${inv.CORN || 0}</div>
+        <div>🥔 Potato: ${inv.POTATO || 0}</div>
+
+        <hr>
+
+        <div>💰 Gold: ${inv.GOLD || 0}</div>
+
+        <hr>
+
+        <button onclick="selectItem('WHEAT_SEED')">
+            Select Wheat Seed
+        </button>
+
+        <button onclick="selectItem('CORN_SEED')">
+            Select Corn Seed
+        </button>
+
+        <button onclick="selectItem('POTATO_SEED')">
+            Select Potato Seed
+        </button>
+
+        <div style="margin-top:10px;">
+            Selected: ${worldState.selectedItem || "NONE"}
+        </div>
     `;
 }
 
@@ -72,7 +115,10 @@ function renderShop() {
     if (!el) return;
 
     el.innerHTML = `
-        🌱 Seeds: ${worldState.inventory.WHEAT_SEED}<br>
+        🌱 Wheat Seeds: ${worldState.inventory.WHEAT_SEED}<br>
+        🌽 Corn Seeds: ${worldState.inventory.CORN_SEED}<br>
+        🥔 Potato Seeds: ${worldState.inventory.POTATO_SEED}<br><br>
+
         💰 Gold: ${worldState.inventory.GOLD}
     `;
 }
@@ -80,6 +126,7 @@ function renderShop() {
 // ================= CLICK SYSTEM =================
 
 const island = document.getElementById("island");
+
 const GRID_SIZE = 60;
 
 const plots = new Map();
@@ -95,10 +142,14 @@ if (island) {
 
         const key = x + ":" + y;
 
+        // ================= CREATE PLOT =================
+
         if (!plots.has(key)) {
 
             const plotEl = document.createElement("div");
+
             plotEl.className = "plot";
+
             plotEl.style.left = x + "px";
             plotEl.style.top = y + "px";
 
@@ -106,7 +157,8 @@ if (island) {
 
             plots.set(key, {
                 plantEl: null,
-                stage: -1
+                stage: -1,
+                type: null
             });
 
             return;
@@ -115,39 +167,74 @@ if (island) {
         const cell = plots.get(key);
 
         // ================= PLANT =================
+
         if (cell.stage === -1) {
 
-            if (worldState.selectedItem !== "WHEAT_SEED") return;
-            if (worldState.inventory.WHEAT_SEED <= 0) return;
+            const seedType = worldState.selectedItem;
 
-            worldState.inventory.WHEAT_SEED--;
+            if (!seedType) return;
 
-            const plant = createPlantVisual(x, y, 0);
+            if (!seedType.includes("_SEED")) return;
+
+            if (worldState.inventory[seedType] <= 0) {
+                alert("No seeds");
+                return;
+            }
+
+            worldState.inventory[seedType]--;
+
+            const plantType = seedType.replace("_SEED", "");
+
+            const plant = createPlantVisual(
+                x,
+                y,
+                0,
+                plantType
+            );
 
             island.appendChild(plant);
 
             cell.plantEl = plant;
             cell.stage = 0;
+            cell.type = plantType;
 
             startGrowth(key);
 
             renderInventory(worldState.inventory);
+
             renderShop();
 
             return;
         }
 
         // ================= HARVEST =================
+
         if (cell.stage === 2) {
 
-            cell.plantEl.remove();
+            if (cell.plantEl) {
+                cell.plantEl.remove();
+            }
+
+            const type = cell.type;
+
+            if (type === "WHEAT") {
+                worldState.inventory.WHEAT++;
+            }
+
+            if (type === "CORN") {
+                worldState.inventory.CORN++;
+            }
+
+            if (type === "POTATO") {
+                worldState.inventory.POTATO++;
+            }
 
             cell.plantEl = null;
             cell.stage = -1;
-
-            worldState.inventory.WHEAT++;
+            cell.type = null;
 
             renderInventory(worldState.inventory);
+
             renderShop();
 
             return;
@@ -158,12 +245,28 @@ if (island) {
 // ================= GROWTH =================
 
 function startGrowth(key) {
-    setTimeout(() => growStep(key), 3000);
+
+    const cell = plots.get(key);
+
+    if (!cell) return;
+
+    let growTime = 3000;
+
+    if (cell.type === "CORN") {
+        growTime = 2000;
+    }
+
+    if (cell.type === "POTATO") {
+        growTime = 4000;
+    }
+
+    setTimeout(() => growStep(key), growTime);
 }
 
 function growStep(key) {
 
     const cell = plots.get(key);
+
     if (!cell || !cell.plantEl) return;
 
     cell.stage++;
@@ -171,35 +274,79 @@ function growStep(key) {
     const x = parseInt(key.split(":")[0]);
     const y = parseInt(key.split(":")[1]);
 
-    const newPlant = createPlantVisual(x, y, cell.stage);
+    const newPlant = createPlantVisual(
+        x,
+        y,
+        cell.stage,
+        cell.type
+    );
 
     cell.plantEl.remove();
+
     cell.plantEl = newPlant;
 
     island.appendChild(newPlant);
 
     if (cell.stage < 2) {
-        setTimeout(() => growStep(key), 3000);
+
+        let growTime = 3000;
+
+        if (cell.type === "CORN") {
+            growTime = 2000;
+        }
+
+        if (cell.type === "POTATO") {
+            growTime = 4000;
+        }
+
+        setTimeout(() => growStep(key), growTime);
     }
 }
 
 // ================= PLANT VISUAL =================
 
-function createPlantVisual(x, y, stage) {
+function createPlantVisual(x, y, stage, type) {
 
     const el = document.createElement("div");
 
     el.style.position = "absolute";
+
     el.style.width = "28px";
     el.style.height = "28px";
+
     el.style.borderRadius = "50%";
+
     el.style.left = (x + 16) + "px";
     el.style.top = (y + 16) + "px";
+
     el.style.zIndex = "10";
 
-    if (stage === 0) el.style.background = "#2ecc71";
-    if (stage === 1) el.style.background = "#27ae60";
-    if (stage === 2) el.style.background = "#145a32";
+    // ================= WHEAT =================
+
+    if (type === "WHEAT") {
+
+        if (stage === 0) el.style.background = "#2ecc71";
+        if (stage === 1) el.style.background = "#27ae60";
+        if (stage === 2) el.style.background = "#145a32";
+    }
+
+    // ================= CORN =================
+
+    if (type === "CORN") {
+
+        if (stage === 0) el.style.background = "#f1c40f";
+        if (stage === 1) el.style.background = "#f39c12";
+        if (stage === 2) el.style.background = "#d68910";
+    }
+
+    // ================= POTATO =================
+
+    if (type === "POTATO") {
+
+        if (stage === 0) el.style.background = "#a67c52";
+        if (stage === 1) el.style.background = "#8e5a2b";
+        if (stage === 2) el.style.background = "#6e3f1a";
+    }
 
     return el;
 }
@@ -209,30 +356,43 @@ function createPlantVisual(x, y, stage) {
 function initShop() {
 
     const sellBtn = document.getElementById("sellBtn");
+
     const buyBtn = document.getElementById("buySeedBtn");
 
     if (sellBtn) {
+
         sellBtn.addEventListener("click", () => {
 
-            if (worldState.inventory.WHEAT <= 0) return;
+            if (worldState.inventory.WHEAT <= 0) {
+                alert("No wheat");
+                return;
+            }
 
             worldState.inventory.WHEAT--;
+
             worldState.inventory.GOLD += 5;
 
             renderInventory(worldState.inventory);
+
             renderShop();
         });
     }
 
     if (buyBtn) {
+
         buyBtn.addEventListener("click", () => {
 
-            if (worldState.inventory.GOLD < 3) return;
+            if (worldState.inventory.GOLD < 3) {
+                alert("Not enough gold");
+                return;
+            }
 
             worldState.inventory.GOLD -= 3;
+
             worldState.inventory.WHEAT_SEED++;
 
             renderInventory(worldState.inventory);
+
             renderShop();
         });
     }
@@ -241,8 +401,11 @@ function initShop() {
 // ================= SELECT ITEM =================
 
 function selectItem(name) {
+
     worldState.selectedItem =
         worldState.selectedItem === name ? null : name;
+
+    renderInventory(worldState.inventory);
 }
 
 // ================= START =================
@@ -250,6 +413,7 @@ function selectItem(name) {
 window.addEventListener("load", () => {
 
     load();
+
     setInterval(load, 3000);
 
     initShop();
