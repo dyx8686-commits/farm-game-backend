@@ -172,7 +172,11 @@ POTATO: 0,
 };
 
 let selectedSlot = "WHEAT_SEED";
-    let hotbarSlots = ["WHEAT_SEED"];
+   let hotbar = [
+    "WHEAT_SEED",
+    "CARROT_SEED",
+    "POTATO_SEED"
+];
 
 /* ================= WORLD ================= */
 
@@ -580,56 +584,40 @@ function renderInventory() {
 }
 /* ================= INPUT ================= */
 
-let hotbar = [
-    "WHEAT_SEED",
-    "CARROT_SEED",
-    "POTATO_SEED"
-];
-
 document.addEventListener("keydown", (e) => {
 
-    let newSlot = null;
+    const keyMap = {
+        "1": "WHEAT_SEED",
+        "2": "CARROT_SEED",
+        "3": "POTATO_SEED",
+        "4": "BIRCH_SEED",
+        "5": "PINE_SEED",
+        "6": "OAK_SEED",
+        "7": "PICK_STONE",
+        "8": "PICK_IRON",
+        "9": "PICK_COPPER"
+    };
 
-    // FARM
-    if (e.key === "1") newSlot = "WHEAT_SEED";
-    if (e.key === "2") newSlot = "CARROT_SEED";
-    if (e.key === "3") newSlot = "POTATO_SEED";
+    if (keyMap[e.key]) {
 
-    // WOOD
-    if (e.key === "4") newSlot = "BIRCH_SEED";
-    if (e.key === "5") newSlot = "PINE_SEED";
-    if (e.key === "6") newSlot = "OAK_SEED";
+        selectedSlot = keyMap[e.key];
 
-    // MINE
-    if (e.key === "7") newSlot = "PICK_STONE";
-    if (e.key === "8") newSlot = "PICK_IRON";
-    if (e.key === "9") newSlot = "PICK_COPPER";
+        hotbar = hotbar.filter(i => i !== selectedSlot);
 
-    // HOTBAR UPDATE
-    if (newSlot) {
+        hotbar.push(selectedSlot);
 
-        selectedSlot = newSlot;
-
-        hotbar = hotbar.filter(s => s !== newSlot);
-
-        hotbar.push(newSlot);
-
-        while (hotbar.length > 3) {
+        if (hotbar.length > 3) {
             hotbar.shift();
         }
     }
 
-    /* BIOMES */
     if (e.key === "f") currentBiome = BIOMES.FARM;
     if (e.key === "g") currentBiome = BIOMES.WOOD;
     if (e.key === "h") currentBiome = BIOMES.MINE;
 
     generateWorld();
-    initPlots();
-
     renderInventory();
 });
-
 /* ================= START ================= */
 
 window.addEventListener("load", () => {
