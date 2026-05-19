@@ -66,6 +66,7 @@ html, body {
 ">
     <div>🛒 SHOP</div>
 
+    <button id="buySeedBtn">Buy Wheat Seed (1 = 3 gold)</button>
     <button id="sellBtn">Sell Wheat (1 = 5 gold)</button>
 
     <div id="shopInfo"></div>
@@ -73,6 +74,7 @@ html, body {
 
 <script>
 const inventory = {
+    WHEAT_SEED: 0,
     WHEAT: 0,
     GOLD: 0
 };
@@ -142,35 +144,43 @@ island.addEventListener("click", (e) => {
     // PLANT
     if (cell.stage === -1) {
 
-        const plant = createPlantVisual(x, y, 0);
-
-        island.appendChild(plant);
-
-        cell.plantEl = plant;
-        cell.stage = 0;
-
-        startGrowth(key);
-
+    if (inventory.WHEAT_SEED <= 0) {
+        alert("No seeds!");
         return;
     }
+
+    inventory.WHEAT_SEED -= 1;
+
+    const plant = createPlantVisual(x, y, 0);
+
+    island.appendChild(plant);
+
+    cell.plantEl = plant;
+    cell.stage = 0;
+
+    startGrowth(key);
+
+    renderInventory();
+    renderShop();
+
+    return;
+}
 
     // HARVEST
     if (cell.stage === 2) {
 
-        cell.plantEl.remove();
+    cell.plantEl.remove();
 
-        cell.plantEl = null;
-        cell.stage = -1;
+    cell.plantEl = null;
+    cell.stage = -1;
 
-        inventory.WHEAT += 1;
+    inventory.WHEAT += 1;
 
-        console.log("HARVESTED +1 WHEAT", inventory);
+    renderInventory();
+    renderShop();
 
-        renderInventory();
-        renderShop();
-
-        return;
-    }
+    return;
+}
 });
 
 // ================= GROWTH =================
@@ -208,7 +218,11 @@ function renderInventory() {
     const el = document.getElementById("inventory");
     if (!el) return;
 
-    el.innerHTML = `🌾 Wheat: ${inventory.WHEAT}`;
+    el.innerHTML = `
+        🌱 Seeds: ${inventory.WHEAT_SEED}<br>
+        🌾 Wheat: ${inventory.WHEAT}<br>
+        💰 Gold: ${inventory.GOLD}
+    `;
 }
 
 // ================= SHOP =================
@@ -228,24 +242,44 @@ function renderShop() {
 
 function initShop() {
 
-    const btn = document.getElementById("sellBtn");
-    if (!btn) return;
+    const sellBtn = document.getElementById("sellBtn");
+    const buyBtn = document.getElementById("buySeedBtn");
 
-    btn.addEventListener("click", () => {
+    if (sellBtn) {
+        sellBtn.addEventListener("click", () => {
 
-        if (inventory.WHEAT <= 0) {
-            alert("No wheat!");
-            return;
-        }
+            if (inventory.WHEAT <= 0) {
+                alert("No wheat!");
+                return;
+            }
 
-        inventory.WHEAT -= 1;
-        inventory.GOLD += 5;
+            inventory.WHEAT -= 1;
+            inventory.GOLD += 5;
 
-        console.log("SOLD 1 WHEAT");
+            console.log("SOLD 1 WHEAT");
 
-        renderInventory();
-        renderShop();
-    });
+            renderInventory();
+            renderShop();
+        });
+    }
+
+    if (buyBtn) {
+        buyBtn.addEventListener("click", () => {
+
+            if (inventory.GOLD < 3) {
+                alert("Not enough gold!");
+                return;
+            }
+
+            inventory.GOLD -= 3;
+            inventory.WHEAT_SEED += 1;
+
+            console.log("BOUGHT SEED", inventory);
+
+            renderInventory();
+            renderShop();
+        });
+    }
 }
 
 // ================= START =================
