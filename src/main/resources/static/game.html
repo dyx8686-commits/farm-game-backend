@@ -359,7 +359,13 @@ document.addEventListener("keydown", (e) => {
     }
 
 });
+    function generateWorld() {
+    createShopBuilding(400, 220);
+}
 window.addEventListener("load", () => {
+
+    generateWorld(); // 🏪 создаём объект магазина на острове
+
     renderInventory();
     renderShop();
     initShop();
