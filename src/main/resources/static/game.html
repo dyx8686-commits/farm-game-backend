@@ -482,20 +482,17 @@ function startGrowth(key) {
 
 function growStep(key) {
 
-    const cell = plots.get(
-        Array.from(plots.entries()).find(([_, v]) =>
-            `${v.x}:${v.y}` === key
-        )?.[0]
-    );
-
+    const cell = plots.get(key);
     if (!cell || !cell.plantEl) return;
 
     cell.stage++;
 
-    const x = cell.x;
-    const y = cell.y;
-
-    const newPlant = createPlantVisual(x, y, cell.stage, cell.type);
+    const newPlant = createPlantVisual(
+        cell.x,
+        cell.y,
+        cell.stage,
+        cell.type
+    );
 
     cell.plantEl.remove();
     cell.plantEl = newPlant;
