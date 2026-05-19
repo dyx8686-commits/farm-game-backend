@@ -1,164 +1,37 @@
-// ================= FARM STATE =================
-let worldState = {
-    player: null,
-    inventory: {},
-    plants: [],
-    hotbar: Array(9).fill(null),
-    selectedHotbarSlot: 0,
-    plotsReady: false,
-    selectedItem: null
-};
+console.log("WORLD FARM LOADED");
 
-// ================= GLOBALS =================
+function renderPlants(player) {
 
+    const container = document.getElementById("plants");
 
-
-// ================= LOAD GAME DATA =================
-console.log("LOAD CALLED");
-async function load() {
-    try {
-    const res = await fetch(BASE + "/game/state?name=" + playerName);
-
-    if (!res.ok) {
-        console.error("SERVER ERROR:", res.status);
-        return;
-    }
-
-    const text = await res.text();
-
-    if (!text || text.trim() === "") {
-        console.warn("EMPTY RESPONSE");
-        return;
-    }
-
-    let data;
-    try {
-        data = JSON.parse(text);
-    } catch (e) {
-        console.error("INVALID JSON:", text);
-        return;
-    }
-
-        // сохраняем состояние мира
-        worldState.player = data;
-        worldState.plants = data.fields || [];
-
-        renderWorld();
-
-    } catch (err) {
-        console.error("LOAD ERROR", err);
-    }
-}
-
-
-// ================= WORLD RENDER =================
-console.log("RENDER WORLD CALLED");
-function renderWorld() {
-
-    renderPlants();
-
-    // ❗ ЖЁСТКАЯ ЗАЩИТА ОТ ДУБЛЯ
-    if (!worldState.plotsReady) {
-        createPlots();
-        worldState.plotsReady = true;
-    }
-}
-
-
-// ================= RENDER PLANTS =================
-function renderPlants() {
-
-    const c = document.getElementById("farmerPlants");
-    if (!c) return;
-
-    c.innerHTML = "";
-
-    const fields = worldState.plants || [];
-
-    for (let i = 0; i < 6; i++) {
-
-        const state = fields[i] || { stage: "EMPTY" };
-
-        const d = document.createElement("div");
-        d.className = "field";
-
-        d.style.position = "absolute";
-
-        d.style.left = (240 + (i % 3) * 70) + "px";
-        d.style.top = (180 + Math.floor(i / 3) * 70) + "px";
-
-        // EMPTY
-        if (state.stage === "EMPTY") {
-            d.innerText = "+";
-            d.onclick = () => plantSeed(i);
-        }
-
-        // SEED / GROWING
-        if (state.stage === "SEED" || state.stage === "GROWING") {
-            d.innerText = "🌱";
-        }
-
-        // READY
-        if (state.stage === "READY") {
-            d.innerText = "🌾";
-            d.onclick = async () => {
-                await fetch(BASE + "/game/harvest?name=" + playerName);
-                load();
-            };
-        }
-
-        c.appendChild(d);
-    }
-}
-
-
-// ================= CREATE PLOTS =================
-console.log("CREATE PLOTS CALLED");
-function createPlots() {
-
-    const container = document.getElementById("plots");
     if (!container) return;
-
-    // ❗ ВАЖНО: защита от повторного рендера
-    if (worldState.plotsReady) return;
 
     container.innerHTML = "";
 
-    const cols = 15;
-    const rows = 10;
+    const plots = window.plots || [];
 
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
+    plots.forEach((plot, index) => {
 
-            const cell = document.createElement("div");
-            cell.className = "plot";
+        const plant = document.createElement("div");
 
-            cell.style.position = "absolute";
-            cell.style.left = (x * 60) + "px";
-            cell.style.top = (y * 60) + "px";
+        plant.style.position = "absolute";
 
-            container.appendChild(cell);
-        }
-    }
+        plant.style.left = (plot.x * 60 + 12) + "px";
+        plant.style.top = (plot.y * 60 + 12) + "px";
 
-    worldState.plotsReady = true;
-}
+        plant.style.width = "36px";
+        plant.style.height = "36px";
 
-// ================= ACTION =================
-function plantSeed(index) {
+        plant.style.display = "flex";
+        plant.style.justifyContent = "center";
+        plant.style.alignItems = "center";
 
-    if (!window.selectedItem) {
-        alert("Выбери семена");
-        return;
-    }
+        plant.style.fontSize = "28px";
 
-    fetch(BASE + "/game/plant?name=" + playerName + "&item=" + window.selectedItem, {
-        method: "POST"
-    })
-    .then(() => {
-        load(); // источник истины
-    })
-    .catch(err => {
-        console.error("PLANT ERROR", err);
+        plant.style.pointerEvents = "auto";
+
+        plant.innerText = "🌱";
+
+        container.appendChild(plant);
     });
 }
