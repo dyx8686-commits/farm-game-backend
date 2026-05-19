@@ -260,8 +260,21 @@ body.mine {
 </div>
 
 <!-- UI -->
-<div id="inventoryModal"></div>
-<div id="shopModal"></div>
+<div id="inventoryModal" style="display:none;">
+    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+                background:#2c2c2c; padding:15px; border-radius:12px; color:white;">
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <div>Inventory</div>
+            <button onclick="closeInventory()">X</button>
+        </div>
+
+        <div id="inventoryContent"></div>
+    </div>
+</div>
+
+<div id="shopModal" style="display:none;"></div>
+
 <div id="hotbar" class="hotbar"></div>
 
 <!-- SCRIPTS -->
