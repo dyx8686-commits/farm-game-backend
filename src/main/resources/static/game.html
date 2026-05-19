@@ -133,11 +133,15 @@ const inventory = {
     GOLD: 0
 };
 
+let selectedSlot = "WHEAT_SEED";
+
 const island = document.getElementById("island");
 const GRID_SIZE = 60;
-
 const plots = new Map();
-    function createShopBuilding(x, y) {
+
+// ================= SHOP BUILDING =================
+
+function createShopBuilding(x, y) {
 
     const shop = document.createElement("div");
 
@@ -164,18 +168,17 @@ const plots = new Map();
 
     island.appendChild(shop);
 }
-   
-    let selectedSlot = "WHEAT_SEED";
 
-/*
-state:
--1 = empty
-0 = planted
-1 = grow
-2 = ready
-*/
+// ================= WORLD =================
+
+function generateWorld() {
+    createShopBuilding(400, 220);
+}
+
+// ================= PLANTS =================
 
 function createPlantVisual(x, y, stage) {
+
     const el = document.createElement("div");
 
     el.style.position = "absolute";
@@ -214,7 +217,6 @@ island.addEventListener("click", (e) => {
         island.appendChild(plotEl);
 
         plots.set(key, {
-            plotEl,
             plantEl: null,
             stage: -1
         });
@@ -227,43 +229,38 @@ island.addEventListener("click", (e) => {
     // PLANT
     if (cell.stage === -1) {
 
-    if (inventory.WHEAT_SEED <= 0) {
-        alert("No seeds!");
+        if (inventory.WHEAT_SEED <= 0) return;
+
+        inventory.WHEAT_SEED--;
+
+        const plant = createPlantVisual(x, y, 0);
+
+        island.appendChild(plant);
+
+        cell.plantEl = plant;
+        cell.stage = 0;
+
+        startGrowth(key);
+
+        renderInventory();
+        renderShop();
+
         return;
     }
-
-    inventory.WHEAT_SEED -= 1;
-
-    const plant = createPlantVisual(x, y, 0);
-
-    island.appendChild(plant);
-
-    cell.plantEl = plant;
-    cell.stage = 0;
-
-    startGrowth(key);
-
-    renderInventory();
-    renderShop();
-
-    return;
-}
 
     // HARVEST
     if (cell.stage === 2) {
 
-    cell.plantEl.remove();
+        cell.plantEl.remove();
 
-    cell.plantEl = null;
-    cell.stage = -1;
+        cell.plantEl = null;
+        cell.stage = -1;
 
-    inventory.WHEAT += 1;
+        inventory.WHEAT++;
 
-    renderInventory();
-    renderShop();
-
-    return;
-}
+        renderInventory();
+        renderShop();
+    }
 });
 
 // ================= GROWTH =================
@@ -299,28 +296,16 @@ function growStep(key) {
 function renderInventory() {
 
     const el = document.getElementById("inventory");
+    if (!el) return;
 
     el.innerHTML = `
-        <div class="slot ${selectedSlot === 'WHEAT_SEED' ? 'selected' : ''}">
-            🌱
-            <div>Seeds</div>
-            <div class="slot-count">${inventory.WHEAT_SEED}</div>
-        </div>
-
-        <div class="slot">
-            🌾
-            <div>Wheat</div>
-            <div class="slot-count">${inventory.WHEAT}</div>
-        </div>
-
-        <div class="slot">
-            💰
-            <div>Gold</div>
-            <div class="slot-count">${inventory.GOLD}</div>
-        </div>
+        🌱 Seeds: ${inventory.WHEAT_SEED}<br>
+        🌾 Wheat: ${inventory.WHEAT}<br>
+        💰 Gold: ${inventory.GOLD}
     `;
 }
-// ================= SHOP =================
+
+// ================= SHOP UI =================
 
 function renderShop() {
 
@@ -333,7 +318,7 @@ function renderShop() {
     `;
 }
 
-// ================= SELL BUTTON (SAFE INIT) =================
+// ================= SHOP BUTTONS =================
 
 function initShop() {
 
@@ -343,15 +328,10 @@ function initShop() {
     if (sellBtn) {
         sellBtn.addEventListener("click", () => {
 
-            if (inventory.WHEAT <= 0) {
-                alert("No wheat!");
-                return;
-            }
+            if (inventory.WHEAT <= 0) return;
 
-            inventory.WHEAT -= 1;
+            inventory.WHEAT--;
             inventory.GOLD += 5;
-
-            console.log("SOLD 1 WHEAT");
 
             renderInventory();
             renderShop();
@@ -361,34 +341,16 @@ function initShop() {
     if (buyBtn) {
         buyBtn.addEventListener("click", () => {
 
-            if (inventory.GOLD < 3) {
-                alert("Not enough gold!");
-                return;
-            }
+            if (inventory.GOLD < 3) return;
 
             inventory.GOLD -= 3;
-            inventory.WHEAT_SEED += 1;
-
-            console.log("BOUGHT SEED", inventory);
+            inventory.WHEAT_SEED++;
 
             renderInventory();
             renderShop();
         });
     }
 }
-
-// ================= START =================
-    
-// ================= BUILDINGS =================
-
-
-
-// ================= WORLD =================
-
-function generateWorld() {
-    console.log("WORLD LOADED");
-}
-
 
 // ================= INPUT =================
 
@@ -398,9 +360,7 @@ document.addEventListener("keydown", (e) => {
         selectedSlot = "WHEAT_SEED";
         renderInventory();
     }
-
 });
-
 
 // ================= START =================
 
@@ -412,9 +372,6 @@ window.addEventListener("load", () => {
     renderShop();
     initShop();
 });
-    function createShopBuilding() {
-    console.log("SHOP FUNCTION LOADED");
-}
 </script>
 </body>
 </html>
