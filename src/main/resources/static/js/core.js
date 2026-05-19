@@ -11,13 +11,11 @@ if (!playerName) {
 window.worldState = {
     player: null,
     inventory: {},
-    plants: [],
-    plotsReady: false,
-
-    selectedItem: null,
 
     hotbar: new Array(9).fill(null),
-    selectedHotbarSlot: 0
+    selectedHotbarSlot: 0,
+
+    selectedItem: null
 };
 
 // ================= THEME =================
@@ -29,17 +27,9 @@ function applyIslandTheme(player) {
 
     body.classList.remove("farm", "wood", "mine");
 
-    if (player.type === "FARMER") {
-        body.classList.add("farm");
-    }
-
-    if (player.type === "WOODCUTTER") {
-        body.classList.add("wood");
-    }
-
-    if (player.type === "MINER") {
-        body.classList.add("mine");
-    }
+    if (player.type === "FARMER") body.classList.add("farm");
+    if (player.type === "WOODCUTTER") body.classList.add("wood");
+    if (player.type === "MINER") body.classList.add("mine");
 }
 
 // ================= LOAD =================
@@ -49,44 +39,33 @@ async function load() {
     try {
 
         const res = await fetch(BASE + "/game/state?name=" + playerName);
-
-        if (!res.ok) {
-            console.error("LOAD FAILED");
-            return;
-        }
+        if (!res.ok) return;
 
         const player = await res.json();
-
-        // ================= WORLD STATE =================
 
         worldState.player = player;
         worldState.inventory = player.inventory || {};
 
-        // ================= THEME =================
-
         applyIslandTheme(player);
 
-        // ================= RENDER =================
-
-        render();
+        renderWorld();
+        renderInventory(worldState.inventory);
+        renderHotbar();
+        updatePlayer();
 
     } catch (err) {
-
         console.error("LOAD ERROR:", err);
     }
 }
 
-// ================= MAIN RENDER =================
+// ================= RENDER =================
 
-function render() {
+function renderWorld() {
 
-    renderWorld();
+    if (!worldState.player) return;
 
-    renderInventory(worldState.inventory);
-
-    renderHotbar();
-
-    updatePlayer();
+    createPlots(worldState.player.type);
+    renderPlants(worldState.player);
 }
 
 // ================= PLAYER =================
@@ -100,31 +79,32 @@ function updatePlayer() {
     p.style.top = "260px";
 }
 
-// ================= GRID =================
-
-
 // ================= PLOTS =================
-console.log("CREATE PLOTS");
+
 function createPlots(playerType) {
 
     const container = document.getElementById("plots");
-
     if (!container) return;
 
     container.innerHTML = "";
 
     window.plots = [];
 
-    const positions = getPlotPositions(playerType);
+    const positions = [
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+        { x: 4, y: 4 },
+        { x: 5, y: 4 },
+        { x: 6, y: 4 }
+    ];
 
     positions.forEach((pos, index) => {
 
         const cell = document.createElement("div");
-
         cell.className = "plot";
 
         cell.style.position = "absolute";
-
         cell.style.left = (pos.x * 60) + "px";
         cell.style.top = (pos.y * 60) + "px";
 
@@ -138,169 +118,35 @@ function createPlots(playerType) {
     });
 }
 
-function getPlotPositions(type) {
+// ================= PLANTS =================
 
-    return [
-        { x: 4, y: 3 },
-        { x: 5, y: 3 },
-        { x: 6, y: 3 },
+function renderPlants(player) {
 
-        { x: 4, y: 4 },
-        { x: 5, y: 4 },
-        { x: 6, y: 4 }
-    ];
-}
-
-// ================= WORLD ROUTER =================
-
-function renderWorld() {
-
-    if (!worldState.player) return;
-
-    console.log("RENDER WORLD");
-
-    createPlots(worldState.player.type);
-
-    renderPlants(worldState.player);
-}
-// ================= SHOP =================
-
-function showShopTab(tab) {
-
-    const container = document.getElementById("shopContent");
-
-    if (!container) {
-        console.error("shopContent NOT FOUND");
-        return;
-    }
+    const container = document.getElementById("plants");
+    if (!container) return;
 
     container.innerHTML = "";
 
-    let items = [];
+    window.plots.forEach(plot => {
 
-    if (tab === "buy") {
+        const plant = document.createElement("div");
 
-        items = [
-            { name: "WHEAT_SEEDS", icon: "🌾", price: 10 },
-            { name: "CORN_SEEDS", icon: "🌽", price: 15 },
-            { name: "POTATO_SEEDS", icon: "🥔", price: 12 }
-        ];
-    }
+        plant.style.position = "absolute";
+        plant.style.left = (plot.x * 60 + 12) + "px";
+        plant.style.top = (plot.y * 60 + 12) + "px";
 
-    if (tab === "sell") {
+        plant.style.fontSize = "26px";
+        plant.innerText = "🌱";
 
-        items = [
-            { name: "WHEAT", icon: "🌾", price: 5 },
-            { name: "CORN", icon: "🌽", price: 8 },
-            { name: "POTATO", icon: "🥔", price: 6 },
-            { name: "WOOD", icon: "🪵", price: 12 },
-            { name: "STONE", icon: "🪨", price: 15 }
-        ];
-    }
-
-    const grid = document.createElement("div");
-
-    grid.style.display = "grid";
-    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
-    grid.style.gap = "10px";
-    grid.style.padding = "10px";
-
-    container.appendChild(grid);
-
-    items.forEach(item => {
-
-        const card = document.createElement("div");
-
-        card.style.background = "#444";
-        card.style.padding = "14px";
-        card.style.borderRadius = "14px";
-        card.style.textAlign = "center";
-        card.style.cursor = "pointer";
-
-        card.innerHTML = `
-            <div style="font-size:42px;">
-                ${item.icon}
-            </div>
-
-            <div style="color:white; margin-top:10px;">
-                ${item.name}
-            </div>
-
-            <div style="color:gold; margin-top:6px;">
-                ${item.price} 💰
-            </div>
-        `;
-
-        card.onclick = async () => {
-
-            const gold = worldState.inventory?.GOLD ?? 0;
-
-            if (gold < item.price) {
-                alert("Not enough gold");
-                return;
-            }
-
-            try {
-
-                const res = await fetch(BASE + "/game/buy", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        name: playerName,
-                        item: item.name,
-                        price: item.price
-                    })
-                });
-
-                if (!res.ok) {
-                    alert("Buy failed");
-                    return;
-                }
-
-                await load();
-
-                showShopTab(tab);
-
-            } catch (err) {
-
-                console.error("BUY ERROR:", err);
-            }
-        };
-
-        grid.appendChild(card);
+        container.appendChild(plant);
     });
 }
-
-// ================= SHOP OPEN/CLOSE =================
-
-window.openShop = function () {
-
-    const modal = document.getElementById("shopModal");
-
-    if (!modal) return;
-
-    modal.style.display = "block";
-
-    showShopTab("buy");
-};
-
-window.closeShop = function () {
-
-    const modal = document.getElementById("shopModal");
-
-    if (!modal) return;
-
-    modal.style.display = "none";
-};
 
 // ================= HOTBAR =================
 
 function renderHotbar() {
 
     const bar = document.getElementById("hotbar");
-
     if (!bar) return;
 
     bar.innerHTML = "";
@@ -308,7 +154,6 @@ function renderHotbar() {
     for (let i = 0; i < 9; i++) {
 
         const slot = document.createElement("div");
-
         slot.className = "hotbar-slot";
 
         const item = worldState.hotbar[i];
@@ -320,9 +165,7 @@ function renderHotbar() {
         slot.innerText = item ? item : "";
 
         slot.onclick = () => {
-
             worldState.selectedHotbarSlot = i;
-
             renderHotbar();
         };
 
@@ -330,23 +173,11 @@ function renderHotbar() {
     }
 }
 
-document.addEventListener("keydown", (e) => {
-
-    const num = parseInt(e.key);
-
-    if (num >= 1 && num <= 9) {
-
-        worldState.selectedHotbarSlot = num - 1;
-
-        renderHotbar();
-    }
-});
-
 // ================= START =================
 
 window.addEventListener("load", () => {
 
-    createGrid();
+    console.log("CORE STARTED");
 
     updatePlayer();
 
