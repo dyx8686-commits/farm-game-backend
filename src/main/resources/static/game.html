@@ -76,6 +76,7 @@ const inventory = {
     WHEAT: 0,
     GOLD: 0
 };
+
 const island = document.getElementById("island");
 const GRID_SIZE = 60;
 
@@ -107,6 +108,8 @@ function createPlantVisual(x, y, stage) {
     return el;
 }
 
+// ================= CLICK =================
+
 island.addEventListener("click", (e) => {
 
     const rect = island.getBoundingClientRect();
@@ -116,7 +119,6 @@ island.addEventListener("click", (e) => {
 
     const key = x + ":" + y;
 
-    // ================= CREATE PLOT =================
     if (!plots.has(key)) {
 
         const plotEl = document.createElement("div");
@@ -137,7 +139,7 @@ island.addEventListener("click", (e) => {
 
     const cell = plots.get(key);
 
-    // ================= PLANT =================
+    // PLANT
     if (cell.stage === -1) {
 
         const plant = createPlantVisual(x, y, 0);
@@ -152,7 +154,7 @@ island.addEventListener("click", (e) => {
         return;
     }
 
-    // ================= HARVEST =================
+    // HARVEST
     if (cell.stage === 2) {
 
         cell.plantEl.remove();
@@ -171,7 +173,7 @@ island.addEventListener("click", (e) => {
     }
 });
 
-// ================= GROWTH SYSTEM =================
+// ================= GROWTH =================
 
 function startGrowth(key) {
     setTimeout(() => growStep(key), 3000);
@@ -199,7 +201,7 @@ function growStep(key) {
     }
 }
 
-// ================= INVENTORY UI =================
+// ================= INVENTORY =================
 
 function renderInventory() {
 
@@ -209,28 +211,9 @@ function renderInventory() {
     el.innerHTML = `🌾 Wheat: ${inventory.WHEAT}`;
 }
 
-// ждать загрузки DOM
-window.addEventListener("load", () => {
-    renderInventory();
-    renderShop();
-});
+// ================= SHOP =================
 
-    document.getElementById("sellBtn").addEventListener("click", () => {
-
-    if (inventory.WHEAT <= 0) {
-        alert("No wheat!");
-        return;
-    }
-
-    inventory.WHEAT -= 1;
-    inventory.GOLD += 5;
-
-    console.log("SOLD 1 WHEAT");
-
-    renderInventory();
-    renderShop();
-});
-    function renderShop() {
+function renderShop() {
 
     const el = document.getElementById("shopInfo");
     if (!el) return;
@@ -240,7 +223,38 @@ window.addEventListener("load", () => {
         💰 Gold: ${inventory.GOLD}
     `;
 }
-</script>
 
+// ================= SELL BUTTON (SAFE INIT) =================
+
+function initShop() {
+
+    const btn = document.getElementById("sellBtn");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+
+        if (inventory.WHEAT <= 0) {
+            alert("No wheat!");
+            return;
+        }
+
+        inventory.WHEAT -= 1;
+        inventory.GOLD += 5;
+
+        console.log("SOLD 1 WHEAT");
+
+        renderInventory();
+        renderShop();
+    });
+}
+
+// ================= START =================
+
+window.addEventListener("load", () => {
+    renderInventory();
+    renderShop();
+    initShop();
+});
+</script>
 </body>
 </html>
