@@ -54,12 +54,28 @@ html, body {
 
 <div id="island"></div>
 <div id="inventory"></div>
+<div id="shop" style="
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:rgba(0,0,0,0.6);
+    padding:10px;
+    border-radius:10px;
+    color:white;
+    z-index:200;
+">
+    <div>🛒 SHOP</div>
+
+    <button id="sellBtn">Sell Wheat (1 = 5 gold)</button>
+
+    <div id="shopInfo"></div>
+</div>
 
 <script>
 const inventory = {
-    WHEAT: 0
+    WHEAT: 0,
+    GOLD: 0
 };
-
 const island = document.getElementById("island");
 const GRID_SIZE = 60;
 
@@ -149,6 +165,7 @@ island.addEventListener("click", (e) => {
         console.log("HARVESTED +1 WHEAT", inventory);
 
         renderInventory();
+        renderShop();
 
         return;
     }
@@ -195,7 +212,34 @@ function renderInventory() {
 // ждать загрузки DOM
 window.addEventListener("load", () => {
     renderInventory();
+    renderShop();
 });
+
+    document.getElementById("sellBtn").addEventListener("click", () => {
+
+    if (inventory.WHEAT <= 0) {
+        alert("No wheat!");
+        return;
+    }
+
+    inventory.WHEAT -= 1;
+    inventory.GOLD += 5;
+
+    console.log("SOLD 1 WHEAT");
+
+    renderInventory();
+    renderShop();
+});
+    function renderShop() {
+
+    const el = document.getElementById("shopInfo");
+    if (!el) return;
+
+    el.innerHTML = `
+        🌾 Wheat: ${inventory.WHEAT}<br>
+        💰 Gold: ${inventory.GOLD}
+    `;
+}
 </script>
 
 </body>
