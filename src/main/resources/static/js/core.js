@@ -157,11 +157,11 @@ function renderWorld() {
 
     if (!worldState.player) return;
 
+    console.log("RENDER WORLD");
+
     createPlots(worldState.player.type);
 
-    if (worldState.player.type === "FARMER") {
-        renderPlants(worldState.player);
-    }
+    renderPlants(worldState.player);
 }
 // ================= SHOP =================
 
