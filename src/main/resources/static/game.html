@@ -33,14 +33,33 @@ html, body {
     border: 2px solid rgba(0,0,0,0.3);
     box-sizing: border-box;
 }
+    #inventory {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    background: rgba(0,0,0,0.5);
+    color: white;
+
+    padding: 10px;
+    border-radius: 10px;
+
+    font-family: Arial;
+    z-index: 100;
+}
 </style>
 </head>
 
 <body>
 
 <div id="island"></div>
+<div id="inventory"></div>
 
 <script>
+const inventory = {
+    WHEAT: 0
+};
+
 const island = document.getElementById("island");
 const GRID_SIZE = 60;
 
@@ -48,7 +67,8 @@ const plots = new Map();
 
 /*
 state:
-0 = seed
+-1 = empty
+0 = planted
 1 = grow
 2 = ready
 */
@@ -124,14 +144,19 @@ island.addEventListener("click", (e) => {
         cell.plantEl = null;
         cell.stage = -1;
 
-        console.log("HARVESTED", key);
+        inventory.WHEAT += 1;
+
+        console.log("HARVESTED +1 WHEAT", inventory);
+
+        renderInventory();
+
+        return;
     }
 });
 
 // ================= GROWTH SYSTEM =================
 
 function startGrowth(key) {
-
     setTimeout(() => growStep(key), 3000);
 }
 
@@ -156,6 +181,21 @@ function growStep(key) {
         setTimeout(() => growStep(key), 3000);
     }
 }
+
+// ================= INVENTORY UI =================
+
+function renderInventory() {
+
+    const el = document.getElementById("inventory");
+    if (!el) return;
+
+    el.innerHTML = `🌾 Wheat: ${inventory.WHEAT}`;
+}
+
+// ждать загрузки DOM
+window.addEventListener("load", () => {
+    renderInventory();
+});
 </script>
 
 </body>
