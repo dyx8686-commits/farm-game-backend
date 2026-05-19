@@ -24,15 +24,14 @@ html, body {
     position: relative;
 }
 
-/* ВИЗУАЛ КЛИКА */
-.click {
+/* ГРЯДКА */
+.plot {
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background: yellow;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
+    width: 60px;
+    height: 60px;
+    background: rgba(139, 69, 19, 0.9);
+    border: 2px solid rgba(0,0,0,0.3);
+    box-sizing: border-box;
 }
 </style>
 </head>
@@ -44,20 +43,34 @@ html, body {
 <script>
 const island = document.getElementById("island");
 
+const GRID_SIZE = 60;
+
+// хранение занятых клеток
+const plots = new Set();
+
 island.addEventListener("click", (e) => {
     const rect = island.getBoundingClientRect();
 
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
 
-    const dot = document.createElement("div");
-    dot.className = "click";
-    dot.style.left = x + "px";
-    dot.style.top = y + "px";
+    // привязка к сетке
+    x = Math.floor(x / GRID_SIZE) * GRID_SIZE;
+    y = Math.floor(y / GRID_SIZE) * GRID_SIZE;
 
-    island.appendChild(dot);
+    const key = x + ":" + y;
 
-    setTimeout(() => dot.remove(), 300);
+    // если уже есть — не ставим
+    if (plots.has(key)) return;
+
+    plots.add(key);
+
+    const plot = document.createElement("div");
+    plot.className = "plot";
+    plot.style.left = x + "px";
+    plot.style.top = y + "px";
+
+    island.appendChild(plot);
 });
 </script>
 
