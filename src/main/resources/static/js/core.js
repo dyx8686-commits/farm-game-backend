@@ -212,16 +212,7 @@ function renderWorld() {
     if (worldState.player.type === "FARMER") {
         renderPlants(worldState.player);
     }
-
-    if (worldState.player.type === "WOODCUTTER") {
-        renderTrees(worldState.player);
-    }
-
-    if (worldState.player.type === "MINER") {
-        renderStones(worldState.player);
-    }
 }
-
 // ================= SHOP =================
 
 function showShopTab(tab) {
