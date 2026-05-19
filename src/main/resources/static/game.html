@@ -172,6 +172,7 @@ POTATO: 0,
 };
 
 let selectedSlot = "WHEAT_SEED";
+    let hotbarSlots = ["WHEAT_SEED"];
 
 /* ================= WORLD ================= */
 
@@ -507,109 +508,116 @@ function growStep(key) {
     }
 }
 /* ================= INVENTORY ================= */
+function addToHotbar(item) {
 
+    hotbarSlots = hotbarSlots.filter(i => i !== item);
+
+    hotbarSlots.push(item);
+
+    if (hotbarSlots.length > 3) {
+        hotbarSlots.shift();
+    }
+}
 function renderInventory() {
 
     const el = document.getElementById("inventory");
     if (!el) return;
 
-    el.innerHTML = `
-        <!-- FARM -->
-        <div class="slot ${selectedSlot === 'WHEAT_SEED' ? 'selected' : ''}">
-            🌾 Wheat Seed (${inventory.WHEAT_SEED})
-        </div>
+    el.innerHTML = "";
 
-        <div class="slot ${selectedSlot === 'CARROT_SEED' ? 'selected' : ''}">
-            🥕 Carrot Seed (${inventory.CARROT_SEED})
-        </div>
+    hotbarSlots.forEach(item => {
 
-        <div class="slot ${selectedSlot === 'POTATO_SEED' ? 'selected' : ''}">
-            🥔 Potato Seed (${inventory.POTATO_SEED})
-        </div>
+        const div = document.createElement("div");
 
-        <!-- WOOD -->
-        <div class="slot ${selectedSlot === 'BIRCH_SEED' ? 'selected' : ''}">
-            🌳 Birch Seed (${inventory.BIRCH_SEED})
-        </div>
+        div.className = "slot";
 
-        <div class="slot ${selectedSlot === 'PINE_SEED' ? 'selected' : ''}">
-            🌲 Pine Seed (${inventory.PINE_SEED})
-        </div>
+        if (item === selectedSlot) {
+            div.classList.add("selected");
+        }
 
-        <div class="slot ${selectedSlot === 'OAK_SEED' ? 'selected' : ''}">
-            🌳 Oak Seed (${inventory.OAK_SEED})
-        </div>
+        let text = item;
 
-        <!-- MINE -->
-        <div class="slot ${selectedSlot === 'PICK_STONE' ? 'selected' : ''}">
-            🪨 Stone Pick
-        </div>
+        if (item === "WHEAT_SEED") {
+            text = `🌾 Wheat (${inventory.WHEAT_SEED})`;
+        }
 
-        <div class="slot ${selectedSlot === 'PICK_IRON' ? 'selected' : ''}">
-            ⛏ Iron Pick
-        </div>
+        if (item === "CARROT_SEED") {
+            text = `🥕 Carrot (${inventory.CARROT_SEED})`;
+        }
 
-        <div class="slot ${selectedSlot === 'PICK_COPPER' ? 'selected' : ''}">
-            🟠 Copper Pick
-        </div>
+        if (item === "POTATO_SEED") {
+            text = `🥔 Potato (${inventory.POTATO_SEED})`;
+        }
 
-        <!-- RESOURCES -->
-        <div class="slot">
-            🌾 ${inventory.WHEAT}
-        </div>
+        if (item === "BIRCH_SEED") {
+            text = `🌳 Birch (${inventory.BIRCH_SEED})`;
+        }
 
-        <div class="slot">
-            🥕 ${inventory.CARROT}
-        </div>
+        if (item === "PINE_SEED") {
+            text = `🌲 Pine (${inventory.PINE_SEED})`;
+        }
 
-        <div class="slot">
-            🥔 ${inventory.POTATO}
-        </div>
+        if (item === "OAK_SEED") {
+            text = `🌳 Oak (${inventory.OAK_SEED})`;
+        }
 
-        <div class="slot">
-            🪵 Wood
-        </div>
+        if (item === "PICK_STONE") {
+            text = `🪨 Stone`;
+        }
 
-        <div class="slot">
-            🪨 Stone
-        </div>
+        if (item === "PICK_IRON") {
+            text = `⛏ Iron`;
+        }
 
-        <div class="slot">
-            ⛓ Iron
-        </div>
+        if (item === "PICK_COPPER") {
+            text = `🟠 Copper`;
+        }
 
-        <div class="slot">
-            🟠 Copper
-        </div>
+        div.textContent = text;
 
-        <div class="slot">
-            💰 ${inventory.GOLD}
-        </div>
-    `;
+        el.appendChild(div);
+    });
 }
-
-
-
-
 /* ================= INPUT ================= */
+
+let hotbar = [
+    "WHEAT_SEED",
+    "CARROT_SEED",
+    "POTATO_SEED"
+];
 
 document.addEventListener("keydown", (e) => {
 
+    let newSlot = null;
 
     // FARM
-    if (e.key === "1") selectedSlot = "WHEAT_SEED";
-    if (e.key === "2") selectedSlot = "CARROT_SEED";
-    if (e.key === "3") selectedSlot = "POTATO_SEED";
+    if (e.key === "1") newSlot = "WHEAT_SEED";
+    if (e.key === "2") newSlot = "CARROT_SEED";
+    if (e.key === "3") newSlot = "POTATO_SEED";
 
     // WOOD
-    if (e.key === "4") selectedSlot = "BIRCH_SEED";
-    if (e.key === "5") selectedSlot = "PINE_SEED";
-    if (e.key === "6") selectedSlot = "OAK_SEED";
+    if (e.key === "4") newSlot = "BIRCH_SEED";
+    if (e.key === "5") newSlot = "PINE_SEED";
+    if (e.key === "6") newSlot = "OAK_SEED";
 
     // MINE
-    if (e.key === "7") selectedSlot = "PICK_STONE";
-    if (e.key === "8") selectedSlot = "PICK_IRON";
-    if (e.key === "9") selectedSlot = "PICK_COPPER";
+    if (e.key === "7") newSlot = "PICK_STONE";
+    if (e.key === "8") newSlot = "PICK_IRON";
+    if (e.key === "9") newSlot = "PICK_COPPER";
+
+    // HOTBAR UPDATE
+    if (newSlot) {
+
+        selectedSlot = newSlot;
+
+        hotbar = hotbar.filter(s => s !== newSlot);
+
+        hotbar.push(newSlot);
+
+        while (hotbar.length > 3) {
+            hotbar.shift();
+        }
+    }
 
     /* BIOMES */
     if (e.key === "f") currentBiome = BIOMES.FARM;
@@ -617,6 +625,8 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "h") currentBiome = BIOMES.MINE;
 
     generateWorld();
+    initPlots();
+
     renderInventory();
 });
 
