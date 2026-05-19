@@ -155,7 +155,36 @@ const GRID_SIZE = 60;
 const plots = new Map();
 
 /* ================= SHOP ================= */
-console.log("SHOP INIT");
+function initShop() {
+
+    const buyBtn = document.getElementById("buySeedBtn");
+    const sellBtn = document.getElementById("sellBtn");
+
+    if (buyBtn) {
+        buyBtn.addEventListener("click", () => {
+
+            if (inventory.GOLD < 3) return;
+
+            inventory.GOLD -= 3;
+            inventory.WHEAT_SEED += 1;
+
+            renderInventory();
+        });
+    }
+
+    if (sellBtn) {
+        sellBtn.addEventListener("click", () => {
+
+            if (inventory.WHEAT <= 0) return;
+
+            inventory.WHEAT -= 1;
+            inventory.GOLD += 5;
+
+            renderInventory();
+        });
+    }
+}
+    console.log("SHOP INIT");
 function toggleShop() {
     const el = document.getElementById("shopWindow");
     if (!el) return;
@@ -379,35 +408,7 @@ function renderInventory() {
     `;
 }
 
-    function initShop() {
 
-    const buyBtn = document.getElementById("buySeedBtn");
-    const sellBtn = document.getElementById("sellBtn");
-
-    if (buyBtn) {
-        buyBtn.addEventListener("click", () => {
-
-            if (inventory.GOLD < 3) return;
-
-            inventory.GOLD -= 3;
-            inventory.WHEAT_SEED += 1;
-
-            renderInventory();
-        });
-    }
-
-    if (sellBtn) {
-        sellBtn.addEventListener("click", () => {
-
-            if (inventory.WHEAT <= 0) return;
-
-            inventory.WHEAT -= 1;
-            inventory.GOLD += 5;
-
-            renderInventory();
-        });
-    }
-}
 
 /* ================= INPUT ================= */
 
