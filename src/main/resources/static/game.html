@@ -442,7 +442,7 @@ island.addEventListener("click", (e) => {
 
         startGrowth(`${x}:${y}`);
 
-        renderInventory();
+        renderInventory(); // или renderHotbar
         return;
     }
 
@@ -470,10 +470,9 @@ island.addEventListener("click", (e) => {
         target.stage = -1;
         target.type = null;
 
-        renderInventory();
+        renderInventory(); // или renderHotbar
     }
 });
-/* ================= GROWTH ================= */
 
 /* ================= GROWTH ================= */
 
