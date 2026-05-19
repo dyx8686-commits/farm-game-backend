@@ -126,11 +126,22 @@ html, body {
 </div>
 
 <script>
-    const WORLD_TYPES = {
-    FARM: "FARM",
-    WOOD: "WOOD",
-    MINE: "MINE"
+    const BIOMES = {
+    FARM: {
+        name: "FARM",
+        allowed: ["WHEAT"]
+    },
+    WOOD: {
+        name: "WOOD",
+        allowed: ["WOOD"]
+    },
+    MINE: {
+        name: "MINE",
+        allowed: ["STONE"]
+    }
 };
+
+let currentBiome = BIOMES.FARM;
 
 let currentWorld = WORLD_TYPES.FARM;
     
@@ -219,20 +230,23 @@ function sellWheat() {
 
 function generateWorld() {
 
-    island.innerHTML = ""; // очищаем остров
+    island.innerHTML = "";
 
-    if (currentWorld === WORLD_TYPES.FARM) {
+    // 🌾 FARM
+    if (currentBiome.name === "FARM") {
         createShopBuilding(400, 220);
     }
 
-    if (currentWorld === WORLD_TYPES.WOOD) {
+    // 🌲 WOOD
+    if (currentBiome.name === "WOOD") {
         createShopBuilding(400, 220);
-        // позже: пилорама + деревья
+        // позже: деревья + пилорама
     }
 
-    if (currentWorld === WORLD_TYPES.MINE) {
+    // ⛏ MINE
+    if (currentBiome.name === "MINE") {
         createShopBuilding(400, 220);
-        // позже: шахта + камни
+        // позже: камни + плавильня
     }
 }
 
@@ -268,7 +282,9 @@ island.addEventListener("click", (e) => {
 
     const key = x + ":" + y;
 
-    if (!plots.has(key)) {
+    if (currentBiome.name !== "FARM") return;
+
+if (!plots.has(key)) {
 
         const plotEl = document.createElement("div");
         plotEl.className = "plot";
@@ -439,13 +455,15 @@ document.addEventListener("keydown", (e) => {
 
     // ================= WORLDPUT =================
 
-    document.addEventListener("keydown", (e) => {
+   document.addEventListener("keydown", (e) => {
 
-    if (e.key === "F") currentWorld = WORLD_TYPES.FARM;
-    if (e.key === "V") currentWorld = WORLD_TYPES.WOOD;
-    if (e.key === "B") currentWorld = WORLD_TYPES.MINE;
+    if (e.key === "f") currentBiome = BIOMES.FARM;
+if (e.key === "g") currentBiome = BIOMES.WOOD;
+if (e.key === "h") currentBiome = BIOMES.MINE;
 
-    generateWorld(); // 🔥 перерисовка мира
+    generateWorld();
+
+    console.log("BIOME:", currentBiome.name);
 });
 
 // ================= START =================
