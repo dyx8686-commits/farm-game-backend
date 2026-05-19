@@ -35,17 +35,53 @@ html, body {
 }
     #inventory {
     position: absolute;
-    top: 10px;
-    left: 10px;
 
-    background: rgba(0,0,0,0.5);
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 10px;
+
+    background: rgba(0,0,0,0.4);
+
+    padding: 12px;
+    border-radius: 16px;
+
+    z-index: 500;
+}
+
+.slot {
+    width: 70px;
+    height: 70px;
+
+    background: rgba(255,255,255,0.15);
+
+    border: 3px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     color: white;
-
-    padding: 10px;
-    border-radius: 10px;
-
     font-family: Arial;
-    z-index: 100;
+
+    position: relative;
+}
+
+.slot.selected {
+    border: 3px solid gold;
+    transform: scale(1.05);
+}
+
+.slot-count {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+
+    font-size: 14px;
 }
 </style>
 </head>
@@ -83,6 +119,7 @@ const island = document.getElementById("island");
 const GRID_SIZE = 60;
 
 const plots = new Map();
+    let selectedSlot = "WHEAT_SEED";
 
 /*
 state:
@@ -216,15 +253,27 @@ function growStep(key) {
 function renderInventory() {
 
     const el = document.getElementById("inventory");
-    if (!el) return;
 
     el.innerHTML = `
-        🌱 Seeds: ${inventory.WHEAT_SEED}<br>
-        🌾 Wheat: ${inventory.WHEAT}<br>
-        💰 Gold: ${inventory.GOLD}
+        <div class="slot ${selectedSlot === 'WHEAT_SEED' ? 'selected' : ''}">
+            🌱
+            <div>Seeds</div>
+            <div class="slot-count">${inventory.WHEAT_SEED}</div>
+        </div>
+
+        <div class="slot">
+            🌾
+            <div>Wheat</div>
+            <div class="slot-count">${inventory.WHEAT}</div>
+        </div>
+
+        <div class="slot">
+            💰
+            <div>Gold</div>
+            <div class="slot-count">${inventory.GOLD}</div>
+        </div>
     `;
 }
-
 // ================= SHOP =================
 
 function renderShop() {
