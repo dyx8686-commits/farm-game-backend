@@ -1,101 +1,32 @@
-const BASE = "https://farm-game-backend-production.up.railway.app";
+console.log("CORE LOADED");
 
-let playerName = new URLSearchParams(window.location.search).get("name");
-
-if (!playerName) {
-    alert("Player name missing");
-}
-
-// ================= WORLD STATE =================
-
+// ================= STATE =================
 window.worldState = {
-    player: null,
+    player: {
+        type: "FARMER"
+    },
     inventory: {},
-    plants: [],
     hotbar: new Array(9).fill(null),
-    selectedHotbarSlot: 0,
-    selectedItem: null
+    selectedSlot: 0
 };
 
-// ================= LOAD =================
+// ================= START =================
+window.addEventListener("load", () => {
+    createWorld();
+    render();
+});
 
-async function load() {
-    try {
-        const res = await fetch(BASE + "/game/state?name=" + playerName);
-
-        if (!res.ok) return;
-
-        const text = await res.text();
-        if (!text) return;
-
-        const data = JSON.parse(text);
-
-        worldState.player = data;
-        worldState.inventory = data.inventory || {};
-
-        render();
-
-    } catch (err) {
-        console.error("LOAD ERROR:", err);
-    }
-}
-// ================= MAIN RENDER =================
-
-function render() {
-    if (!worldState.player) return;
-
-    renderWorld(worldState.player);
-    renderInventory(worldState.inventory);
-    renderHotbar();
-    updatePlayer();
-}
-
-// ================= THEME =================
-
-function applyIslandTheme(player) {
-    const body = document.body;
-
-    body.classList.remove("farm", "wood", "mine");
-
-    if (player.type === "FARMER") body.classList.add("farm");
-    if (player.type === "WOODCUTTER") body.classList.add("wood");
-    if (player.type === "MINER") body.classList.add("mine");
-}
-
-// ================= PLAYER =================
-
-function updatePlayer() {
-    const p = document.getElementById("player");
-    if (!p) return;
-
-    p.style.left = "420px";
-    p.style.top = "260px";
-}
-
-// ================= WORLD ROUTER =================
-
-function renderWorld(player) {
+// ================= WORLD =================
+function createWorld() {
     const container = document.getElementById("plots");
-    if (!container) return;
 
-    container.innerHTML = "";
+    const plots = [];
 
-    if (player.type === "FARMER") renderFarm(container);
-    if (player.type === "WOODCUTTER") renderWood(container);
-    if (player.type === "MINER") renderMine(container);
-}
-
-// ================= FARM =================
-
-function renderFarm(container) {
-    const plots = [
-        { x: 4, y: 3 },
-        { x: 5, y: 3 },
-        { x: 6, y: 3 },
-        { x: 4, y: 4 },
-        { x: 5, y: 4 },
-        { x: 6, y: 4 }
-    ];
+    for (let y = 3; y < 6; y++) {
+        for (let x = 4; x < 7; x++) {
+            plots.push({ x, y });
+        }
+    }
 
     plots.forEach(p => {
         const el = document.createElement("div");
@@ -106,128 +37,31 @@ function renderFarm(container) {
     });
 }
 
-// ================= WOOD =================
-
-function renderWood(container) {
-    const trees = [
-        { x: 3, y: 3 },
-        { x: 7, y: 4 }
-    ];
-
-    trees.forEach(t => {
-        const el = document.createElement("div");
-        el.className = "plot";
-        el.style.background = "#2e8b57";
-        el.style.left = t.x * 60 + "px";
-        el.style.top = t.y * 60 + "px";
-        container.appendChild(el);
-    });
-}
-
-// ================= MINE =================
-
-function renderMine(container) {
-    const stones = [
-        { x: 4, y: 2 },
-        { x: 6, y: 5 }
-    ];
-
-    stones.forEach(s => {
-        const el = document.createElement("div");
-        el.className = "plot";
-        el.style.background = "#666";
-        el.style.left = s.x * 60 + "px";
-        el.style.top = s.y * 60 + "px";
-        container.appendChild(el);
-    });
+// ================= RENDER =================
+function render() {
+    renderHotbar();
 }
 
 // ================= HOTBAR =================
-
 function renderHotbar() {
     const bar = document.getElementById("hotbar");
-    if (!bar) return;
-
     bar.innerHTML = "";
 
     for (let i = 0; i < 9; i++) {
         const slot = document.createElement("div");
         slot.className = "hotbar-slot";
 
-        const item = worldState.hotbar[i];
-
-        if (i === worldState.selectedHotbarSlot) {
-            slot.classList.add("active");
+        if (i === worldState.selectedSlot) {
+            slot.style.border = "2px solid gold";
         }
 
-        slot.innerText = item || "";
+        slot.innerText = worldState.hotbar[i] || "";
 
         slot.onclick = () => {
-            worldState.selectedHotbarSlot = i;
+            worldState.selectedSlot = i;
             renderHotbar();
         };
 
         bar.appendChild(slot);
     }
 }
-
-// ================= INVENTORY =================
-
-window.openInventory = function () {
-    const modal = document.getElementById("inventoryModal");
-    if (!modal) return;
-    modal.style.display = "block";
-};
-
-window.closeInventory = function () {
-    const modal = document.getElementById("inventoryModal");
-    if (!modal) return;
-
-    modal.style.display = "none";
-};
-window.getSelectedItem = function () {
-    return worldState.selectedItem;
-};
-
-function renderInventory(inv) {
-    const container = document.getElementById("inventoryContent");
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    const grid = document.createElement("div");
-    grid.className = "inventory-grid";
-    container.appendChild(grid);
-
-    Object.entries(inv || {}).forEach(([name, amount]) => {
-        if (amount <= 0) return;
-
-        const slot = document.createElement("div");
-        slot.className = "inv-item";
-
-        if (worldState.selectedItem === name) {
-            slot.classList.add("selected");
-        }
-
-        slot.innerHTML = `
-            <div>${name}</div>
-            <div class="inv-count">${amount}</div>
-        `;
-
-        slot.onclick = () => {
-            worldState.selectedItem =
-                worldState.selectedItem === name ? null : name;
-
-            renderInventory(inv);
-        };
-
-        grid.appendChild(slot);
-    });
-}
-
-// ================= START =================
-
-window.addEventListener("load", () => {
-    load();
-    setInterval(load, 3000);
-});
