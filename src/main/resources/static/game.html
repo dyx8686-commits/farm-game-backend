@@ -23,28 +23,17 @@ body {
 
 /* ================= WORLD ================= */
 
-.world {
+#game {
     width: 100vw;
     height: 100vh;
-    position: relative;
 
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* ================= GAME WRAPPER ================= */
+/* ================= ISLAND ================= */
 
-.game {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* ================= ISLAND (MAIN SCENE) ================= */
 #island {
     position: relative;
 
@@ -58,19 +47,57 @@ body {
     background: #6dbf4b;
 
     border: 8px solid #4e8f35;
-}   
+}
 
-/* ================= GRID (BACKGROUND LAYER) ================= */
+/* ================= UI ================= */
 
-.grid-cell {
+#ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    z-index: 100;
+}
+
+/* ================= LAYERS ================= */
+
+#plots {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 1;
+}
+
+#entities {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ================= PLOT ================= */
+
+.plot {
+    position: absolute;
+
     width: 60px;
     height: 60px;
 
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(139, 69, 19, 0.9);
 
+    border: 2px solid rgba(0,0,0,0.25);
+
+    border-radius: 6px;
     box-sizing: border-box;
-
-    background: transparent; /* ❗ ВАЖНО */
 }
 
 /* ================= PLAYER ================= */
@@ -91,46 +118,18 @@ body {
     z-index: 50;
 }
 
-/* ================= OBJECTS ================= */
+/* ================= PLANTS ================= */
 
-.farm, .shop {
+#plants {
     position: absolute;
-    border-radius: 10px;
-    cursor: pointer;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
 }
 
-/* SHOP (IMPORTANT FIXED LAYER) */
-
-.shop {
-    position: absolute;
-    top: 220px;
-    left: 200px;
-
-    width: 90px;
-    height: 90px;
-
-    background: gold;
-    border-radius: 12px;
-
-    cursor: pointer;
-
-    z-index: 15;
-}
-
-/* ================= WORLD OBJECTS ================= */
-
-.plantObj, .treeObj, .stoneObj {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    border-radius: 6px;
-}
-
-.plantObj { background: #3CB371; }
-.treeObj { background: #2e8b57; }
-.stoneObj { background: #666; }
-
-/* ================= THEME BACKGROUNDS ================= */
+/* ================= THEME ================= */
 
 body.farm {
     background: linear-gradient(#87CEEB, #4CAF50);
@@ -144,115 +143,7 @@ body.mine {
     background: linear-gradient(#666, #222);
 }
 
-/* ================= INVENTORY ================= */
-
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
-
-.inv-item {
-    width: 65px;
-    height: 65px;
-
-    background: #8b8b8b;
-    border: 3px solid #555;
-    border-radius: 6px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    cursor: pointer;
-    color: white;
-    font-size: 14px;
-}
-
-.inv-item:hover {
-    background: #999;
-}
-
-.inv-count {
-    position: absolute;
-    bottom: 4px;
-    right: 6px;
-
-    font-size: 12px;
-    color: white;
-}
-
-/* ================= SHOP GRID ================= */
-
-.shop-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.shop-item {
-    background: #8b8b8b;
-    border: 3px solid #555;
-    border-radius: 8px;
-
-    padding: 10px;
-    text-align: center;
-
-    cursor: pointer;
-    color: white;
-
-    transition: 0.2s;
-}
-
-.shop-item:hover {
-    transform: scale(1.03);
-    background: #999;
-}
-
-.shop-icon {
-    font-size: 32px;
-}
-
-.shop-price {
-    margin-top: 5px;
-    font-size: 13px;
-    color: gold;
-}
-
-/* ================= MODALS ================= */
-
-.shop-modal {
-    display: none;
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0,0,0,0.6);
-    z-index: 1000;
-}
-
-.shop-window {
-    width: 520px;
-    margin: 80px auto;
-
-    background: #2c2c2c;
-    padding: 15px;
-    border-radius: 14px;
-
-    color: white;
-}
-
-/* ================= SELECTED ================= */
-
-.selected {
-    border: 3px solid yellow !important;
-}
-    /* ================= HOTBAR ================= */
+/* ================= HOTBAR ================= */
 
 .hotbar {
     position: fixed;
@@ -285,7 +176,6 @@ body.mine {
     font-size: 12px;
 
     cursor: pointer;
-
     user-select: none;
 }
 
@@ -293,58 +183,57 @@ body.mine {
     border-color: gold;
     transform: scale(1.05);
 }
-    /* ================= ENTITIES ================= */
 
-#entities {
-    position: absolute;
+/* ================= INVENTORY ================= */
 
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-    z-index: 5;
-}
-    /* ================= PLOTS ================= */
-#plots {
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    z-index: 1;
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
 }
 
-    .plot {
-    position: absolute;
+.inv-item {
+    width: 65px;
+    height: 65px;
 
-    width: 60px;
-    height: 60px;
-
-    background: rgba(139, 69, 19, 0.9);
-
-    border: 2px solid rgba(0,0,0,0.25);
-
-    box-sizing: border-box;
-
+    background: #8b8b8b;
+    border: 3px solid #555;
     border-radius: 6px;
-}
-    /* ================= PLANTS ================= */
 
-#plants {
-    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+}
+
+/* ================= SHOP ================= */
+
+.shop-modal {
+    display: none;
+    position: fixed;
 
     top: 0;
     left: 0;
 
     width: 100%;
     height: 100%;
-    z-index: 1;
+
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+}
+
+.shop-window {
+    width: 520px;
+    margin: 80px auto;
+
+    background: #2c2c2c;
+    padding: 15px;
+    border-radius: 14px;
+
+    color: white;
 }
 
 </style>
@@ -360,10 +249,8 @@ body.mine {
             <button onclick="openShop()">🛒 Shop</button>
         </div>
 
-        <!-- ЕДИНСТВЕННАЯ ЗЕМЛЯ -->
         <div id="plots"></div>
 
-        <!-- ОБЪЕКТЫ -->
         <div id="entities">
             <div id="player"></div>
             <div id="plants"></div>
@@ -378,11 +265,7 @@ body.mine {
 <div id="hotbar" class="hotbar"></div>
 
 <!-- SCRIPTS -->
-<script src="/js/inventory.js"></script>
-<script src="/js/shop.js"></script>
-<script src="/js/world_farm.js"></script>
-<script src="/js/world_wood.js"></script>
-<script src="/js/world_mine.js"></script>
+<script src="/js/core.js"></script>
 
 </body>
 </html>
