@@ -102,54 +102,6 @@ function updatePlayer() {
 
 // ================= GRID =================
 
-const GRID_WIDTH = 15;
-const GRID_HEIGHT = 10;
-
-window.gridData = [];
-
-function createGrid() {
-
-    const grid = document.getElementById("grid");
-
-    if (!grid || grid.dataset.ready === "true") return;
-
-    grid.innerHTML = "";
-
-    window.gridData = [];
-
-    grid.dataset.ready = "true";
-
-    for (let y = 0; y < GRID_HEIGHT; y++) {
-
-        for (let x = 0; x < GRID_WIDTH; x++) {
-
-            const cell = document.createElement("div");
-
-            cell.className = "grid-cell";
-
-            cell.dataset.x = x;
-            cell.dataset.y = y;
-
-            cell.onclick = () => onCellClick(x, y, cell);
-
-            grid.appendChild(cell);
-
-            window.gridData.push({
-                x,
-                y,
-                element: cell,
-                occupied: false
-            });
-        }
-    }
-}
-
-function onCellClick(x, y, cell) {
-
-    console.log("CLICK CELL:", x, y);
-
-    cell.style.background = "rgba(255,255,0,0.3)";
-}
 
 // ================= PLOTS =================
 
@@ -171,19 +123,17 @@ function createPlots(playerType) {
 
         cell.className = "plot";
 
+        cell.style.position = "absolute";
+
         cell.style.left = (pos.x * 60) + "px";
         cell.style.top = (pos.y * 60) + "px";
-
-        cell.innerText = index + 1;
 
         container.appendChild(cell);
 
         window.plots.push({
             id: index,
-            type: playerType,
             x: pos.x,
-            y: pos.y,
-            state: null
+            y: pos.y
         });
     });
 }
