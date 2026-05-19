@@ -42,19 +42,34 @@ html, body {
 
 <script>
 const island = document.getElementById("island");
-
 const GRID_SIZE = 60;
 
-// грядки + растения
 const plots = new Map();
 
 /*
-key = "x:y"
-value = {
-    plotEl,
-    plantEl
-}
+state:
+0 = seed
+1 = grow
+2 = ready
 */
+
+function createPlantVisual(x, y, stage) {
+    const el = document.createElement("div");
+
+    el.style.position = "absolute";
+    el.style.width = "28px";
+    el.style.height = "28px";
+    el.style.borderRadius = "50%";
+    el.style.left = (x + 16) + "px";
+    el.style.top = (y + 16) + "px";
+    el.style.zIndex = "10";
+
+    if (stage === 0) el.style.background = "#2ecc71";
+    if (stage === 1) el.style.background = "#27ae60";
+    if (stage === 2) el.style.background = "#145a32";
+
+    return el;
+}
 
 island.addEventListener("click", (e) => {
 
@@ -76,38 +91,71 @@ island.addEventListener("click", (e) => {
         island.appendChild(plotEl);
 
         plots.set(key, {
-            plotEl: plotEl,
-            plantEl: null
+            plotEl,
+            plantEl: null,
+            stage: -1
         });
 
         return;
     }
 
-    // ================= PLANT =================
     const cell = plots.get(key);
 
-    if (cell.plantEl) return;
+    // ================= PLANT =================
+    if (cell.stage === -1) {
 
-    const plantEl = document.createElement("div");
+        const plant = createPlantVisual(x, y, 0);
 
-    plantEl.style.position = "absolute";
-    plantEl.style.width = "28px";
-    plantEl.style.height = "28px";
-    plantEl.style.background = "#2ecc71";
-    plantEl.style.border = "2px solid #145a32";
-    plantEl.style.borderRadius = "50%";
+        island.appendChild(plant);
 
-    plantEl.style.left = (x + 16) + "px";
-    plantEl.style.top = (y + 16) + "px";
+        cell.plantEl = plant;
+        cell.stage = 0;
 
-    plantEl.style.zIndex = "10";
+        startGrowth(key);
 
-    island.appendChild(plantEl);
+        return;
+    }
 
-    cell.plantEl = plantEl;
+    // ================= HARVEST =================
+    if (cell.stage === 2) {
 
-    console.log("PLANT CREATED AT", key);
+        cell.plantEl.remove();
+
+        cell.plantEl = null;
+        cell.stage = -1;
+
+        console.log("HARVESTED", key);
+    }
 });
+
+// ================= GROWTH SYSTEM =================
+
+function startGrowth(key) {
+
+    setTimeout(() => growStep(key), 3000);
+}
+
+function growStep(key) {
+
+    const cell = plots.get(key);
+    if (!cell || !cell.plantEl) return;
+
+    cell.stage++;
+
+    const x = parseInt(key.split(":")[0]);
+    const y = parseInt(key.split(":")[1]);
+
+    const newPlant = createPlantVisual(x, y, cell.stage);
+
+    cell.plantEl.remove();
+    cell.plantEl = newPlant;
+
+    island.appendChild(newPlant);
+
+    if (cell.stage < 2) {
+        setTimeout(() => growStep(key), 3000);
+    }
+}
 </script>
 
 </body>
