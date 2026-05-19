@@ -126,6 +126,14 @@ html, body {
 </div>
 
 <script>
+    const WORLD_TYPES = {
+    FARM: "FARM",
+    WOOD: "WOOD",
+    MINE: "MINE"
+};
+
+let currentWorld = WORLD_TYPES.FARM;
+    
 const inventory = {
     WHEAT_SEED: 0,
     WHEAT: 0,
@@ -210,7 +218,22 @@ function sellWheat() {
 // ================= WORLD =================
 
 function generateWorld() {
-    createShopBuilding(400, 220);
+
+    island.innerHTML = ""; // очищаем остров
+
+    if (currentWorld === WORLD_TYPES.FARM) {
+        createShopBuilding(400, 220);
+    }
+
+    if (currentWorld === WORLD_TYPES.WOOD) {
+        createShopBuilding(400, 220);
+        // позже: пилорама + деревья
+    }
+
+    if (currentWorld === WORLD_TYPES.MINE) {
+        createShopBuilding(400, 220);
+        // позже: шахта + камни
+    }
 }
 
 // ================= PLANTS =================
@@ -412,6 +435,17 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "3") selectedSlot = "GOLD";
 
     renderInventory();
+});
+
+    // ================= WORLDPUT =================
+
+    document.addEventListener("keydown", (e) => {
+
+    if (e.key === "F") currentWorld = WORLD_TYPES.FARM;
+    if (e.key === "V") currentWorld = WORLD_TYPES.WOOD;
+    if (e.key === "B") currentWorld = WORLD_TYPES.MINE;
+
+    generateWorld(); // 🔥 перерисовка мира
 });
 
 // ================= START =================
