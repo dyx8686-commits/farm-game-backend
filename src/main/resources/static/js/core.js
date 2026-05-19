@@ -304,7 +304,32 @@ function growStep(key) {
 }
 
 // ================= PLANT VISUAL =================
+function createShopBuilding(x, y) {
+    const shop = document.createElement("div");
 
+    shop.style.position = "absolute";
+    shop.style.left = x + "px";
+    shop.style.top = y + "px";
+
+    shop.style.width = "60px";
+    shop.style.height = "60px";
+
+    shop.style.display = "flex";
+    shop.style.alignItems = "center";
+    shop.style.justifyContent = "center";
+
+    shop.style.fontSize = "42px";
+    shop.style.cursor = "pointer";
+
+    shop.innerHTML = "🏪";
+
+    shop.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleShop();
+    });
+
+    island.appendChild(shop);
+}
 function createPlantVisual(x, y, stage, type) {
 
     const el = document.createElement("div");
