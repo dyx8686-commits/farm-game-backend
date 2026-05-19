@@ -5,9 +5,6 @@
 <title>Farm Game</title>
 
 <style>
-
-/* ================= BASE ================= */
-
 html, body {
     margin: 0;
     padding: 0;
@@ -15,275 +12,73 @@ html, body {
     height: 100%;
     overflow: hidden;
     font-family: Arial;
-}
-
-body {
     background: #4fc3f7;
 }
 
-/* ================= WORLD ================= */
-
-#game {
-    width: 100vw;
-    height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* ================= ISLAND ================= */
-
 #island {
     position: relative;
-
     width: 900px;
     height: 500px;
-
-    overflow: hidden;
-
-    border-radius: 30px;
-
+    margin: auto;
+    margin-top: 40px;
     background: #6dbf4b;
-
-    border: 8px solid #4e8f35;
+    border: 6px solid #3e7d2f;
+    border-radius: 20px;
 }
-
-/* ================= UI ================= */
-
-#ui {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-
-    z-index: 100;
-}
-
-/* ================= LAYERS ================= */
 
 #plots {
     position: absolute;
-    top: 0;
-    left: 0;
-
     width: 100%;
     height: 100%;
-
-    z-index: 1;
 }
-
-#entities {
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-    z-index: 5;
-}
-
-/* ================= PLOT ================= */
 
 .plot {
     position: absolute;
-
     width: 60px;
     height: 60px;
-
-    background: rgba(139, 69, 19, 0.9);
-
-    border: 2px solid rgba(0,0,0,0.25);
-
-    border-radius: 6px;
-    box-sizing: border-box;
+    background: rgba(139,69,19,0.9);
+    border: 1px solid #000;
 }
-
-/* ================= PLAYER ================= */
 
 #player {
     position: absolute;
-
     width: 30px;
     height: 30px;
-
     background: red;
-
-    border-radius: 6px;
-
     left: 420px;
     top: 260px;
-
-    z-index: 50;
 }
 
-/* ================= PLANTS ================= */
-
-#plants {
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-}
-
-/* ================= THEME ================= */
-
-body.farm {
-    background: linear-gradient(#87CEEB, #4CAF50);
-}
-
-body.wood {
-    background: linear-gradient(#1f3d1f, #0f1f0f);
-}
-
-body.mine {
-    background: linear-gradient(#666, #222);
-}
-
-/* ================= HOTBAR ================= */
-
-.hotbar {
+#hotbar {
     position: fixed;
-
     bottom: 20px;
     left: 50%;
-
     transform: translateX(-50%);
-
     display: flex;
-    gap: 8px;
-
-    z-index: 999;
+    gap: 6px;
 }
 
 .hotbar-slot {
-    width: 60px;
-    height: 60px;
-
-    background: rgba(40,40,40,0.95);
-
-    border: 3px solid #555;
-    border-radius: 10px;
-
+    width: 50px;
+    height: 50px;
+    background: #333;
+    color: white;
     display: flex;
-    justify-content: center;
     align-items: center;
-
-    color: white;
-    font-size: 12px;
-
-    cursor: pointer;
-    user-select: none;
-}
-
-.hotbar-slot.active {
-    border-color: gold;
-    transform: scale(1.05);
-}
-
-/* ================= INVENTORY ================= */
-
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
-
-.inv-item {
-    width: 65px;
-    height: 65px;
-
-    background: #8b8b8b;
-    border: 3px solid #555;
-    border-radius: 6px;
-
-    display: flex;
     justify-content: center;
-    align-items: center;
-
-    cursor: pointer;
-    color: white;
-    font-size: 14px;
 }
-
-/* ================= SHOP ================= */
-
-.shop-modal {
-    display: none;
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0,0,0,0.6);
-    z-index: 1000;
-}
-
-.shop-window {
-    width: 520px;
-    margin: 80px auto;
-
-    background: #2c2c2c;
-    padding: 15px;
-    border-radius: 14px;
-
-    color: white;
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="game">
-    <div id="island">
-
-        <div id="ui">
-            <button onclick="openInventory()">🎒 Inventory</button>
-            <button onclick="openShop()">🛒 Shop</button>
-        </div>
-
-        <div id="plots"></div>
-
-        <div id="entities">
-            <div id="player"></div>
-            <div id="plants"></div>
-        </div>
-
-    </div>
+<div id="island">
+    <div id="plots"></div>
+    <div id="player"></div>
 </div>
 
-<!-- UI -->
-<div id="inventoryModal" style="display:none;">
-    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-                background:#2c2c2c; padding:15px; border-radius:12px; color:white;">
+<div id="hotbar"></div>
 
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <div>Inventory</div>
-            <button onclick="closeInventory()">X</button>
-        </div>
-
-        <div id="inventoryContent"></div>
-    </div>
-</div>
-
-<div id="shopModal" style="display:none;"></div>
-
-<div id="hotbar" class="hotbar"></div>
-
-<!-- SCRIPTS -->
-<script>
-console.log("GAME HTML LOADED");
-</script>
-<script>
-alert("DEPLOY IS REALLY NEW");
-</script>
 <script src="/js/core.js"></script>
 
 </body>
