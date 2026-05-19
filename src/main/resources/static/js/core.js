@@ -1,4 +1,3 @@
-console.log("CORE JS LOADED");
 const BASE = "https://farm-game-backend-production.up.railway.app";
 
 let playerName = new URLSearchParams(window.location.search).get("name");
@@ -12,61 +11,59 @@ if (!playerName) {
 window.worldState = {
     player: null,
     inventory: {},
-
+    plants: [],
     hotbar: new Array(9).fill(null),
     selectedHotbarSlot: 0,
-
     selectedItem: null
 };
-
-// ================= THEME =================
-
-function applyIslandTheme(player) {
-
-    const body = document.getElementById("gameBody");
-    if (!body) return;
-
-    body.classList.remove("farm", "wood", "mine");
-
-    if (player.type === "FARMER") body.classList.add("farm");
-    if (player.type === "WOODCUTTER") body.classList.add("wood");
-    if (player.type === "MINER") body.classList.add("mine");
-}
 
 // ================= LOAD =================
 
 async function load() {
-
     try {
-
         const res = await fetch(BASE + "/game/state?name=" + playerName);
+
         if (!res.ok) return;
 
-        const player = await res.json();
+        const data = await res.json();
 
-        worldState.player = player;
-        worldState.inventory = player.inventory || {};
+        worldState.player = data;
+        worldState.inventory = data.inventory || {};
 
-        applyIslandTheme(player);
-
-        renderWorld();
-        renderInventory(worldState.inventory);
-        renderHotbar();
-        updatePlayer();
+        render();
 
     } catch (err) {
         console.error("LOAD ERROR:", err);
     }
 }
 
-// ================= RENDER =================
+// ================= MAIN RENDER =================
 
-function renderWorld() {
-
+function render() {
     if (!worldState.player) return;
 
-    createPlots(worldState.player.type);
-    renderPlants(worldState.player);
+    applyIslandTheme(worldState.player);
+
+    renderWorld(worldState.player);
+
+    renderInventory(worldState.inventory);
+
+    renderHotbar();
+
+    updatePlayer();
+}
+
+// ================= THEME =================
+
+function applyIslandTheme(player) {
+
+    const body = document.body;
+
+    body.classList.remove("farm", "wood", "mine");
+
+    if (player.type === "FARMER") body.classList.add("farm");
+    if (player.type === "WOODCUTTER") body.classList.add("wood");
+    if (player.type === "MINER") body.classList.add("mine");
 }
 
 // ================= PLAYER =================
@@ -80,24 +77,33 @@ function updatePlayer() {
     p.style.top = "260px";
 }
 
-// ================= PLOTS =================
+// ================= WORLD ROUTER =================
 
-function createPlots(playerType) {
-
-    console.log("CREATE PLOTS CALLED");
+function renderWorld(player) {
 
     const container = document.getElementById("plots");
-
-    if (!container) {
-        console.error("NO #plots FOUND");
-        return;
-    }
+    if (!container) return;
 
     container.innerHTML = "";
 
-    window.plots = [];
+    if (player.type === "FARMER") {
+        renderFarm(container);
+    }
 
-    const positions = [
+    if (player.type === "WOODCUTTER") {
+        renderWood(container);
+    }
+
+    if (player.type === "MINER") {
+        renderMine(container);
+    }
+}
+
+// ================= FARM =================
+
+function renderFarm(container) {
+
+    const plots = [
         { x: 4, y: 3 },
         { x: 5, y: 3 },
         { x: 6, y: 3 },
@@ -106,49 +112,50 @@ function createPlots(playerType) {
         { x: 6, y: 4 }
     ];
 
-    positions.forEach((pos, index) => {
-
-        const cell = document.createElement("div");
-
-        cell.className = "plot";
-
-        cell.style.position = "absolute";
-        cell.style.left = (pos.x * 60) + "px";
-        cell.style.top = (pos.y * 60) + "px";
-
-        cell.style.width = "60px";
-        cell.style.height = "60px";
-
-        cell.style.background = "rgba(139, 69, 19, 0.9)";
-        cell.style.border = "2px solid black";
-
-        container.appendChild(cell);
-
-        window.plots.push(pos);
+    plots.forEach(p => {
+        const el = document.createElement("div");
+        el.className = "plot";
+        el.style.left = p.x * 60 + "px";
+        el.style.top = p.y * 60 + "px";
+        container.appendChild(el);
     });
 }
 
-// ================= PLANTS =================
+// ================= WOOD =================
 
-function renderPlants(player) {
+function renderWood(container) {
 
-    const container = document.getElementById("plants");
-    if (!container) return;
+    const trees = [
+        { x: 3, y: 3 },
+        { x: 7, y: 4 }
+    ];
 
-    container.innerHTML = "";
+    trees.forEach(t => {
+        const el = document.createElement("div");
+        el.className = "plot";
+        el.style.background = "#2e8b57";
+        el.style.left = t.x * 60 + "px";
+        el.style.top = t.y * 60 + "px";
+        container.appendChild(el);
+    });
+}
 
-    window.plots.forEach(plot => {
+// ================= MINE =================
 
-        const plant = document.createElement("div");
+function renderMine(container) {
 
-        plant.style.position = "absolute";
-        plant.style.left = (plot.x * 60 + 12) + "px";
-        plant.style.top = (plot.y * 60 + 12) + "px";
+    const stones = [
+        { x: 4, y: 2 },
+        { x: 6, y: 5 }
+    ];
 
-        plant.style.fontSize = "26px";
-        plant.innerText = "🌱";
-
-        container.appendChild(plant);
+    stones.forEach(s => {
+        const el = document.createElement("div");
+        el.className = "plot";
+        el.style.background = "#666";
+        el.style.left = s.x * 60 + "px";
+        el.style.top = s.y * 60 + "px";
+        container.appendChild(el);
     });
 }
 
@@ -172,7 +179,7 @@ function renderHotbar() {
             slot.classList.add("active");
         }
 
-        slot.innerText = item ? item : "";
+        slot.innerText = item || "";
 
         slot.onclick = () => {
             worldState.selectedHotbarSlot = i;
@@ -183,15 +190,16 @@ function renderHotbar() {
     }
 }
 
+// ================= INVENTORY (stub, если у тебя уже есть UI — оставляем) =================
+
+function renderInventory(inv) {
+    // если inventory.js есть — он перезапишет это
+    console.log("inventory render", inv);
+}
+
 // ================= START =================
 
 window.addEventListener("load", () => {
-
-    console.log("CORE STARTED");
-
-    updatePlayer();
-
     load();
-
     setInterval(load, 3000);
 });
