@@ -104,7 +104,7 @@ function updatePlayer() {
 
 
 // ================= PLOTS =================
-
+console.log("CREATE PLOTS");
 function createPlots(playerType) {
 
     const container = document.getElementById("plots");
