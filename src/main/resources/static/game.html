@@ -475,19 +475,26 @@ island.addEventListener("click", (e) => {
 });
 /* ================= GROWTH ================= */
 
+/* ================= GROWTH ================= */
+
 function startGrowth(key) {
     setTimeout(() => growStep(key), 3000);
 }
 
 function growStep(key) {
 
-    const cell = plots.get(key);
+    const cell = plots.get(
+        Array.from(plots.entries()).find(([_, v]) =>
+            `${v.x}:${v.y}` === key
+        )?.[0]
+    );
+
     if (!cell || !cell.plantEl) return;
 
     cell.stage++;
 
-    const x = parseInt(key.split(":")[0]);
-    const y = parseInt(key.split(":")[1]);
+    const x = cell.x;
+    const y = cell.y;
 
     const newPlant = createPlantVisual(x, y, cell.stage, cell.type);
 
@@ -500,7 +507,6 @@ function growStep(key) {
         setTimeout(() => growStep(key), 3000);
     }
 }
-
 /* ================= INVENTORY ================= */
 
 function renderInventory() {
