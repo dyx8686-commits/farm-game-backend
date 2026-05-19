@@ -126,44 +126,48 @@ html, body {
 </div>
 
 <script>
-    const BIOMES = {
-    FARM: {
-        name: "FARM",
-        allowed: ["WHEAT"]
-    },
-    WOOD: {
-        name: "WOOD",
-        allowed: ["WOOD"]
-    },
-    MINE: {
-        name: "MINE",
-        allowed: ["STONE"]
-    }
+
+/* ================= BIOMES ================= */
+
+const BIOMES = {
+    FARM: "FARM",
+    WOOD: "WOOD",
+    MINE: "MINE"
 };
 
 let currentBiome = BIOMES.FARM;
 
-let currentWorld = WORLD_TYPES.FARM;
-    
+/* ================= INVENTORY ================= */
+
 const inventory = {
     WHEAT_SEED: 0,
     WHEAT: 0,
+
+    WOOD_SEED: 0,
+    WOOD: 0,
+
     GOLD: 0
 };
 
 let selectedSlot = "WHEAT_SEED";
 
-const hotbarSlots = [
-    "WHEAT_SEED",
-    "WHEAT",
-    "GOLD"
-];
+/* ================= WORLD ================= */
 
 const island = document.getElementById("island");
 const GRID_SIZE = 60;
+
 const plots = new Map();
 
-// ================= SHOP BUILDING =================
+/* ================= SHOP ================= */
+
+function toggleShop() {
+    const el = document.getElementById("shopWindow");
+    if (!el) return;
+
+    el.style.display = el.style.display === "block" ? "none" : "block";
+}
+
+/* ================= BUILDINGS ================= */
 
 function createShopBuilding(x, y) {
 
@@ -187,72 +191,37 @@ function createShopBuilding(x, y) {
 
     shop.addEventListener("click", (e) => {
         e.stopPropagation();
-        toggleShop(); // теперь это основной вход
+        toggleShop();
     });
 
     island.appendChild(shop);
 }
-    let shopOpen = false;
 
-function toggleShop() {
-    const el = document.getElementById("shopWindow");
-    if (!el) return;
-
-    el.style.display = "block";
-}
-    function closeShop() {
-    const el = document.getElementById("shopWindow");
-    if (!el) return;
-
-    el.style.display = "none";
-}
-    function buySeed() {
-
-    if (inventory.GOLD < 3) return;
-
-    inventory.GOLD -= 3;
-    inventory.WHEAT_SEED++;
-
-    renderInventory();
-}
-
-function sellWheat() {
-
-    if (inventory.WHEAT <= 0) return;
-
-    inventory.WHEAT--;
-    inventory.GOLD += 5;
-
-    renderInventory();
-}
-
-// ================= WORLD =================
+/* ================= WORLD GENERATION ================= */
 
 function generateWorld() {
 
     island.innerHTML = "";
+    plots.clear();
 
-    // 🌾 FARM
-    if (currentBiome.name === "FARM") {
-        createShopBuilding(400, 220);
+    createShopBuilding(400, 220);
+
+    if (currentBiome === BIOMES.FARM) {
+        console.log("FARM BIOME");
     }
 
-    // 🌲 WOOD
-    if (currentBiome.name === "WOOD") {
-        createShopBuilding(400, 220);
-        // позже: деревья + пилорама
+    if (currentBiome === BIOMES.WOOD) {
+        console.log("WOOD BIOME");
     }
 
-    // ⛏ MINE
-    if (currentBiome.name === "MINE") {
-        createShopBuilding(400, 220);
-        // позже: камни + плавильня
+    if (currentBiome === BIOMES.MINE) {
+        console.log("MINE BIOME");
     }
 }
 
-// ================= PLANTS =================
+/* ================= PLANTS ================= */
 
-function createPlantVisual(x, y, stage) {
+function createPlantVisual(x, y, stage, type) {
 
     const el = document.createElement("div");
 
@@ -260,18 +229,29 @@ function createPlantVisual(x, y, stage) {
     el.style.width = "28px";
     el.style.height = "28px";
     el.style.borderRadius = "50%";
+
     el.style.left = (x + 16) + "px";
     el.style.top = (y + 16) + "px";
     el.style.zIndex = "10";
 
-    if (stage === 0) el.style.background = "#2ecc71";
-    if (stage === 1) el.style.background = "#27ae60";
-    if (stage === 2) el.style.background = "#145a32";
+    /* FARM PLANTS */
+    if (type === "WHEAT") {
+        if (stage === 0) el.style.background = "#2ecc71";
+        if (stage === 1) el.style.background = "#27ae60";
+        if (stage === 2) el.style.background = "#145a32";
+    }
+
+    /* WOOD PLANTS */
+    if (type === "WOOD") {
+        if (stage === 0) el.style.background = "#8d6e63";
+        if (stage === 1) el.style.background = "#6d4c41";
+        if (stage === 2) el.style.background = "#4e342e";
+    }
 
     return el;
 }
 
-// ================= CLICK =================
+/* ================= CLICK SYSTEM ================= */
 
 island.addEventListener("click", (e) => {
 
@@ -282,9 +262,10 @@ island.addEventListener("click", (e) => {
 
     const key = x + ":" + y;
 
-    if (currentBiome.name !== "FARM") return;
+    /* ONLY FARM ALLOWS PLANTS */
+    if (currentBiome !== BIOMES.FARM) return;
 
-if (!plots.has(key)) {
+    if (!plots.has(key)) {
 
         const plotEl = document.createElement("div");
         plotEl.className = "plot";
@@ -295,7 +276,8 @@ if (!plots.has(key)) {
 
         plots.set(key, {
             plantEl: null,
-            stage: -1
+            stage: -1,
+            type: null
         });
 
         return;
@@ -303,44 +285,51 @@ if (!plots.has(key)) {
 
     const cell = plots.get(key);
 
-    // PLANT
+    /* PLANT */
     if (cell.stage === -1) {
 
-        if (inventory.WHEAT_SEED <= 0) return;
+        const seed = selectedSlot;
 
-        inventory.WHEAT_SEED--;
+        if (!seed.includes("_SEED")) return;
+        if (inventory[seed] <= 0) return;
 
-        const plant = createPlantVisual(x, y, 0);
+        inventory[seed]--;
+
+        const type = seed.replace("_SEED", "");
+
+        const plant = createPlantVisual(x, y, 0, type);
 
         island.appendChild(plant);
 
         cell.plantEl = plant;
         cell.stage = 0;
+        cell.type = type;
 
         startGrowth(key);
 
         renderInventory();
-        renderShop();
-
         return;
     }
 
-    // HARVEST
+    /* HARVEST */
     if (cell.stage === 2) {
+
+        const type = cell.type;
+
+        if (type === "WHEAT") inventory.WHEAT++;
+        if (type === "WOOD") inventory.WOOD++;
 
         cell.plantEl.remove();
 
         cell.plantEl = null;
         cell.stage = -1;
-
-        inventory.WHEAT++;
+        cell.type = null;
 
         renderInventory();
-        renderShop();
     }
 });
 
-// ================= GROWTH =================
+/* ================= GROWTH ================= */
 
 function startGrowth(key) {
     setTimeout(() => growStep(key), 3000);
@@ -356,7 +345,7 @@ function growStep(key) {
     const x = parseInt(key.split(":")[0]);
     const y = parseInt(key.split(":")[1]);
 
-    const newPlant = createPlantVisual(x, y, cell.stage);
+    const newPlant = createPlantVisual(x, y, cell.stage, cell.type);
 
     cell.plantEl.remove();
     cell.plantEl = newPlant;
@@ -368,7 +357,7 @@ function growStep(key) {
     }
 }
 
-// ================= INVENTORY =================
+/* ================= INVENTORY ================= */
 
 function renderInventory() {
 
@@ -377,105 +366,49 @@ function renderInventory() {
 
     el.innerHTML = `
         <div class="slot ${selectedSlot === 'WHEAT_SEED' ? 'selected' : ''}">
-    🌱
-    <div>Seeds</div>
-    <div class="slot-count">${inventory.WHEAT_SEED}</div>
-</div>
+            🌱 ${inventory.WHEAT_SEED}
+        </div>
 
-<div class="slot ${selectedSlot === 'WHEAT' ? 'selected' : ''}">
-    🌾
-    <div>Wheat</div>
-    <div class="slot-count">${inventory.WHEAT}</div>
-</div>
+        <div class="slot ${selectedSlot === 'WHEAT' ? 'selected' : ''}">
+            🌾 ${inventory.WHEAT}
+        </div>
 
-<div class="slot ${selectedSlot === 'GOLD' ? 'selected' : ''}">
-    💰
-    <div>Gold</div>
-    <div class="slot-count">${inventory.GOLD}</div>
-</div>
-    `;
-}
-// ================= SHOP UI =================
+        <div class="slot ${selectedSlot === 'WOOD' ? 'selected' : ''}">
+            🪵 ${inventory.WOOD}
+        </div>
 
-function renderShop() {
-
-    const el = document.getElementById("shopInfo");
-    if (!el) return;
-
-    el.innerHTML = `
-        🌾 Wheat: ${inventory.WHEAT}<br>
-        💰 Gold: ${inventory.GOLD}
+        <div class="slot">
+            💰 ${inventory.GOLD}
+        </div>
     `;
 }
 
-// ================= SHOP BUTTONS =================
-
-function initShop() {
-
-    const sellBtn = document.getElementById("sellBtn");
-    const buyBtn = document.getElementById("buySeedBtn");
-
-    if (sellBtn) {
-        sellBtn.addEventListener("click", () => {
-
-            if (inventory.WHEAT <= 0) return;
-
-            inventory.WHEAT--;
-            inventory.GOLD += 5;
-
-            renderInventory();
-            renderShop();
-        });
-    }
-
-    if (buyBtn) {
-        buyBtn.addEventListener("click", () => {
-
-            if (inventory.GOLD < 3) return;
-
-            inventory.GOLD -= 3;
-            inventory.WHEAT_SEED++;
-
-            renderInventory();
-            renderShop();
-        });
-    }
-}
-
-// ================= INPUT =================
+/* ================= INPUT ================= */
 
 document.addEventListener("keydown", (e) => {
 
+    /* HOTBAR */
     if (e.key === "1") selectedSlot = "WHEAT_SEED";
     if (e.key === "2") selectedSlot = "WHEAT";
-    if (e.key === "3") selectedSlot = "GOLD";
+    if (e.key === "3") selectedSlot = "WOOD";
 
+    /* BIOMES */
+    if (e.key === "f") currentBiome = BIOMES.FARM;
+    if (e.key === "g") currentBiome = BIOMES.WOOD;
+    if (e.key === "h") currentBiome = BIOMES.MINE;
+
+    generateWorld();
     renderInventory();
 });
 
-    // ================= WORLDPUT =================
-
-   document.addEventListener("keydown", (e) => {
-
-    if (e.key === "f") currentBiome = BIOMES.FARM;
-if (e.key === "g") currentBiome = BIOMES.WOOD;
-if (e.key === "h") currentBiome = BIOMES.MINE;
-
-    generateWorld();
-
-    console.log("BIOME:", currentBiome.name);
-});
-
-// ================= START =================
+/* ================= START ================= */
 
 window.addEventListener("load", () => {
 
     generateWorld();
-
     renderInventory();
-    renderShop();
-    initShop();
 });
+
 </script>
 </body>
 </html>
