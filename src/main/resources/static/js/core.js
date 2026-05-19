@@ -83,8 +83,14 @@ function updatePlayer() {
 
 function createPlots(playerType) {
 
+    console.log("CREATE PLOTS CALLED");
+
     const container = document.getElementById("plots");
-    if (!container) return;
+
+    if (!container) {
+        console.error("NO #plots FOUND");
+        return;
+    }
 
     container.innerHTML = "";
 
@@ -102,19 +108,22 @@ function createPlots(playerType) {
     positions.forEach((pos, index) => {
 
         const cell = document.createElement("div");
+
         cell.className = "plot";
 
         cell.style.position = "absolute";
         cell.style.left = (pos.x * 60) + "px";
         cell.style.top = (pos.y * 60) + "px";
 
+        cell.style.width = "60px";
+        cell.style.height = "60px";
+
+        cell.style.background = "rgba(139, 69, 19, 0.9)";
+        cell.style.border = "2px solid black";
+
         container.appendChild(cell);
 
-        window.plots.push({
-            id: index,
-            x: pos.x,
-            y: pos.y
-        });
+        window.plots.push(pos);
     });
 }
 
