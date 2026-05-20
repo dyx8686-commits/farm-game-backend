@@ -650,7 +650,12 @@ function safeGet(id) {
     return document.getElementById(id);
 }
 
+const oldAppend = island.appendChild;
 
+island.appendChild = function (el) {
+    console.log("APPEND:", el);
+    return oldAppend.call(island, el);
+};
 </script>
 </body>
 </html>
