@@ -597,40 +597,34 @@ function renderInventory() {
 
 document.addEventListener("keydown", (e) => {
 
-    let biomeChanged = false;
-
-    // FARM
+    // HOTBAR (НИЧЕГО НЕ УДАЛЯЕТ)
     if (e.key === "1") selectedSlot = "WHEAT_SEED";
     if (e.key === "2") selectedSlot = "CARROT_SEED";
     if (e.key === "3") selectedSlot = "POTATO_SEED";
 
-    // WOOD
     if (e.key === "4") selectedSlot = "BIRCH_SEED";
     if (e.key === "5") selectedSlot = "PINE_SEED";
     if (e.key === "6") selectedSlot = "OAK_SEED";
 
-    // MINE
     if (e.key === "7") selectedSlot = "PICK_STONE";
     if (e.key === "8") selectedSlot = "PICK_IRON";
     if (e.key === "9") selectedSlot = "PICK_COPPER";
 
-    // BIOMES
+    // BIOMES (ТОЛЬКО ЭТО ПЕРЕРИСОВЫВАЕТ МИР)
     if (e.key === "f") {
         currentBiome = BIOMES.FARM;
-        biomeChanged = true;
+        generateWorld();
+        initPlots();
     }
 
     if (e.key === "g") {
         currentBiome = BIOMES.WOOD;
-        biomeChanged = true;
+        generateWorld();
+        initPlots();
     }
 
     if (e.key === "h") {
         currentBiome = BIOMES.MINE;
-        biomeChanged = true;
-    }
-
-    if (biomeChanged) {
         generateWorld();
         initPlots();
     }
