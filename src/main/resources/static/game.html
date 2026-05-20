@@ -108,6 +108,25 @@ html, body {
     display:none;
     z-index:999;
 ">
+    <div id="invWindow" style="
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:320px;
+    background:rgba(0,0,0,0.85);
+    color:white;
+    padding:15px;
+    border-radius:10px;
+    display:none;
+    z-index:999;
+">
+    <h3>🎒 Full Inventory</h3>
+    <div id="invContent"></div>
+
+    <br>
+    <button onclick="toggleInventory()">Close</button>
+</div>
 
     <h3>🏪 Shop</h3>
 
@@ -137,7 +156,19 @@ const BIOMES = {
 let currentBiome = BIOMES.FARM;
 
 /* ================= INVENTORY ================= */
-
+<button id="invBtn" style="
+    position:absolute;
+    bottom:120px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+">
+    🎒 Inventory
+</button>
+    
 const inventory = {
 
     /* FARM */
@@ -544,6 +575,45 @@ function growStep(key) {
     }
 }
 /* ================= INVENTORY ================= */
+function toggleInventory() {
+    const el = document.getElementById("invWindow");
+    if (!el) return;
+
+    el.style.display = el.style.display === "block" ? "none" : "block";
+
+    renderFullInventory();
+}
+
+    function renderFullInventory() {
+
+    const el = document.getElementById("invContent");
+    if (!el) return;
+
+    el.innerHTML = `
+        🌾 Wheat Seeds: ${inventory.WHEAT_SEED}<br>
+        🥕 Carrot Seeds: ${inventory.CARROT_SEED}<br>
+        🥔 Potato Seeds: ${inventory.POTATO_SEED}<br>
+        <br>
+        🌾 Wheat: ${inventory.WHEAT}<br>
+        🥕 Carrot: ${inventory.CARROT}<br>
+        🥔 Potato: ${inventory.POTATO}<br>
+        <br>
+        🌳 Birch: ${inventory.BIRCH_SEED}<br>
+        🌲 Pine: ${inventory.PINE_SEED}<br>
+        🌳 Oak: ${inventory.OAK_SEED}<br>
+        <br>
+        🪵 Birch Wood: ${inventory.BIRCH_WOOD}<br>
+        🪵 Pine Wood: ${inventory.PINE_WOOD}<br>
+        🪵 Oak Wood: ${inventory.OAK_WOOD}<br>
+        <br>
+        🪨 Stone: ${inventory.STONE}<br>
+        ⛏ Iron: ${inventory.IRON}<br>
+        🟠 Copper: ${inventory.COPPER}<br>
+        <br>
+        💰 Gold: ${inventory.GOLD}
+    `;
+}
+    
 function addToHotbar(item) {
 
     hotbarSlots = hotbarSlots.filter(i => i !== item);
