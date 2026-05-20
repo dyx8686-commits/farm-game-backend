@@ -729,10 +729,13 @@ window.addEventListener("load", () => {
     generateWorld();
     initPlots();
 
-    loadWorld(); // 👈 ДОБАВИТЬ ЭТО
+    loadWorld();
 
     renderInventory();
     initShop();
+
+    document.getElementById("invBtn")
+        .addEventListener("click", toggleInventory);
 });
     
 /* ================= SAFETY FIX ================= */
