@@ -108,7 +108,19 @@ html, body {
     display:none;
     z-index:999;
 ">
-    <div id="invWindow" style="
+    <h3>🏪 Shop</h3>
+
+    <button id="buySeedBtn">Buy Seed (3💰)</button>
+    <button id="sellBtn">Sell Wheat (5💰)</button>
+
+    <br><br>
+    <button onclick="toggleShop()">Close</button>
+
+    <div id="shopInfo"></div>
+</div>
+
+
+<div id="invWindow" style="
     position:absolute;
     top:50%;
     left:50%;
@@ -127,19 +139,6 @@ html, body {
     <br>
     <button onclick="toggleInventory()">Close</button>
 </div>
-
-    <h3>🏪 Shop</h3>
-
-    <button id="buySeedBtn">Buy Seed (3💰)</button>
-    <button id="sellBtn">Sell Wheat (5💰)</button>
-
-    <br><br>
-    <button onclick="toggleShop()">Close</button>
-
-    <div id="shopInfo"></div>
-
-</div>
-
     <div id="island"></div>
 <div id="inventory"></div>
     
