@@ -597,36 +597,44 @@ function renderInventory() {
 
 document.addEventListener("keydown", (e) => {
 
-    const keyMap = {
-        "1": "WHEAT_SEED",
-        "2": "CARROT_SEED",
-        "3": "POTATO_SEED",
-        "4": "BIRCH_SEED",
-        "5": "PINE_SEED",
-        "6": "OAK_SEED",
-        "7": "PICK_STONE",
-        "8": "PICK_IRON",
-        "9": "PICK_COPPER"
-    };
+    let biomeChanged = false;
 
-    if (keyMap[e.key]) {
+    // FARM
+    if (e.key === "1") selectedSlot = "WHEAT_SEED";
+    if (e.key === "2") selectedSlot = "CARROT_SEED";
+    if (e.key === "3") selectedSlot = "POTATO_SEED";
 
-        selectedSlot = keyMap[e.key];
+    // WOOD
+    if (e.key === "4") selectedSlot = "BIRCH_SEED";
+    if (e.key === "5") selectedSlot = "PINE_SEED";
+    if (e.key === "6") selectedSlot = "OAK_SEED";
 
-        hotbar = hotbar.filter(i => i !== selectedSlot);
+    // MINE
+    if (e.key === "7") selectedSlot = "PICK_STONE";
+    if (e.key === "8") selectedSlot = "PICK_IRON";
+    if (e.key === "9") selectedSlot = "PICK_COPPER";
 
-        hotbar.push(selectedSlot);
-
-        if (hotbar.length > 3) {
-            hotbar.shift();
-        }
+    // BIOMES
+    if (e.key === "f") {
+        currentBiome = BIOMES.FARM;
+        biomeChanged = true;
     }
 
-    if (e.key === "f") currentBiome = BIOMES.FARM;
-    if (e.key === "g") currentBiome = BIOMES.WOOD;
-    if (e.key === "h") currentBiome = BIOMES.MINE;
+    if (e.key === "g") {
+        currentBiome = BIOMES.WOOD;
+        biomeChanged = true;
+    }
 
-    generateWorld();
+    if (e.key === "h") {
+        currentBiome = BIOMES.MINE;
+        biomeChanged = true;
+    }
+
+    if (biomeChanged) {
+        generateWorld();
+        initPlots();
+    }
+
     renderInventory();
 });
 /* ================= START ================= */
