@@ -482,6 +482,7 @@ island.addEventListener("click", (e) => {
     }
 });
 
+
 /* ================= GROWTH ================= */
 
 function startGrowth(key) {
@@ -490,7 +491,16 @@ function startGrowth(key) {
 
 function growStep(key) {
 
-    const cell = plots.get(key);
+    let cell = null;
+
+    for (const plot of plots.values()) {
+
+        if (`${plot.x}:${plot.y}` === key) {
+            cell = plot;
+            break;
+        }
+    }
+
     if (!cell || !cell.plantEl) return;
 
     cell.stage++;
@@ -503,6 +513,7 @@ function growStep(key) {
     );
 
     cell.plantEl.remove();
+
     cell.plantEl = newPlant;
 
     island.appendChild(newPlant);
