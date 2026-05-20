@@ -115,8 +115,6 @@ html, body {
 
     <br><br>
     <button onclick="toggleShop()">Close</button>
-
-    <div id="shopInfo"></div>
 </div>
 
 
@@ -134,12 +132,30 @@ html, body {
     z-index:999;
 ">
     <h3>🎒 Full Inventory</h3>
+
     <div id="invContent"></div>
 
     <br>
     <button onclick="toggleInventory()">Close</button>
 </div>
-    <div id="island"></div>
+
+
+<!-- КНОПКА ВСЕГДА СНАРУЖИ -->
+<button id="invBtn" style="
+    position:absolute;
+    bottom:120px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+">
+    🎒 Inventory
+</button>
+
+
+<div id="island"></div>
 <div id="inventory"></div>
     
 <script>
@@ -155,19 +171,7 @@ const BIOMES = {
 let currentBiome = BIOMES.FARM;
 
 /* ================= INVENTORY ================= */
-<button id="invBtn" style="
-    position:absolute;
-    bottom:120px;
-    left:50%;
-    transform:translateX(-50%);
-    padding:10px;
-    border-radius:8px;
-    border:none;
-    cursor:pointer;
-">
-    🎒 Inventory
-</button>
-    
+
 const inventory = {
 
     /* FARM */
