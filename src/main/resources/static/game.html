@@ -288,7 +288,7 @@ function createShopBuilding(x, y) {
 }
 
 /* ================= WORLD GENERATION ================= */
-console.log("❗ WORLD REBUILD TRIGGERED");
+
 function generateWorld() {
 
     island.innerHTML = "";
@@ -451,6 +451,7 @@ island.addEventListener("click", (e) => {
         startGrowth(`${x}:${y}`);
 
         renderInventory(); // или renderHotbar
+        saveWorld();
         return;
     }
 
@@ -479,6 +480,7 @@ island.addEventListener("click", (e) => {
         target.type = null;
 
         renderInventory(); // или renderHotbar
+        saveWorld();
     }
 });
 
@@ -517,6 +519,25 @@ function growStep(key) {
     cell.plantEl = newPlant;
 
     island.appendChild(newPlant);
+     const newPlant = createPlantVisual(
+        cell.x,
+        cell.y,
+        cell.stage,
+        cell.type
+    );
+
+    cell.plantEl.remove();
+
+    cell.plantEl = newPlant;
+    
+    saveWorld();
+
+    island.appendChild(newPlant);
+
+    if (cell.stage < 2) {
+        setTimeout(() => growStep(key), 3000);
+    }
+}
 
     if (cell.stage < 2) {
         setTimeout(() => growStep(key), 3000);
@@ -635,13 +656,13 @@ document.addEventListener("keydown", (e) => {
 
 window.addEventListener("load", () => {
 
-    generateWorld();   // рисуем базу мира
+    generateWorld();
+    initPlots();
 
-    initPlots();       // добавляем 6 фиксированных клеток
+    loadWorld(); // 👈 ДОБАВИТЬ ЭТО
 
-    renderInventory(); // UI
-
-    initShop();        // магазин
+    renderInventory();
+    initShop();
 });
     
 /* ================= SAFETY FIX ================= */
@@ -656,6 +677,53 @@ island.appendChild = function (el) {
     console.log("APPEND:", el);
     return oldAppend.call(island, el);
 };
+    function saveWorld() {
+    const data = [];
+
+    for (const cell of plots.values()) {
+        data.push({
+            x: cell.x,
+            y: cell.y,
+            stage: cell.stage,
+            type: cell.type
+        });
+    }
+
+    localStorage.setItem("farm_world", JSON.stringify(data));
+}
+
+    
+    function loadWorld() {
+    const data = JSON.parse(localStorage.getItem("farm_world"));
+    if (!data) return;
+
+    for (const saved of data) {
+
+        const cell = Array.from(plots.values())
+            .find(p => p.x === saved.x && p.y === saved.y);
+
+        if (!cell) continue;
+
+        cell.stage = saved.stage;
+        cell.type = saved.type;
+
+        if (cell.plantEl) {
+            cell.plantEl.remove();
+        }
+
+        if (saved.stage >= 0 && saved.type) {
+            const plant = createPlantVisual(
+                cell.x,
+                cell.y,
+                cell.stage,
+                cell.type
+            );
+
+            island.appendChild(plant);
+            cell.plantEl = plant;
+        }
+    }
+}
 </script>
 </body>
 </html>
